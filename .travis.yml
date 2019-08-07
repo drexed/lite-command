@@ -1,0 +1,24 @@
+sudo: false
+language: ruby
+cache: bundler
+rvm:
+- 2.5
+- 2.6
+- ruby-head
+matrix:
+  fast_finish: true
+  allow_failures:
+  - rvm: ruby-head
+before_install:
+- gem update --system
+- gem install bundler
+install:
+- bundle install --jobs=3 --retry=3
+script:
+- bundle exec rspec
+- bundle exec rubocop
+- bundle exec fasterer
+notifications:
+  email: false
+  slack:
+    secure: GGLBlk2ILEkNtXY/qiWoSlow8HYz1+RG+1OgXyI5pySDmmlsDfFijGOtoz/tcdcdANiTyzMNb0pBQRaYFjbNld7YQ6DttRbTdAnd2TIRxaQ2+2ttZ+kHpHMGG+9lKiDvoy3+4j7KLH4H/j/Ls6NrNAl0NfY87ZAVA+WjcRBCPKelyAYlWQy8Lj/b+8aMtlWF4YSft6A96Y8YK64uWPadHJI6d7W3pNF7L3S+N+PjMqEgryb0L8IXuobV6bA+rbGNqT14ytku3nDTN2d2WMLms6hsaA53h+LAgAniIOBYuFWrjJXZ2My7Tcba7sk2oIoqi7cePFUUQ+lZD1PvFEiCQCO5aIekVWrbUepWW5DobCENOBsv7gwxV4sJqzo3JLXufj+ia5U+VFpVPYkBPStrCqK2Yy/VGFwzkyjXf5qV3HXpDaMA5z1As0PvWtcegYZMTh4BfYaz8BBmFPdYAgOQHkMPgldttETgWb8xd4etBdK3ZUvlMBi+opBsjHDu5s2kf6og0Pf2/YBKRBZmUAch/+c+HCCBiK7RdXs4NsAeXEld2/fWW9+JgOumQ9DyiQBqmXgTSdRNnoxvlLTTDPBgjzimFh2qDNQycgbQRPpIcqe4f1p6Oe3lm96lguwai22enU2iXmBa0hfd80f/l7iQIshwxLAam/ovUq2TFIuERac=
