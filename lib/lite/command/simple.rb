@@ -9,7 +9,7 @@ module Lite
         def call(*args)
           raise Lite::Command::NotImplementedError unless defined?(command)
 
-          command
+          command(*args)
         end
 
       end

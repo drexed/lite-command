@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "lite/command/version"
+require 'lite/command/version'
 
 %w[errors memoize].each do |name|
   require "lite/command/extensions/#{name}"

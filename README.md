@@ -40,7 +40,7 @@ class SearchMovies < Lite::Command::Simple
     private
 
     # NOTE: This class method is required
-    def command
+    def command(*args)
       { generate_fingerprint => movies_by_name }
     end
   end

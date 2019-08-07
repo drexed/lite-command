@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2019-08-07
+### Changed
+- Pass args to command in call for Simple based commands
+
 ## [1.0.0] - 2019-08-07
 ### Added
 - Initial project version
