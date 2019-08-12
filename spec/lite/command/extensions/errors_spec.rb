@@ -8,7 +8,7 @@ class BarErrorsService < Lite::Command::Complex
 
   def initialize; end
 
-  def command
+  def execute
     SecureRandom.hex(6)
   end
 

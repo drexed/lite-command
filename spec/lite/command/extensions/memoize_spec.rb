@@ -8,7 +8,7 @@ class BarMemoizeService < Lite::Command::Complex
 
   def initialize; end
 
-  def command
+  def execute
     memoized
   end
 

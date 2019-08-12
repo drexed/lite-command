@@ -7,9 +7,9 @@ module Lite
       class << self
 
         def call(*args)
-          raise Lite::Command::NotImplementedError unless defined?(command)
+          raise Lite::Command::NotImplementedError unless defined?(execute)
 
-          command(*args)
+          execute(*args)
         end
 
       end

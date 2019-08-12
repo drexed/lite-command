@@ -40,7 +40,7 @@ class SearchMovies < Lite::Command::Simple
     private
 
     # NOTE: This class method is required
-    def command(*args)
+    def execute(*args)
       { generate_fingerprint => movies_by_name }
     end
   end
@@ -68,7 +68,7 @@ class SearchMovies < Lite::Command::Complex
   end
 
   # NOTE: This instance method is required
-  def command
+  def execute
     { generate_fingerprint => movies_by_name }
   end
 
@@ -102,7 +102,8 @@ command.call    #=> { 'fingerprint_1' => [ 'Toy Story 1', ... ] }
 # - or -
 
 # Useful when you are not using the Errors mixin as its a one time access call.
-SearchMovies.run('Toy Story') #=> { 'fingerprint_1' => [ 'Toy Story 1', ... ] }
+# Very similar to the simple command builder.
+SearchMovies.execute('Toy Story') #=> { 'fingerprint_1' => [ 'Toy Story 1', ... ] }
 ```
 
 **Result**
@@ -144,7 +145,7 @@ class SearchMovies < Lite::Command::Complex
 end
 ```
 
-**Caller**
+**Callers**
 
 ```ruby
 # Useful for controllers or actions that depend on states.

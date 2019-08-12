@@ -12,7 +12,7 @@ module Lite
           klass
         end
 
-        def run(*args)
+        def execute(*args)
           klass = call(*args)
           klass.result
         end
@@ -26,11 +26,11 @@ module Lite
       end
 
       def call
-        raise Lite::Command::NotImplementedError unless defined?(command)
+        raise Lite::Command::NotImplementedError unless defined?(execute)
         return @result if called?
 
         @called = true
-        @result = command
+        @result = execute
       end
 
       def called?

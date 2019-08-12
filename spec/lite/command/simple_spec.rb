@@ -6,7 +6,7 @@ class FooSimpleService < Lite::Command::Simple; end
 
 class BarSimpleService < Lite::Command::Simple
 
-  def self.command
+  def self.execute
     SecureRandom.hex(6)
   end
 

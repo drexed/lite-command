@@ -8,7 +8,7 @@ class BarComplexService < Lite::Command::Complex
 
   def initialize; end
 
-  def command
+  def execute
     SecureRandom.hex(6)
   end
 
@@ -46,9 +46,9 @@ RSpec.describe Lite::Command::Complex do
     end
   end
 
-  describe '.run' do
+  describe '.execute' do
     it 'to be 12' do
-      expect(BarComplexService.run.size).to eq(12)
+      expect(BarComplexService.execute.size).to eq(12)
     end
   end
 
