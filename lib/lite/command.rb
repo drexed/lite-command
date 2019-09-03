@@ -9,3 +9,6 @@ end
 %w[exceptions states complex simple].each do |name|
   require "lite/command/#{name}"
 end
+
+require 'generators/lite/command/install_generator'
+require 'generators/rails/command_generator'

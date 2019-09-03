@@ -24,9 +24,20 @@ Or install it yourself as:
 
 ## Table of Contents
 
+* [Setup](#setup)
 * [Simple](#simple)
 * [Complex](#complex)
 * [Extensions](#extensions)
+
+## Setup
+
+`rails g lite:command:install` will generate the following file:
+`../app/commands/application_command.rb`
+
+```ruby
+class ApplicationCommand < Lite::Command::Complex
+end
+```
 
 ## Simple
 
@@ -59,6 +70,11 @@ command.call
 
 Complex commands can be used in instance and class based calls and
 extended with access to errors and memoization.
+
+Use `rails g decorator NAME` will generate the following file:
+`../app/decorators/[name]_decorator.rb`
+
+You will then need to fill this class with the required `execute` method as shown below:
 
 ```ruby
 class SearchMovies < Lite::Command::Complex

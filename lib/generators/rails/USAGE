@@ -1,0 +1,9 @@
+Description:
+    Generate a command file
+
+Example:
+    rails generate command NAME
+
+    This will create:
+        - app/commands/[name]_command.rb
+        - spec/commands/[name]_command_spec.rb
