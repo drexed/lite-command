@@ -45,6 +45,13 @@ module Lite
           called? && errored?
         end
 
+        def merge_errors!(klass, direction: :from)
+          case direction
+          when :from then errors.merge!(klass.errors)
+          when :to then klass.errors.merge!(errors)
+          end
+        end
+
         def result!
           result if valid?
         end

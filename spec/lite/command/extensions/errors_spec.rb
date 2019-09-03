@@ -57,6 +57,32 @@ RSpec.describe Lite::Command::Extensions::Errors do
     end
   end
 
+  describe '.merge_errors!' do
+    it 'to be merged errors in :from direction' do
+      baz = BarErrorsService.new
+
+      baz.errors.add(:field, 'baz error message')
+      bar.errors.add(:field, 'bar error message')
+
+      bar.merge_errors!(baz, direction: :from)
+
+      expect(bar.errors.messages).to eq(field: ['bar error message', 'baz error message'])
+      expect(baz.errors.messages).to eq(field: ['baz error message'])
+    end
+
+    it 'to be merged errors in :to direction' do
+      baz = BarErrorsService.new
+
+      baz.errors.add(:field, 'baz error message')
+      bar.errors.add(:field, 'bar error message')
+
+      bar.merge_errors!(baz, direction: :to)
+
+      expect(bar.errors.messages).to eq(field: ['bar error message'])
+      expect(baz.errors.messages).to eq(field: ['baz error message', 'bar error message'])
+    end
+  end
+
   describe '.recall!' do
     it 'to be different random strings' do
       bar.call

@@ -186,6 +186,11 @@ command.failure?  #=> Checks that it has been called and has errors
 command.status    #=> :failure
 
 command.result!   #=> Raises Lite::Command::ValidationError if it has any errors, if not it returns the result
+
+# Use the following to merge errors from other commands or models
+# with the default direction being `:from`
+command.merge_errors!(command_2)
+user_model.merge_errors!(command, direction: :to)
 ```
 
 ### Memoize (optional)
