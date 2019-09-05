@@ -50,6 +50,14 @@ module Lite
           when :from then errors.merge!(klass.errors)
           when :to then klass.errors.merge!(errors)
           end
+
+          nil
+        end
+
+        def merge_exception!(exception, key: :internal)
+          errors.add(key, "#{exception.class} - #{exception.message}")
+
+          nil
         end
 
         def result!

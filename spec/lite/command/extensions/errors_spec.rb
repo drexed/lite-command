@@ -83,6 +83,16 @@ RSpec.describe Lite::Command::Extensions::Errors do
     end
   end
 
+  describe '.merge_exception!' do
+    it 'to be internal error message' do
+      bar = BarErrorsService.new
+
+      bar.merge_exception!(ArgumentError.new('sample message...'))
+
+      expect(bar.errors.messages).to eq(internal: ['ArgumentError - sample message...'])
+    end
+  end
+
   describe '.recall!' do
     it 'to be different random strings' do
       bar.call

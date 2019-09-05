@@ -153,9 +153,10 @@ class SearchMovies < Lite::Command::Complex
 
   # Add a fingerprint error to the error pool
   def generate_fingerprint
+    errors.add(:fingerprint, 'invalid md5 request value') if movies_by_name.nil?
     Digest::MD5.hexdigest(movies_by_name)
-  rescue
-    errors.add(:fingerprint, 'invalid md5 request value')
+  rescue ArgumentError => e
+    merge_exception!(e, key: :custom_key)
   end
 
 end
