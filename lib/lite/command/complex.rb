@@ -8,6 +8,8 @@ module Lite
 
         def call(*args)
           klass = new(*args)
+          raise Lite::Command::NotImplementedError unless klass.respond_to?(:execute)
+
           klass.call
           klass
         end

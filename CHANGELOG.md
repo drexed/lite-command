@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.6] - 2019-09-07
+### Added
+- Raise error when class `call` if class doesn't respond_to `execute`
+
 ## [1.0.5] - 2019-09-05
 ### Added
 - Add `merge_exception!` method to errors module
