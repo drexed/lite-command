@@ -2,9 +2,9 @@
 
 require 'spec_helper'
 
-class FooSimpleService < Lite::Command::Simple; end
+class FooSimpleCommand < Lite::Command::Simple; end
 
-class BarSimpleService < Lite::Command::Simple
+class BarSimpleCommand < Lite::Command::Simple
 
   def self.execute
     SecureRandom.hex(6)
@@ -16,11 +16,11 @@ RSpec.describe Lite::Command::Simple do
 
   describe '.call' do
     it 'to be an Lite::Command::NotImplementedError error' do
-      expect { FooSimpleService.call }.to raise_error(Lite::Command::NotImplementedError)
+      expect { FooSimpleCommand.call }.to raise_error(Lite::Command::NotImplementedError)
     end
 
     it 'to be 12 via class call' do
-      result = BarSimpleService.call
+      result = BarSimpleCommand.call
 
       expect(result.size).to eq(12)
     end

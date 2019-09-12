@@ -2,9 +2,9 @@
 
 require 'spec_helper'
 
-class FooComplexService < Lite::Command::Complex; end
+class FooComplexCommand < Lite::Command::Complex; end
 
-class BazComplexService < Lite::Command::Complex
+class BazComplexCommand < Lite::Command::Complex
 
   def call
     SecureRandom.hex(6)
@@ -12,7 +12,7 @@ class BazComplexService < Lite::Command::Complex
 
 end
 
-class BarComplexService < Lite::Command::Complex
+class BarComplexCommand < Lite::Command::Complex
 
   def initialize; end
 
@@ -23,17 +23,17 @@ class BarComplexService < Lite::Command::Complex
 end
 
 RSpec.describe Lite::Command::Complex do
-  let(:foo) { FooComplexService.new }
-  let(:bar) { BarComplexService.new }
+  let(:foo) { FooComplexCommand.new }
+  let(:bar) { BarComplexCommand.new }
 
   describe '.call' do
     it 'to be an Lite::Command::NotImplementedError error' do
       expect { foo.call }.to raise_error(Lite::Command::NotImplementedError)
-      expect { BazComplexService.call }.to raise_error(Lite::Command::NotImplementedError)
+      expect { BazComplexCommand.call }.to raise_error(Lite::Command::NotImplementedError)
     end
 
     it 'to be 12 via class call' do
-      command = BarComplexService.call
+      command = BarComplexCommand.call
 
       expect(command.result.size).to eq(12)
     end
@@ -57,7 +57,7 @@ RSpec.describe Lite::Command::Complex do
 
   describe '.execute' do
     it 'to be 12' do
-      expect(BarComplexService.execute.size).to eq(12)
+      expect(BarComplexCommand.execute.size).to eq(12)
     end
   end
 

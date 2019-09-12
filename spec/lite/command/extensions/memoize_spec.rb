@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-class BarMemoizeService < Lite::Command::Complex
+class BarMemoizeCommand < Lite::Command::Complex
 
   include Lite::Command::Extensions::Memoize
 
@@ -19,7 +19,7 @@ class BarMemoizeService < Lite::Command::Complex
 end
 
 RSpec.describe Lite::Command::Extensions::Memoize do
-  let(:bar) { BarMemoizeService.new }
+  let(:bar) { BarMemoizeCommand.new }
 
   describe '.cache' do
     it 'to be an Lite::Memoize::Instance object' do

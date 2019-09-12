@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-class BarErrorsService < Lite::Command::Complex
+class BarErrorsCommand < Lite::Command::Complex
 
   include Lite::Command::Extensions::Errors
 
@@ -15,14 +15,14 @@ class BarErrorsService < Lite::Command::Complex
 end
 
 RSpec.describe Lite::Command::Extensions::Errors do
-  let(:bar) { BarErrorsService.new }
+  let(:bar) { BarErrorsCommand.new }
 
   describe '.perform' do
     it 'to be success yield results' do
       s1 = 'success'
       s2 = 'failure'
 
-      BarErrorsService.perform do |result, success, failure|
+      BarErrorsCommand.perform do |result, success, failure|
         expect(result.size).to eq(12)
         expect(success.call { s1 }).to eq(s1)
         expect(failure.call { s2 }).to eq(nil)
@@ -59,7 +59,7 @@ RSpec.describe Lite::Command::Extensions::Errors do
 
   describe '.merge_errors!' do
     it 'to be merged errors in :from direction' do
-      baz = BarErrorsService.new
+      baz = BarErrorsCommand.new
 
       baz.errors.add(:field, 'baz error message')
       bar.errors.add(:field, 'bar error message')
@@ -71,7 +71,7 @@ RSpec.describe Lite::Command::Extensions::Errors do
     end
 
     it 'to be merged errors in :to direction' do
-      baz = BarErrorsService.new
+      baz = BarErrorsCommand.new
 
       baz.errors.add(:field, 'baz error message')
       bar.errors.add(:field, 'bar error message')
@@ -85,7 +85,7 @@ RSpec.describe Lite::Command::Extensions::Errors do
 
   describe '.merge_exception!' do
     it 'to be internal error message' do
-      bar = BarErrorsService.new
+      bar = BarErrorsCommand.new
 
       bar.merge_exception!(ArgumentError.new('sample message...'))
 
