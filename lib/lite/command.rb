@@ -2,7 +2,7 @@
 
 require 'lite/command/version'
 
-%w[errors memoize].each do |name|
+%w[errors memoize propagation].each do |name|
   require "lite/command/extensions/#{name}"
 end
 

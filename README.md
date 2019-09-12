@@ -194,6 +194,28 @@ command.merge_errors!(command_2)
 user_model.merge_errors!(command, direction: :to)
 ```
 
+### Propagation (optional)
+
+Propagation methods help you perform an action on an object. If successful is
+returns the result else it adds the object errors to the form object. Available
+propagation methods are:
+`create_and_return!(object, params)`, `update_and_return!(object, params)`,
+`save_and_return!(object)`, and `destroy_and_return!(object)`
+
+```ruby
+class SearchMovies < Lite::Command::Complex
+  include Lite::Command::Extensions::Errors
+  include Lite::Command::Extensions::Propagation
+
+  # ... ommited ...
+
+  def execute
+    create_and_return!(User, name: 'John Doe')
+  end
+
+end
+```
+
 ### Memoize (optional)
 
 Learn more about using [Lite::Memoize](https://github.com/drexed/lite-memoize)
