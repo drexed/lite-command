@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.8] - 2019-09-16
+### Changed
+- Changed create propagation to check errors instead of persistence
+
 ## [1.0.7] - 2019-09-12
 ### Added
 - Add propagation mixin

@@ -16,7 +16,7 @@ module Lite
 
         def create_and_return!(klass, params)
           klass = klass.create(params)
-          merge_errors!(klass) unless klass.persisted?
+          merge_errors!(klass) unless klass.errors.empty?
           klass
         end
 
