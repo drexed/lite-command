@@ -47,13 +47,9 @@ This is more of a traditional command service call as it only exposes a `call` m
 ```ruby
 class SearchMovies < Lite::Command::Simple
 
-  class << self
-    private
-
-    # NOTE: This class method is required
-    def execute(*args)
-      { generate_fingerprint => movies_by_name }
-    end
+  # NOTE: This class method is required
+  def self.execute(*args)
+    { generate_fingerprint => movies_by_name }
   end
 
 end
