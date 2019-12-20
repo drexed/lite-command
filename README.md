@@ -31,12 +31,10 @@ Or install it yourself as:
 
 ## Setup
 
-`rails g lite:command:install` will generate the following file:
-`../app/commands/application_command.rb`
+`rails g command NAME` will generate the following file:
 
-```ruby
-class ApplicationCommand < Lite::Command::Complex
-end
+```erb
+app/commands/[NAME]_command.rb
 ```
 
 ## Simple
