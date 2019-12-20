@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
 <% module_namespacing do -%>
-class <%= class_name %>Command < ApplicationCommand
+class <%= class_name %>Command < <%= ApplicationCommand.to_s rescue 'Lite::Command::Complex' %>
 end
 <% end -%>
