@@ -12,12 +12,12 @@ Layout/EmptyLinesAroundClassBody:
   EnforcedStyle: empty_lines_except_namespace
 Layout/EmptyLinesAroundModuleBody:
   EnforcedStyle: empty_lines_except_namespace
+Layout/LineLength:
+  Max: 100
 Metrics/BlockLength:
   Exclude:
     - 'spec/**/**/*'
     - '*.gemspec'
-Metrics/LineLength:
-  Max: 100
 Naming/MemoizedInstanceVariableName:
   Enabled: false
 RSpec/ExampleLength:
