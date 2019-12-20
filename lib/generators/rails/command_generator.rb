@@ -14,12 +14,6 @@ module Rails
       template('command.rb.tt', path)
     end
 
-    def copy_specs
-      path = File.join('spec', 'commands', class_path, "#{file_name}_command_spec.rb")
-      empty_directory('spec/commands')
-      template('spec.rb.tt', path)
-    end
-
     private
 
     def file_name
