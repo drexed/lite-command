@@ -37,6 +37,10 @@ Or install it yourself as:
 app/commands/[NAME]_command.rb
 ```
 
+If a `ApplicationCommand` file in the `app/commands` directory is available, the
+generator will create file that inherit from `ApplicationCommand` if not it will
+fallback to `Lite::Command::Complex`.
+
 ## Simple
 
 Simple commands build quick class based calls but cannot be extended.
@@ -64,9 +68,6 @@ command.call
 
 Complex commands can be used in instance and class based calls and
 extended with access to errors and memoization.
-
-Use `rails g decorator NAME` will generate the following file:
-`../app/decorators/[name]_decorator.rb`
 
 You will then need to fill this class with the required `execute` method as shown below:
 
