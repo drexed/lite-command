@@ -10,7 +10,6 @@ module Rails
 
     def copy_files
       path = File.join('app', 'commands', class_path, "#{file_name}_command.rb")
-      empty_directory('app/commands')
       template('command.rb.tt', path)
     end
 

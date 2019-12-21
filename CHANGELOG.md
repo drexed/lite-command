@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.10] - 2019-12-21
+### Removed
+- Removed generator empty directory check
+
 ## [1.0.9] - 2019-12-20
 ### Removed
 - Removed lite-command generator
