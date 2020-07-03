@@ -20,7 +20,7 @@ RSpec.describe Rails::CommandGenerator, type: :generator do
 
       it 'to include the proper markup' do
         command_file = File.read(command_path)
-        text_snippet = 'class V1::Users::AgeCommand < ApplicationCommand'
+        text_snippet = 'class V1::Users::AgeCommand < Lite::Command::Complex'
 
         expect(command_file.include?(text_snippet)).to eq(true)
       end
