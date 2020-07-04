@@ -60,8 +60,7 @@ end
 **Caller**
 
 ```ruby
-command = SearchMovies.call('Toy Story')
-command.call
+SearchMovies.call('Toy Story')
 ```
 
 ## Complex
