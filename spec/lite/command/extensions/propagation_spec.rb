@@ -8,6 +8,7 @@ class FooPropagationCommand < Lite::Command::Complex
   include Lite::Command::Extensions::Propagation
 
   def initialize(action)
+    super
     @action = action
   end
 

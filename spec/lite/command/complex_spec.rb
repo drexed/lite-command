@@ -14,8 +14,6 @@ end
 
 class BarComplexCommand < Lite::Command::Complex
 
-  def initialize; end
-
   def execute
     SecureRandom.hex(6)
   end

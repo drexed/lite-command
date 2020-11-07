@@ -6,8 +6,6 @@ class BarMemoizeCommand < Lite::Command::Complex
 
   include Lite::Command::Extensions::Memoize
 
-  def initialize; end
-
   def execute
     memoized
   end

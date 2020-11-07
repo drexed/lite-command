@@ -6,8 +6,6 @@ class BarErrorsCommand < Lite::Command::Complex
 
   include Lite::Command::Extensions::Errors
 
-  def initialize; end
-
   def execute
     SecureRandom.hex(6)
   end
