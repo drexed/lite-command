@@ -6,7 +6,7 @@ require 'lite/command/version'
   require "lite/command/extensions/#{name}"
 end
 
-%w[exceptions states complex simple].each do |name|
+%w[exceptions states simple complex procedure].each do |name|
   require "lite/command/#{name}"
 end
 

@@ -27,6 +27,7 @@ Or install it yourself as:
 * [Setup](#setup)
 * [Simple](#simple)
 * [Complex](#complex)
+* [Procedure](#procedure)
 * [Extensions](#extensions)
 
 ## Setup
@@ -129,9 +130,39 @@ command.recall! #=> Clears the call, cache, errors, and then re-performs the cal
 command.result  #=> { 'fingerprint_2' => [ 'Toy Story 2', ... ] }
 ```
 
+## Procedure
+
+Procedures run a collection of commands. It uses the the complex procedure API
+so it has access to all the methods. The `execute` method is already defined to
+handle most common procedure steps. It can be use directly or subclassed.
+
+```ruby
+class SearchChannels < Lite::Command::Procedure; end
+
+procedure = SearchChannels.call(
+  DisneyChannel.new,
+  EspnChannel.new,
+  MtvChannel.new
+)
+
+procedure.result #=> ['disney: #3', 'espn: #59', 'mtv: #212']
+procedure.steps  #=> [<DisneyChannel  @result="...">, <EspnChannel @result="...">, <MtvChannel  @result="...">]
+
+# If the errors extension is added you can stop the procedure at first failure.
+procedure = SearchChannels.new(
+  DisneyChannel.new,
+  ErrorChannel.new,
+  MtvChannel.new
+)
+
+procedure.exit_on_failure = true
+procedure.call
+procedure.result #=> ['disney: #3']
+```
+
 ## Extensions
 
-Extend complex base command with any of the following extensions:
+Extend complex (and procedures) base command with any of the following extensions:
 
 ### Errors (optional)
 

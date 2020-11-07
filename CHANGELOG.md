@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2019-06-06
+### Added
+- Added procedure support for running multiple commands
+
 ## [1.0.10] - 2019-12-21
 ### Added
 - Added Ruby 2.7 support
