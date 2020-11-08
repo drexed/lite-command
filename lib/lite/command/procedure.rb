@@ -12,8 +12,8 @@ module Lite
         steps.each_with_object([]) do |command, results|
           command.call
 
-          if respond_to?(:errors) && command.respond_to?(:errors) && command.failure?
-            merge_errors!(command)
+          if command.respond_to?(:errors) && command.failure?
+            merge_errors!(command) if respond_to?(:errors)
             break results if exit_on_failure?
           else
             results << command.result
