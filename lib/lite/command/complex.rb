@@ -21,7 +21,7 @@ module Lite
 
       end
 
-      attr_reader :result
+      attr_reader :args, :result
 
       def initialize(*args)
         @args = args

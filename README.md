@@ -141,7 +141,7 @@ class SearchChannels < Lite::Command::Procedure; end
 
 procedure = SearchChannels.call(
   DisneyChannel.new,
-  EspnChannel.new,
+  EspnChannel.new(current_station),
   MtvChannel.new
 )
 
@@ -151,13 +151,14 @@ procedure.steps  #=> [<DisneyChannel  @result="...">, <EspnChannel @result="..."
 # If the errors extension is added you can stop the procedure at first failure.
 procedure = SearchChannels.new(
   DisneyChannel.new,
-  ErrorChannel.new,
+  ErrorChannel.new(current_station),
   MtvChannel.new
 )
 
 procedure.exit_on_failure = true
 procedure.call
 procedure.result #=> ['disney: #3']
+procedure.failed_steps #=> [{ index: 1, step: 2, name: 'ErrorChannel', args: [current_station], errors: ['field error message'] }]
 ```
 
 ## Extensions

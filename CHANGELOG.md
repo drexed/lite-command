@@ -6,11 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.1.1] - 2019-06-08
+## [1.2.0] - 2021-02-04
+### Changed
+- Add failed_steps to procedure
+
+## [1.1.1] - 2019-12-08
 ### Changed
 - Improve procedure error merging
 
-## [1.1.0] - 2019-06-06
+## [1.1.0] - 2019-12-06
 ### Added
 - Added procedure support for running multiple commands
 

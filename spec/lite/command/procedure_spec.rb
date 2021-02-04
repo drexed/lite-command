@@ -4,8 +4,6 @@ require 'spec_helper'
 
 class FooProcedureCommand < Lite::Command::Procedure
 
-  include Lite::Command::Extensions::Errors
-
   def execute
     SecureRandom.hex(6)
   end
@@ -43,6 +41,15 @@ RSpec.describe Lite::Command::Procedure do
       ParComplexCommand.new
     ]
   end
+  let(:errored_step) do
+    {
+      index: 1,
+      step: 2,
+      name: 'PazComplexCommand',
+      args: [],
+      errors: ['field error message']
+    }
+  end
 
   describe '.call' do
     it 'to be true when returns without error' do
@@ -70,6 +77,7 @@ RSpec.describe Lite::Command::Procedure do
 
       expect(procedure.errors.key?(:field)).to eq(true)
       expect(procedure.result.map { |s| s.class.name }).to eq(%w[String String])
+      expect(procedure.failed_steps).to include(errored_step)
     end
 
     it 'to be all correct result class name with errors and exit on failure' do
@@ -80,6 +88,7 @@ RSpec.describe Lite::Command::Procedure do
 
       expect(procedure.errors.key?(:field)).to eq(true)
       expect(procedure.result.map { |s| s.class.name }).to eq(%w[String])
+      expect(procedure.failed_steps).to include(errored_step)
     end
   end
 
