@@ -9,8 +9,8 @@ module Lite
 
         module ClassMethods
 
-          def perform(*args)
-            klass = call(*args)
+          def perform(*args, **kwargs, &block)
+            klass = call(*args, **kwargs, &block)
 
             if klass.success?
               yield(klass.result, Lite::Command::Success, Lite::Command::Failure)

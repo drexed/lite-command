@@ -6,16 +6,16 @@ module Lite
 
       class << self
 
-        def call(*args)
-          klass = new(*args)
+        def call(*args, **kwargs, &block)
+          klass = new(*args, **kwargs, &block)
           raise Lite::Command::NotImplementedError unless klass.respond_to?(:execute)
 
           klass.call
           klass
         end
 
-        def execute(*args)
-          klass = call(*args)
+        def execute(*args, **kwargs, &block)
+          klass = call(*args, **kwargs, &block)
           klass.result
         end
 

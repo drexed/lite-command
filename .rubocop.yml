@@ -3,7 +3,7 @@ require:
   - rubocop-rake
   - rubocop-rspec
 AllCops:
-  TargetRubyVersion: 2.7
+  TargetRubyVersion: 3.0
   NewCops: enable
   DisplayCopNames: true
   DisplayStyleGuide: true
@@ -35,6 +35,8 @@ Naming/MemoizedInstanceVariableName:
 RSpec/ExampleLength:
   Enabled: false
 RSpec/MultipleExpectations:
+  Enabled: false
+Style/ArgumentsForwarding:
   Enabled: false
 Style/Documentation:
   Enabled: false
