@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'generators/rails/command_generator' if defined?(Rails::Generators)
+
 require 'lite/command/version'
 
 %w[errors memoize propagation].each do |name|
@@ -9,5 +11,3 @@ end
 %w[exceptions states simple complex procedure].each do |name|
   require "lite/command/#{name}"
 end
-
-require 'generators/rails/command_generator'
