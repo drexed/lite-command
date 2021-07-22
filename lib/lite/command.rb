@@ -4,10 +4,12 @@ require 'generators/rails/command_generator' if defined?(Rails::Generators)
 
 require 'lite/command/version'
 
-%w[errors memoize propagation].each do |name|
-  require "lite/command/extensions/#{name}"
-end
+require 'lite/command/extensions/errors'
+require 'lite/command/extensions/memoize'
+require 'lite/command/extensions/propagation'
 
-%w[exceptions states simple complex procedure].each do |name|
-  require "lite/command/#{name}"
-end
+require 'lite/command/exceptions'
+require 'lite/command/states'
+require 'lite/command/simple'
+require 'lite/command/complex'
+require 'lite/command/procedure'

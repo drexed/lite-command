@@ -4,8 +4,9 @@ require 'bundler/setup'
 require 'securerandom'
 require 'rails/generators'
 require 'active_record'
-require 'lite/command'
 require 'generator_spec'
+
+require 'lite/command'
 
 spec_path = Pathname.new(File.expand_path('../spec', File.dirname(__FILE__)))
 

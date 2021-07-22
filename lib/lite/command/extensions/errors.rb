@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'lite/errors'
+require 'lite/errors' unless defined?(Lite::Errors)
 
 module Lite
   module Command

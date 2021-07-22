@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'lite/memoize'
+require 'lite/memoize' unless defined?(Lite::Memoize)
 
 module Lite
   module Command
