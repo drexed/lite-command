@@ -8,7 +8,7 @@ module Lite
         private
 
         def assign_and_return!(instance, params)
-          instance = instance.assign_attributes(params)
+          instance.assign_attributes(params)
           errors.merge!(instance.errors) unless instance.valid?
           instance
         end

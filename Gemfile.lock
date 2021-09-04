@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    lite-command (1.4.0)
+    lite-command (1.4.1)
       lite-errors
       lite-memoize
 
