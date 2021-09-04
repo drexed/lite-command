@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0] - 2021-09-04
+### Added
+- Added `assign_and_return!` to propagation extension
+
 ## [1.3.2] - 2021-07-21
 ### Changed
 - Improved setup

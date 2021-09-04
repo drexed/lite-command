@@ -225,8 +225,12 @@ user_model.merge_errors!(command, direction: :to)
 Propagation methods help you perform an action on an object. If successful is
 returns the result else it adds the object errors to the form object. Available
 propagation methods are:
-`create_and_return!(object, params)`, `update_and_return!(object, params)`,
-`save_and_return!(object)`, and `destroy_and_return!(object)`
+  - `assign_and_return!(object, params)`
+  - `create_and_return!(klass, params)`
+  - `update_and_return!(object, params)`
+  - `destroy_and_return!(object)`
+  - `archive_and_return!(object)` (if using Lite::Archive)
+  - `save_and_return!(object)`
 
 ```ruby
 class SearchMovies < Lite::Command::Complex
