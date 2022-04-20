@@ -7,16 +7,17 @@ module Lite
       class << self
 
         def call(*args, **kwargs, &block)
-          klass = new(*args, **kwargs, &block)
-          raise Lite::Command::NotImplementedError unless klass.respond_to?(:execute)
+          instance = new(*args, **kwargs, &block)
 
-          klass.call
-          klass
+          raise Lite::Command::NotImplementedError unless instance.respond_to?(:execute)
+
+          instance.call
+          instance
         end
 
         def execute(*args, **kwargs, &block)
-          klass = call(*args, **kwargs, &block)
-          klass.result
+          instance = call(*args, **kwargs, &block)
+          instance.result
         end
 
       end
@@ -29,6 +30,7 @@ module Lite
 
       def call
         raise Lite::Command::NotImplementedError unless defined?(execute)
+
         return @result if called?
 
         @called = true
@@ -41,7 +43,7 @@ module Lite
 
       def recall!
         @called = false
-        %i[cache errors].each { |mixin| send(mixin).clear if respond_to?(mixin) }
+        %i[cache errors].each { |method_name| send(method_name).clear if respond_to?(method_name) }
         call
       end
 

@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/drexed/lite-command.svg?branch=master)](https://travis-ci.org/drexed/lite-command)
 
 Lite::Command provides an API for building simple and complex command based service objects.
-It provides mixins for handling errors and memoization to improve your object workflow productivity.
+It provides extensions for handling errors and memoization to improve your object workflow productivity.
 
 ## Installation
 
@@ -44,41 +44,49 @@ fallback to `Lite::Command::Complex`.
 
 ## Simple
 
-Simple commands build quick class based calls but cannot be extended.
-This is more of a traditional command service call as it only exposes a `call` method.
+Simple commands are a traditional command service call objects.
+It only exposes a `call` method that returns a value.
+
+**Setup**
 
 ```ruby
-class SearchMovies < Lite::Command::Simple
+class CalculatePower < Lite::Command::Simple
 
-  # NOTE: This class method is required
-  def self.execute(*args)
-    { generate_fingerprint => movies_by_name }
+  # NOTE: This `execute` class method is required to use with call
+  def self.execute(a, b)
+    a**b
   end
 
 end
 ```
 
-**Caller**
+**Callers**
 
 ```ruby
-SearchMovies.call('Toy Story')
+CalculatePower.execute(2, 2) #=> 4
+
+# - or -
+
+CalculatePower.call(2, 3) #=> 8
 ```
 
 ## Complex
 
-Complex commands can be used in instance and class based calls and
-extended with access to errors and memoization.
+Complex commands are powerful command service call objects.
+It can be extended to use error, memoization, and propagation mixins.
 
-You will then need to fill this class with the required `execute` method as shown below:
+**Setup**
 
 ```ruby
 class SearchMovies < Lite::Command::Complex
+
+  attr_reader :name
 
   def initialize(name)
     @name = name
   end
 
-  # NOTE: This instance method is required
+  # NOTE: This `execute` instance method is required to use with call
   def execute
     { generate_fingerprint => movies_by_name }
   end
@@ -86,7 +94,7 @@ class SearchMovies < Lite::Command::Complex
   private
 
   def movies_by_name
-    HTTP.get("http://movies.com?title=#{title}")
+    HTTP.get("http://movies.com?title=#{name}")
   end
 
   def generate_fingerprint
@@ -99,6 +107,10 @@ end
 **Caller**
 
 ```ruby
+SearchMovies.execute('Toy Story') #=> { 'fingerprint_1' => [ 'Toy Story 1', ... ] }
+
+# - or -
+
 command = SearchMovies.new('Toy Story')
 command.called? #=> false
 command.call    #=> { 'fingerprint_1' => [ 'Toy Story 1', ... ] }
@@ -109,12 +121,6 @@ command.called? #=> true
 command = SearchMovies.call('Toy Story')
 command.called? #=> true
 command.call    #=> { 'fingerprint_1' => [ 'Toy Story 1', ... ] }
-
-# - or -
-
-# Useful when you are not using the Errors mixin as its a one time access call.
-# Very similar to the simple command builder.
-SearchMovies.execute('Toy Story') #=> { 'fingerprint_1' => [ 'Toy Story 1', ... ] }
 ```
 
 **Result**
@@ -126,35 +132,33 @@ command.result  #=> nil
 command.call    #=> { 'fingerprint_1' => [ 'Toy Story 1', ... ] }
 command.result  #=> { 'fingerprint_1' => [ 'Toy Story 1', ... ] }
 
-command.recall! #=> Clears the call, cache, errors, and then re-performs the call
+command.recall! #=> Clears the `call`, `cache`, `errors` variables and then re-performs the call
 command.result  #=> { 'fingerprint_2' => [ 'Toy Story 2', ... ] }
 ```
 
 ## Procedure
 
-Procedures run a collection of commands. It uses the the complex procedure API
+Procedures are used to run a collection of commands. It uses the the complex procedure API
 so it has access to all the methods. The `execute` method is already defined to
 handle most common procedure steps. It can be use directly or subclassed.
 
+**Setup**
+
 ```ruby
 class SearchChannels < Lite::Command::Procedure; end
+```
 
-procedure = SearchChannels.call(
-  DisneyChannel.new,
-  EspnChannel.new(current_station),
-  MtvChannel.new
-)
+```ruby
+commands = [DisneyChannel.new, EspnChannel.new(current_station), MtvChannel.new]
 
+procedure = SearchChannels.call(*commands)
 procedure.result #=> ['disney: #3', 'espn: #59', 'mtv: #212']
 procedure.steps  #=> [<DisneyChannel  @result="...">, <EspnChannel @result="...">, <MtvChannel  @result="...">]
 
-# If the errors extension is added you can stop the procedure at first failure.
-procedure = SearchChannels.new(
-  DisneyChannel.new,
-  ErrorChannel.new(current_station),
-  MtvChannel.new
-)
+# - or -
 
+# If the errors extension is added you can stop the procedure at first failure.
+procedure = SearchChannels.new(*commands)
 procedure.exit_on_failure = true
 procedure.call
 procedure.result #=> ['disney: #3']
@@ -169,6 +173,8 @@ Extend complex (and procedures) base command with any of the following extension
 
 Learn more about using [Lite::Errors](https://github.com/drexed/lite-errors)
 
+**Setup**
+
 ```ruby
 class SearchMovies < Lite::Command::Complex
   include Lite::Command::Extensions::Errors
@@ -177,28 +183,21 @@ class SearchMovies < Lite::Command::Complex
 
   private
 
-  # Add a fingerprint error to the error pool
+  # Add a explicit and/or exception errors to the error pool
   def generate_fingerprint
-    errors.add(:fingerprint, 'invalid md5 request value') if movies_by_name.nil?
-    Digest::MD5.hexdigest(movies_by_name)
-  rescue ArgumentError => e
-    merge_exception!(e, key: :custom_key)
+    if movies_by_name.nil?
+      errors.add(:fingerprint, 'invalid md5 request value')
+    else
+      Digest::MD5.hexdigest(movies_by_name)
+    end
+  rescue ArgumentError => exception
+    merge_exception!(exception, key: :custom_error_key)
   end
 
 end
 ```
 
-**Callers**
-
-```ruby
-# Useful for controllers or actions that depend on states.
-SearchMovies.perform('Toy Story') do |result, success, failure|
-  success.call { redirect_to(movie_path, notice: "Movie can be found at: #{result}") }
-  failure.call { redirect_to(root_path, notice: "Movie cannot be found at: #{result}") }
-end
-```
-
-**Methods**
+**Instance Callers**
 
 ```ruby
 command = SearchMovies.call('Toy Story')
@@ -220,6 +219,16 @@ command.merge_errors!(command_2)
 user_model.merge_errors!(command, direction: :to)
 ```
 
+**Block Callers**
+
+```ruby
+# Useful for controllers or actions that depend on states.
+SearchMovies.perform('Toy Story') do |result, success, failure|
+  success.call { redirect_to(movie_path, notice: "Movie can be found at: #{result}") }
+  failure.call { redirect_to(root_path, notice: "Movie cannot be found at: #{result}") }
+end
+```
+
 ### Propagation (optional)
 
 Propagation methods help you perform an action on an object. If successful is
@@ -231,6 +240,8 @@ propagation methods are:
   - `destroy_and_return!(object)`
   - `archive_and_return!(object)` (if using Lite::Archive)
   - `save_and_return!(object)`
+
+**Setup**
 
 ```ruby
 class SearchMovies < Lite::Command::Complex
@@ -250,6 +261,8 @@ end
 
 Learn more about using [Lite::Memoize](https://github.com/drexed/lite-memoize)
 
+**Setup**
+
 ```ruby
 class SearchMovies < Lite::Command::Complex
   include Lite::Command::Extensions::Memoize
@@ -262,7 +275,7 @@ class SearchMovies < Lite::Command::Complex
   # Subsequent method calls gets the cached value
   # This saves you the extra external HTTP.get call
   def movies_by_name
-    cache.memoize { HTTP.get("http://movies.com?title=#{title}") }
+    cache.memoize { HTTP.get("http://movies.com?title=#{name}") }
   end
 
   # Gets the value in the cache
@@ -273,7 +286,7 @@ class SearchMovies < Lite::Command::Complex
 end
 ```
 
-**Methods**
+**Callers**
 
 ```ruby
 command = SearchMovies.call('Toy Story')

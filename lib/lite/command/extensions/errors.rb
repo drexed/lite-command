@@ -10,12 +10,12 @@ module Lite
         module ClassMethods
 
           def perform(*args, **kwargs, &block)
-            klass = call(*args, **kwargs, &block)
+            instance = call(*args, **kwargs, &block)
 
-            if klass.success?
-              yield(klass.result, Lite::Command::Success, Lite::Command::Failure)
+            if instance.success?
+              yield(instance.result, Lite::Command::Success, Lite::Command::Failure)
             else
-              yield(klass.result, Lite::Command::Failure, Lite::Command::Success)
+              yield(instance.result, Lite::Command::Failure, Lite::Command::Success)
             end
           end
 
@@ -45,10 +45,10 @@ module Lite
           called? && errored?
         end
 
-        def merge_errors!(klass, direction: :from)
+        def merge_errors!(instance, direction: :from)
           case direction
-          when :from then errors.merge!(klass.errors)
-          when :to then klass.errors.merge!(errors)
+          when :from then errors.merge!(instance.errors)
+          when :to then instance.errors.merge!(errors)
           end
 
           nil

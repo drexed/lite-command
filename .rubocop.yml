@@ -7,6 +7,8 @@ AllCops:
   NewCops: enable
   DisplayCopNames: true
   DisplayStyleGuide: true
+Gemspec/RequireMFA:
+  Enabled: false
 Gemspec/RequiredRubyVersion:
   Enabled: false
 Layout/EmptyLinesAroundAttributeAccessor:

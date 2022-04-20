@@ -23,7 +23,7 @@ RSpec.describe Lite::Command::Extensions::Errors do
       BarErrorsCommand.perform do |result, success, failure|
         expect(result.size).to eq(12)
         expect(success.call { s1 }).to eq(s1)
-        expect(failure.call { s2 }).to eq(nil)
+        expect(failure.call { s2 }).to be_nil
       end
     end
   end
@@ -44,14 +44,14 @@ RSpec.describe Lite::Command::Extensions::Errors do
     it 'to be false' do
       bar.call
 
-      expect(bar.failure?).to eq(false)
+      expect(bar.failure?).to be(false)
     end
 
     it 'to be true' do
       bar.call
       bar.errors.add(:field, 'error message')
 
-      expect(bar.failure?).to eq(true)
+      expect(bar.failure?).to be(true)
     end
   end
 
@@ -141,14 +141,14 @@ RSpec.describe Lite::Command::Extensions::Errors do
     it 'to be true' do
       bar.call
 
-      expect(bar.success?).to eq(true)
+      expect(bar.success?).to be(true)
     end
 
     it 'to be false' do
       bar.call
       bar.errors.add(:field, 'error message')
 
-      expect(bar.success?).to eq(false)
+      expect(bar.success?).to be(false)
     end
   end
 
@@ -156,7 +156,7 @@ RSpec.describe Lite::Command::Extensions::Errors do
     it 'to be true' do
       bar.call
 
-      expect(bar.validate!).to eq(true)
+      expect(bar.validate!).to be(true)
     end
 
     it 'to be an Lite::Command::ValidationError error' do

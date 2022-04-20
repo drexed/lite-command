@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0] - 2022-04-19
+### Changed
+- Update docs
+- Rename internal variables for more clarity
+- Improved spec checkers
+
 ## [1.4.1] - 2021-09-04
 ### Changed
 - Fixed nil issue with `assign_and_return!`

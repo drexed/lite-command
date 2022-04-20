@@ -55,7 +55,7 @@ RSpec.describe Lite::Command::Procedure do
     it 'to be true when returns without error' do
       procedure = described_class.call(steps)
 
-      expect(procedure.success?).to eq(true)
+      expect(procedure.success?).to be(true)
     end
 
     it 'to be all correct result class name without errors' do
@@ -68,14 +68,14 @@ RSpec.describe Lite::Command::Procedure do
       steps.first.errors.add(:field, 'error message')
       procedure = described_class.call(steps)
 
-      expect(procedure.success?).to eq(false)
+      expect(procedure.success?).to be(false)
     end
 
     it 'to be all correct result class name with errors' do
       steps[1] = PazComplexCommand.new
       procedure = described_class.call(steps)
 
-      expect(procedure.errors.key?(:field)).to eq(true)
+      expect(procedure.errors.key?(:field)).to be(true)
       expect(procedure.result.map { |s| s.class.name }).to eq(%w[String String])
       expect(procedure.failed_steps).to include(errored_step)
     end
@@ -86,7 +86,7 @@ RSpec.describe Lite::Command::Procedure do
       procedure.exit_on_failure = true
       procedure.call
 
-      expect(procedure.errors.key?(:field)).to eq(true)
+      expect(procedure.errors.key?(:field)).to be(true)
       expect(procedure.result.map { |s| s.class.name }).to eq(%w[String])
       expect(procedure.failed_steps).to include(errored_step)
     end

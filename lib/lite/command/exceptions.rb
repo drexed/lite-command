@@ -4,7 +4,6 @@ module Lite
   module Command
 
     class NotImplementedError < StandardError; end
-
     class ValidationError < StandardError; end
 
   end

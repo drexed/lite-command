@@ -28,14 +28,14 @@ RSpec.describe Lite::Command::Extensions::Propagation do
       foo = FooPropagationCommand.new(:fail)
       foo.call
 
-      expect(foo.errors.empty?).to eq(false)
+      expect(foo.errors.empty?).to be(false)
     end
 
     it 'to be true when the object passes' do
       foo = FooPropagationCommand.new(:pass)
       foo.call
 
-      expect(foo.errors.empty?).to eq(true)
+      expect(foo.errors.empty?).to be(true)
     end
   end
 

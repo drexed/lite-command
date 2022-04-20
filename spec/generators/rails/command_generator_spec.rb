@@ -15,14 +15,14 @@ RSpec.describe Rails::CommandGenerator, type: :generator do
   describe '#generator' do
     context 'when generating app files' do
       it 'to be true when command file exists' do
-        expect(File.exist?(command_path)).to eq(true)
+        expect(File.exist?(command_path)).to be(true)
       end
 
       it 'to include the proper markup' do
         command_file = File.read(command_path)
         text_snippet = 'class V1::Users::AgeCommand < Lite::Command::Complex'
 
-        expect(command_file.include?(text_snippet)).to eq(true)
+        expect(command_file.include?(text_snippet)).to be(true)
       end
     end
   end
