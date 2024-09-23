@@ -3,12 +3,11 @@ require:
   - rubocop-rake
   - rubocop-rspec
 AllCops:
-  TargetRubyVersion: 3.0
   NewCops: enable
   DisplayCopNames: true
   DisplayStyleGuide: true
-Gemspec/RequireMFA:
-  Enabled: false
+Gemspec/DevelopmentDependencies:
+  EnforcedStyle: gemspec
 Gemspec/RequiredRubyVersion:
   Enabled: false
 Layout/EmptyLinesAroundAttributeAccessor:
@@ -21,7 +20,7 @@ Layout/EmptyLinesAroundClassBody:
 Layout/EmptyLinesAroundModuleBody:
   EnforcedStyle: empty_lines_except_namespace
 Layout/LineLength:
-  Max: 100
+  Enabled: false
 Layout/SpaceAroundMethodCallOperator:
   Enabled: true
 Lint/RaiseException:
@@ -44,3 +43,5 @@ Style/Documentation:
   Enabled: false
 Style/ExpandPathArguments:
   Enabled: false
+Style/StringLiterals:
+  EnforcedStyle: double_quotes

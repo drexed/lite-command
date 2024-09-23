@@ -4,12 +4,17 @@ require 'generators/rails/command_generator' if defined?(Rails::Generators)
 
 require 'lite/command/version'
 
-require 'lite/command/extensions/errors'
-require 'lite/command/extensions/memoize'
-require 'lite/command/extensions/propagation'
+require 'lite/command/faults/base'
+require 'lite/command/faults/failure'
+require 'lite/command/faults/noop'
 
-require 'lite/command/exceptions'
-require 'lite/command/states'
-require 'lite/command/simple'
-require 'lite/command/complex'
-require 'lite/command/procedure'
+require 'lite/command/step/callable'
+require 'lite/command/step/debuggable'
+require 'lite/command/step/executable'
+require 'lite/command/step/resultable'
+require 'lite/command/step/traceable'
+
+require 'lite/command/construct'
+require 'lite/command/results'
+require 'lite/command/step'
+require 'lite/command/trace'

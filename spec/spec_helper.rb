@@ -3,18 +3,13 @@
 require 'bundler/setup'
 require 'securerandom'
 require 'rails/generators'
-require 'active_record'
+require 'active_support'
 require 'generator_spec'
 
 require 'lite/command'
 
 spec_path = Pathname.new(File.expand_path('../spec', File.dirname(__FILE__)))
-
-%w[config models].each do |dir|
-  Dir.each_child(spec_path.join("support/#{dir}")) do |f|
-    load(spec_path.join("support/#{dir}/#{f}"))
-  end
-end
+load(spec_path.join("support/command_helpers.rb"))
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
@@ -34,4 +29,6 @@ RSpec.configure do |config|
     temp_path = spec_path.join('generators/lite/tmp')
     FileUtils.remove_dir(temp_path) if File.directory?(temp_path)
   end
+
+  config.include ActiveSupport::Testing::TimeHelpers
 end
