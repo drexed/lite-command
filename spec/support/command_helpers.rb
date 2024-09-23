@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 module CommandHelpers
+
   class PassStep
+
     include Lite::Command::Step
 
     def call
@@ -13,9 +15,11 @@ module CommandHelpers
     def trace_key
       :pass
     end
+
   end
 
   class NoopStep
+
     include Lite::Command::Step
 
     def call
@@ -27,25 +31,31 @@ module CommandHelpers
     def trace_key
       :pass
     end
+
   end
 
   class FailStep
+
     include Lite::Command::Step
 
     def call
       fail!("Failed step")
     end
+
   end
 
   class ErrorStep
+
     include Lite::Command::Step
 
     def call
       raise "Errored step"
     end
+
   end
 
   class ThrownStep
+
     include Lite::Command::Step
 
     def call
@@ -61,5 +71,7 @@ module CommandHelpers
     def trace_key
       :thrown
     end
+
   end
+
 end

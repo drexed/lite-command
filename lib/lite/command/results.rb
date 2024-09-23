@@ -1,20 +1,24 @@
 # frozen_string_literal: true
 
-module Lite::Command
-  class Results
-    include Enumerable
+module Lite
+  module Command
+    class Results
 
-    attr_reader :values
+      include Enumerable
 
-    delegate :any?, :empty?, :each, :map, :none?, :size, to: :values
+      attr_reader :values
 
-    def initialize
-      @values = []
-    end
+      delegate :any?, :empty?, :each, :map, :none?, :size, to: :values
 
-    def <<(value)
-      values << value
-      values.sort_by!(&:trace)
+      def initialize
+        @values = []
+      end
+
+      def <<(value)
+        values << value
+        values.sort_by!(&:trace)
+      end
+
     end
   end
 end

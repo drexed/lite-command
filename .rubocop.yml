@@ -27,21 +27,35 @@ Lint/RaiseException:
   Enabled: true
 Lint/StructNewOverride:
   Enabled: true
+Metrics/AbcSize:
+  Enabled: false
 Metrics/BlockLength:
   Exclude:
     - 'spec/**/**/*'
     - '*.gemspec'
+Metrics/CyclomaticComplexity:
+  Enabled: false
+Metrics/MethodLength:
+  Enabled: false
+Metrics/PerceivedComplexity:
+  Enabled: false
 Naming/MemoizedInstanceVariableName:
   Enabled: false
 RSpec/ExampleLength:
   Enabled: false
+RSpec/MessageSpies:
+  Enabled: false
 RSpec/MultipleExpectations:
+  Enabled: false
+RSpec/MultipleMemoizedHelpers:
   Enabled: false
 Style/ArgumentsForwarding:
   Enabled: false
 Style/Documentation:
   Enabled: false
 Style/ExpandPathArguments:
+  Enabled: false
+Style/OpenStructUse:
   Enabled: false
 Style/StringLiterals:
   EnforcedStyle: double_quotes

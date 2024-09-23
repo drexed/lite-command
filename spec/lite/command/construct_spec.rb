@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Lite::Command::Construct do
   subject(:construct) { described_class.init(context) }
@@ -27,7 +27,7 @@ RSpec.describe Lite::Command::Construct do
 
   describe ".merge!" do
     it "adds new key value pair to the construct" do
-      construct.merge!(attr_2: "val_2")
+      construct[:attr_2] = "val_2"
       expect(construct.attr_2).to eq("val_2")
     end
   end

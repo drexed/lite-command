@@ -1,43 +1,47 @@
 # frozen_string_literal: true
 
-module Lite::Command
-  module Step
-    module Resultable
-      extend ActiveSupport::Concern
+module Lite
+  module Command
+    module Step
+      module Resultable
 
-      included { delegate :as_json, to: :to_h }
+        extend ActiveSupport::Concern
 
-      def results
-        context.results ||= Lite::Command::Results.new
-      end
+        included { delegate :as_json, to: :to_h }
 
-      def result
-        if pending? || thrown_fault?
-          state
-        else
-          status
+        def results
+          context.results ||= Lite::Command::Results.new
         end
-      end
 
-      def to_hash
-        {
-          index: trace.index,
-          trace: trace.to_fs,
-          step: self.class.name,
-          result: result,
-          state: state,
-          status: status,
-          reason: reason,
-          fault: faulter&.trace&.index,
-          throw: thrower&.trace&.index
-        }.merge!(metadata.to_h).compact_blank
-      end
-      alias to_h to_hash
+        def result
+          if pending? || thrown_fault?
+            state
+          else
+            status
+          end
+        end
 
-      private
+        def to_hash
+          {
+            index: trace.index,
+            trace: trace.to_fs,
+            step: self.class.name,
+            result:,
+            state:,
+            status:,
+            reason:,
+            fault: faulter&.trace&.index,
+            throw: thrower&.trace&.index
+          }.merge!(metadata.to_h).compact_blank
+        end
+        alias to_h to_hash
 
-      def append_current_result
-        results << self
+        private
+
+        def append_current_result
+          results << self
+        end
+
       end
     end
   end

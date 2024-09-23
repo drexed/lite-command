@@ -1,20 +1,20 @@
 # frozen_string_literal: true
 
-require 'generators/rails/command_generator' if defined?(Rails::Generators)
+require "generators/rails/command_generator" if defined?(Rails::Generators)
 
-require 'lite/command/version'
+require "lite/command/version"
 
-require 'lite/command/faults/base'
-require 'lite/command/faults/failure'
-require 'lite/command/faults/noop'
+require "lite/command/faults/base"
+require "lite/command/faults/failure"
+require "lite/command/faults/noop"
 
-require 'lite/command/step/callable'
-require 'lite/command/step/debuggable'
-require 'lite/command/step/executable'
-require 'lite/command/step/resultable'
-require 'lite/command/step/traceable'
+require "lite/command/step/callable"
+require "lite/command/step/debuggable"
+require "lite/command/step/executable"
+require "lite/command/step/resultable"
+require "lite/command/step/traceable"
 
-require 'lite/command/construct'
-require 'lite/command/results'
-require 'lite/command/step'
-require 'lite/command/trace'
+require "lite/command/construct"
+require "lite/command/results"
+require "lite/command/step"
+require "lite/command/trace"

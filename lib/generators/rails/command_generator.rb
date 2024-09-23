@@ -3,12 +3,12 @@
 module Rails
   class CommandGenerator < Rails::Generators::NamedBase
 
-    source_root File.expand_path('../templates', __FILE__)
-    check_class_collision suffix: 'Command'
+    source_root File.expand_path("../templates", __FILE__)
+    check_class_collision suffix: "Command"
 
     def copy_files
-      path = File.join('app', 'commands', class_path, "#{file_name}_command.rb")
-      template('command.rb.tt', path)
+      path = File.join("app", "commands", class_path, "#{file_name}_command.rb")
+      template("command.rb.tt", path)
     end
 
     private
@@ -18,7 +18,7 @@ module Rails
     end
 
     def remove_possible_suffix(name)
-      name.sub(/_?command$/i, '')
+      name.sub(/_?command$/i, "")
     end
 
   end
