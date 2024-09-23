@@ -19,11 +19,11 @@ module Lite
 
         def execute
           around_execution { call }
-        rescue Lite::Command::Faults::Noop => e
+        rescue Lite::Command::Noop => e
           noop(e)
           after_execution
           on_noop(e)
-        rescue Lite::Command::Faults::Failure => e
+        rescue Lite::Command::Failure => e
           failure(e)
           after_execution
           on_failure(e)

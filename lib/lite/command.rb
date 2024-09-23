@@ -3,10 +3,7 @@
 require "generators/rails/command_generator" if defined?(Rails::Generators)
 
 require "lite/command/version"
-
-require "lite/command/faults/base"
-require "lite/command/faults/failure"
-require "lite/command/faults/noop"
+require "lite/command/fault"
 
 require "lite/command/step/callable"
 require "lite/command/step/debuggable"

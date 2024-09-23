@@ -64,8 +64,8 @@ RSpec.describe Lite::Command::Step do
         step
       end
 
-      it "raises a Lite::Command::Faults::Noop error" do
-        expect { step_instance.execute! }.to raise_error(Lite::Command::Faults::Noop, "Nooped step")
+      it "raises a Lite::Command::Noop error" do
+        expect { step_instance.execute! }.to raise_error(Lite::Command::Noop, "Nooped step")
       end
 
       it "returns a dnf state" do
@@ -87,8 +87,8 @@ RSpec.describe Lite::Command::Step do
         step
       end
 
-      it "raises a Lite::Command::Faults::Failure error" do
-        expect { step_instance.execute! }.to raise_error(Lite::Command::Faults::Failure, "Failed step")
+      it "raises a Lite::Command::Failure error" do
+        expect { step_instance.execute! }.to raise_error(Lite::Command::Failure, "Failed step")
       end
 
       it "returns a dnf state" do

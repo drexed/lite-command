@@ -100,12 +100,12 @@ module Lite
 
         def noop!(obj)
           noop(obj)
-          raise Lite::Command::Faults::Noop.new(faulter, self, reason)
+          raise Lite::Command::Noop.new(faulter, self, reason)
         end
 
         def fail!(obj)
           failure(obj)
-          raise Lite::Command::Faults::Failure.new(faulter, self, reason)
+          raise Lite::Command::Failure.new(faulter, self, reason)
         end
 
         def throw!(step)
