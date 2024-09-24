@@ -55,6 +55,16 @@ module Lite
 
         private
 
+        # Any metadata added can be accessed throughout the step
+        # lifecyle as well as dumped in to the `to_hash` method
+        def assign_metadata_before_execution
+          metadata.started_at = Time.current
+        end
+
+        def on_before_execution
+          # Define in your class to run code before execution
+        end
+
         def before_execution
           assign_metadata_before_execution
           advance_execution_trace
@@ -66,6 +76,15 @@ module Lite
           before_execution
           yield
           after_execution
+        end
+
+        def assign_metadata_after_execution
+          metadata.finished_at = Time.current
+          metadata.runtime = metadata.finished_at - metadata.started_at
+        end
+
+        def on_after_execution
+          # Define in your class to run code after execution
         end
 
         def after_execution

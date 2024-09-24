@@ -96,19 +96,31 @@ module Lite
           @noop = true
         end
 
-        def failure(obj)
-          fault(obj)
-          @failure = true
-        end
-
         def noop!(obj)
           noop(obj)
           raise Lite::Command::Noop.new(faulter, self, reason)
         end
 
+        def on_noop(_error)
+          # Define in your class to run code when a NOOP happens
+        end
+
+        def failure(obj)
+          fault(obj)
+          @failure = true
+        end
+
         def fail!(obj)
           failure(obj)
           raise Lite::Command::Failure.new(faulter, self, reason)
+        end
+
+        def on_failure(_error)
+          # Define in your class to run code when a Failure happens
+        end
+
+        def on_error(error)
+          # Define in your class to run code when a StandardError happens
         end
 
         def throw!(step)
