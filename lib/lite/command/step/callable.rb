@@ -2,19 +2,19 @@
 
 module Lite
   module Command
+    # Status represents the state of the callable code. If no fault
+    # is thrown then a status of SUCCESS is returned even if `call`
+    # has not been executed.
+    STATUSES = [
+      SUCCESS = "SUCCESS",
+      NOOP = "NOOP",
+      FAILURE = "FAILURE"
+    ].freeze
+
     module Step
       module Callable
 
         extend ActiveSupport::Concern
-
-        # Status represents the state of the callable code. If no fault
-        # is thrown then a status of SUCCESS is returned even if `call`
-        # has not been executed.
-        STATUSES = [
-          SUCCESS = "SUCCESS",
-          NOOP = "NOOP",
-          FAILURE = "FAILURE"
-        ].freeze
 
         included { attr_reader :faulter, :thrower, :reason }
 

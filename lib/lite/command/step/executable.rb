@@ -2,20 +2,18 @@
 
 module Lite
   module Command
+    # State represents the state of the executable code. Once `execute`
+    # is ran, it will always complete or dnf if a fault is thrown by a
+    # child step.
+    STATES = [
+      PENDING = "PENDING",
+      EXECUTING = "EXECUTING",
+      COMPLETE = "COMPLETE",
+      DNF = "DNF"
+    ].freeze
+
     module Step
       module Executable
-
-        extend ActiveSupport::Concern
-
-        # State represents the state of the executable code. Once the
-        # `execute` is ran it will always complete or dnf if a fault
-        # is thrown by a child step.
-        STATES = [
-          PENDING = "PENDING",
-          EXECUTING = "EXECUTING",
-          COMPLETE = "COMPLETE",
-          DNF = "DNF"
-        ].freeze
 
         def execute
           around_execution { call }

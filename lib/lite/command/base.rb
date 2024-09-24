@@ -4,25 +4,6 @@ module Lite
   module Command
     class Base
 
-      # State represents the state of the executable code. Once the
-      # `execute` is ran it will always complete or dnf if a fault
-      # is thrown by a child step.
-      STATES = [
-        PENDING = "PENDING",
-        EXECUTING = "EXECUTING",
-        COMPLETE = "COMPLETE",
-        DNF = "DNF"
-      ].freeze
-
-      # Status represents the state of the callable code. If no fault
-      # is thrown then a status of SUCCESS is returned even if `call`
-      # has not been executed.
-      STATUSES = [
-        SUCCESS = "SUCCESS",
-        NOOP = "NOOP",
-        FAILURE = "FAILURE"
-      ].freeze
-
       include Lite::Command::Step::Traceable
       include Lite::Command::Step::Resultable
       include Lite::Command::Step::Callable
