@@ -5,10 +5,13 @@ module Lite
     module Step
       module Traceable
 
-        extend ActiveSupport::Concern
-
         def trace
           @trace ||= Lite::Command::Trace.init(context.trace.to_h)
+        end
+
+        def trace_key
+          # Define in your class to enable tracing.
+          # eg: :parent, :__child
         end
 
         private

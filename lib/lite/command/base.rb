@@ -5,22 +5,18 @@ module Lite
     class Base
 
       include Lite::Command::Step::Traceable
-      include Lite::Command::Step::Resultable
       include Lite::Command::Step::Callable
       include Lite::Command::Step::Executable
+      include Lite::Command::Step::Resultable
 
       attr_reader :context, :metadata
 
       def initialize(context = {})
-        @context = Lite::Command::Construct.build(context)
+        @context  = Lite::Command::Construct.build(context)
         @metadata = Lite::Command::Construct.init
       end
 
       private
-
-      def trace_key
-        # Define in your class to enable tracing
-      end
 
       def on_before_execution
         # Define in your class to run code before execution
