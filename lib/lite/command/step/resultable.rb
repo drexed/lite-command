@@ -5,9 +5,11 @@ module Lite
     module Step
       module Resultable
 
-        extend ActiveSupport::Concern
-
-        included { delegate :as_json, to: :to_h }
+        def self.included(base)
+          base.class_eval do
+            delegate :as_json, to: :to_h
+          end
+        end
 
         def results
           context.results ||= Lite::Command::Results.new

@@ -14,11 +14,14 @@ module Lite
     module Step
       module Callable
 
-        extend ActiveSupport::Concern
+        def self.included(base)
+          base.extend ClassMethods
+          base.class_eval do
+            attr_reader :faulter, :thrower, :reason
+          end
+        end
 
-        included { attr_reader :faulter, :thrower, :reason }
-
-        class_methods do
+        module ClassMethods
           def call(context = {})
             new(context).tap(&:execute)
           end
@@ -29,7 +32,7 @@ module Lite
         end
 
         def call
-          raise NotImplementedError, "call method not defined in #{self.class} class"
+          raise NotImplementedError, "call method not defined in #{self.class}"
         end
 
         def success?
