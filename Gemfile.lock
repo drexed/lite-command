@@ -161,7 +161,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activesupport
   bundler
   fasterer
   generator_spec
