@@ -12,7 +12,6 @@ module Lite
       attr_reader :context, :metadata
 
       def initialize(context = {})
-        @print_format = context.try(:delete, :print)
         @context = Lite::Command::Construct.build(context)
         @metadata = Lite::Command::Construct.init
       end
@@ -21,10 +20,6 @@ module Lite
 
       def trace_key
         # Define in your class to enable tracing
-      end
-
-      def print_title
-        # Define in your class to add a print title
       end
 
       def on_before_execution
