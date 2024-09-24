@@ -55,10 +55,12 @@ module Lite
 
         private
 
-        # Any metadata added can be accessed throughout the step
-        # lifecyle as well as dumped in to the `to_hash` method
-        def assign_metadata_before_execution
-          metadata.started_at = Time.current
+        def current_execution_time
+          Time.respond_to?(:current) ? Time.current : Time.now
+        end
+
+        def before_execution_run_data
+          metadata.started_at = current_execution_time
         end
 
         def on_before_execution
@@ -66,7 +68,7 @@ module Lite
         end
 
         def before_execution
-          assign_metadata_before_execution
+          before_execution_run_data
           advance_execution_trace
           executing!
           on_before_execution
@@ -78,8 +80,8 @@ module Lite
           after_execution
         end
 
-        def assign_metadata_after_execution
-          metadata.finished_at = Time.current
+        def after_execution_run_data
+          metadata.finished_at = current_execution_time
           metadata.runtime = metadata.finished_at - metadata.started_at
         end
 
@@ -89,8 +91,8 @@ module Lite
 
         def after_execution
           fault? ? dnf! : complete!
-          assign_metadata_after_execution
-          append_current_result
+          after_execution_run_data
+          append_execution_result
           on_after_execution
         end
 

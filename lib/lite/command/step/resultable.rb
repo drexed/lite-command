@@ -40,7 +40,7 @@ module Lite
 
         private
 
-        def append_current_result
+        def append_execution_result
           results << self
         end
 
