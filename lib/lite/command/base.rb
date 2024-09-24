@@ -8,7 +8,6 @@ module Lite
       include Lite::Command::Step::Resultable
       include Lite::Command::Step::Callable
       include Lite::Command::Step::Executable
-      include Lite::Command::Step::Debuggable
 
       attr_reader :context, :metadata
 

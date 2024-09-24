@@ -73,7 +73,6 @@ module Lite
           assign_metadata_after_execution
           append_current_result
           on_after_execution
-          print_execution_results
         end
 
       end
