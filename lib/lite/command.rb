@@ -13,5 +13,5 @@ require "lite/command/step/traceable"
 
 require "lite/command/construct"
 require "lite/command/results"
-require "lite/command/step"
+require "lite/command/base"
 require "lite/command/trace"

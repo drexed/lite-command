@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-# :reek:ModuleInitialize
 module Lite
   module Command
-    module Step
+    class Base
 
       # State represents the state of the executable code. Once the
       # `execute` is ran it will always complete or dnf if a fault
@@ -24,15 +23,13 @@ module Lite
         FAILURE = "FAILURE"
       ].freeze
 
-      def self.included(base)
-        base.include Lite::Command::Step::Traceable
-        base.include Lite::Command::Step::Resultable
-        base.include Lite::Command::Step::Callable
-        base.include Lite::Command::Step::Executable
-        base.include Lite::Command::Step::Debuggable
+      include Lite::Command::Step::Traceable
+      include Lite::Command::Step::Resultable
+      include Lite::Command::Step::Callable
+      include Lite::Command::Step::Executable
+      include Lite::Command::Step::Debuggable
 
-        base.class_eval { attr_reader :context, :metadata }
-      end
+      attr_reader :context, :metadata
 
       def initialize(context = {})
         @print_format = context.try(:delete, :print)

@@ -2,9 +2,7 @@
 
 module CommandHelpers
 
-  class PassStep
-
-    include Lite::Command::Step
+  class PassStep < Lite::Command::Base
 
     def call
       # Do nothing, success
@@ -18,9 +16,7 @@ module CommandHelpers
 
   end
 
-  class NoopStep
-
-    include Lite::Command::Step
+  class NoopStep < Lite::Command::Base
 
     def call
       noop!("Nooped step")
@@ -34,9 +30,7 @@ module CommandHelpers
 
   end
 
-  class FailStep
-
-    include Lite::Command::Step
+  class FailStep < Lite::Command::Base
 
     def call
       fail!("Failed step")
@@ -44,9 +38,7 @@ module CommandHelpers
 
   end
 
-  class ErrorStep
-
-    include Lite::Command::Step
+  class ErrorStep < Lite::Command::Base
 
     def call
       raise "Errored step"
@@ -54,9 +46,7 @@ module CommandHelpers
 
   end
 
-  class ThrownStep
-
-    include Lite::Command::Step
+  class ThrownStep < Lite::Command::Base
 
     def call
       step = PassStep.call(context)

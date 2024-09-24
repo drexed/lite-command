@@ -68,14 +68,12 @@ module Lite
         end
         alias to_t to_table
 
-        # rubocop:disable Style/Semicolon
         def print(format)
           case format
           when :hash then puts; pp to_hash; puts
           when :table then puts; puts to_table; puts
           end
         end
-        # rubocop:enable Style/Semicolon
 
         private
 

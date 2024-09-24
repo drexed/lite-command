@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-RSpec.describe Lite::Command::Step do
+RSpec.describe Lite::Command::Base do
   subject(:step) { step_class.call }
 
   let(:step_class) { pass_step }
@@ -22,7 +22,7 @@ RSpec.describe Lite::Command::Step do
     context "when initialized" do
       it "returns a pending state" do
         expect(step_instance).to be_pending
-        expect(step_instance.state).to eq(Lite::Command::Step::PENDING)
+        expect(step_instance.state).to eq(Lite::Command::Base::PENDING)
       end
     end
 
@@ -47,7 +47,7 @@ RSpec.describe Lite::Command::Step do
     context "when success" do
       it "returns a complete state" do
         expect(step).to be_complete
-        expect(step.state).to eq(Lite::Command::Step::COMPLETE)
+        expect(step.state).to eq(Lite::Command::Base::COMPLETE)
       end
     end
 
@@ -70,7 +70,7 @@ RSpec.describe Lite::Command::Step do
 
       it "returns a dnf state" do
         expect(step).to be_dnf
-        expect(step.state).to eq(Lite::Command::Step::DNF)
+        expect(step.state).to eq(Lite::Command::Base::DNF)
       end
     end
 
@@ -93,7 +93,7 @@ RSpec.describe Lite::Command::Step do
 
       it "returns a dnf state" do
         expect(step).to be_dnf
-        expect(step.state).to eq(Lite::Command::Step::DNF)
+        expect(step.state).to eq(Lite::Command::Base::DNF)
       end
     end
 
@@ -124,7 +124,7 @@ RSpec.describe Lite::Command::Step do
 
       it "returns a dnf state" do
         expect(step).to be_dnf
-        expect(step.state).to eq(Lite::Command::Step::DNF)
+        expect(step.state).to eq(Lite::Command::Base::DNF)
       end
     end
   end
@@ -133,14 +133,14 @@ RSpec.describe Lite::Command::Step do
     context "when initialized" do
       it "returns a success status" do
         expect(step_instance).to be_success
-        expect(step_instance.status).to eq(Lite::Command::Step::SUCCESS)
+        expect(step_instance.status).to eq(Lite::Command::Base::SUCCESS)
       end
     end
 
     context "when success" do
       it "returns a success status" do
         expect(step).to be_success
-        expect(step.status).to eq(Lite::Command::Step::SUCCESS)
+        expect(step.status).to eq(Lite::Command::Base::SUCCESS)
       end
     end
 
@@ -154,7 +154,7 @@ RSpec.describe Lite::Command::Step do
         expect(step).not_to be_thrown_fault
         expect(step.noop?("Nooped step")).to be(true)
         expect(step.noop?("Some reason")).to be(false)
-        expect(step.status).to eq(Lite::Command::Step::NOOP)
+        expect(step.status).to eq(Lite::Command::Base::NOOP)
       end
     end
 
@@ -168,7 +168,7 @@ RSpec.describe Lite::Command::Step do
         expect(step).not_to be_thrown_fault
         expect(step.failure?("Failed step")).to be(true)
         expect(step.failure?("Some reason")).to be(false)
-        expect(step.status).to eq(Lite::Command::Step::FAILURE)
+        expect(step.status).to eq(Lite::Command::Base::FAILURE)
       end
     end
 
@@ -182,7 +182,7 @@ RSpec.describe Lite::Command::Step do
         expect(step).not_to be_thrown_fault
         expect(step.failure?("[RuntimeError] Errored step")).to be(true)
         expect(step.failure?("Some reason")).to be(false)
-        expect(step.status).to eq(Lite::Command::Step::FAILURE)
+        expect(step.status).to eq(Lite::Command::Base::FAILURE)
       end
     end
 
@@ -206,7 +206,7 @@ RSpec.describe Lite::Command::Step do
     context "when initialized" do
       it "returns a success status" do
         expect(step_instance.results).to be_empty
-        expect(step_instance.result).to eq(Lite::Command::Step::PENDING)
+        expect(step_instance.result).to eq(Lite::Command::Base::PENDING)
         expect(step_instance.as_json).to eq(
           "step" => "CommandHelpers::PassStep",
           "result" => "PENDING",
@@ -219,7 +219,7 @@ RSpec.describe Lite::Command::Step do
     context "when success" do
       it "returns a success status" do
         expect(step.results).not_to be_empty
-        expect(step.result).to eq(Lite::Command::Step::SUCCESS)
+        expect(step.result).to eq(Lite::Command::Base::SUCCESS)
         expect(step.as_json).to eq(
           "index" => 1,
           "trace" => "1[1]",
@@ -239,7 +239,7 @@ RSpec.describe Lite::Command::Step do
 
       it "returns a noop status" do
         expect(step.results).not_to be_empty
-        expect(step.result).to eq(Lite::Command::Step::NOOP)
+        expect(step.result).to eq(Lite::Command::Base::NOOP)
         expect(step.as_json).to eq(
           "index" => 1,
           "trace" => "1[1]",
@@ -262,7 +262,7 @@ RSpec.describe Lite::Command::Step do
 
       it "returns a failure status" do
         expect(step.results).not_to be_empty
-        expect(step.result).to eq(Lite::Command::Step::FAILURE)
+        expect(step.result).to eq(Lite::Command::Base::FAILURE)
         expect(step.as_json).to eq(
           "step" => "CommandHelpers::FailStep",
           "result" => "FAILURE",
@@ -281,7 +281,7 @@ RSpec.describe Lite::Command::Step do
 
       it "returns fault" do
         expect(step.results).not_to be_empty
-        expect(step.result).to eq(Lite::Command::Step::DNF)
+        expect(step.result).to eq(Lite::Command::Base::DNF)
         expect(step.as_json).to eq(
           "index" => 1,
           "trace" => "1[1]",
