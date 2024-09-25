@@ -8,7 +8,9 @@ module Lite
     STATUSES = [
       SUCCESS = "SUCCESS",
       NOOP = "NOOP",
-      FAILURE = "FAILURE"
+      INVALID = "INVALID",
+      FAILURE = "FAILURE",
+      ERROR = "ERROR"
     ].freeze
 
     module Step
@@ -39,13 +41,6 @@ module Lite
           !fault?
         end
 
-        def failure?(message = nil)
-          status = @failure || false
-          return status if message.nil?
-
-          reason == message
-        end
-
         def noop?(message = nil)
           status = @noop || false
           return status if message.nil?
@@ -53,15 +48,41 @@ module Lite
           reason == message
         end
 
+        def invalid?(message = nil)
+          status = @invalid || false
+          return status if message.nil?
+
+          reason == message
+        end
+
+        def failure?(message = nil)
+          status = @failure || false
+          return status if message.nil?
+
+          reason == message
+        end
+
+        def error?(message = nil)
+          status = @error || false
+          return status if message.nil?
+
+          reason == message
+        end
+
         def fault?(message = nil)
-          failure?(message) || noop?(message)
+          noop?(message) ||
+            invalid?(message) ||
+            failure?(message) ||
+            error?(message)
         end
 
         def status
           return SUCCESS if success?
+          return NOOP if noop?
+          return INVALID if invalid?
           return FAILURE if failure?
 
-          NOOP
+          ERROR
         end
 
         def faulter?
@@ -105,6 +126,20 @@ module Lite
           # Define in your class to run code when a NOOP happens
         end
 
+        def invalid(obj)
+          fault(obj)
+          @invalid = true
+        end
+
+        def invalid!(obj)
+          invalid(obj)
+          raise Lite::Command::Invalid.new(faulter, self, reason)
+        end
+
+        def on_invalid(_error)
+          # Define in your class to run code when a NOOP happens
+        end
+
         def failure(obj)
           fault(obj)
           @failure = true
@@ -119,14 +154,26 @@ module Lite
           # Define in your class to run code when a Failure happens
         end
 
-        def on_error(error)
+        def error(obj)
+          fault(obj)
+          @error = true
+        end
+
+        def error!(obj)
+          error(obj)
+          raise Lite::Command::Error.new(faulter, self, reason)
+        end
+
+        def on_error(_error)
           # Define in your class to run code when a StandardError happens
         end
 
         def throw!(step)
           case step.status
-          when FAILURE then fail!(step)
           when NOOP then noop!(step)
+          when INVALID then invalid!(step)
+          when FAILURE then fail!(step)
+          when ERROR then error!(step)
           end
         end
 

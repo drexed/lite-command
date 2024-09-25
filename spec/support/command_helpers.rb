@@ -30,6 +30,14 @@ module CommandHelpers
 
   end
 
+  class InvalidStep < Lite::Command::Base
+
+    def call
+      invalid!("Invalid step")
+    end
+
+  end
+
   class FailStep < Lite::Command::Base
 
     def call
@@ -41,7 +49,15 @@ module CommandHelpers
   class ErrorStep < Lite::Command::Base
 
     def call
-      raise "Errored step"
+      error!("Errored step")
+    end
+
+  end
+
+  class ExceptionStep < Lite::Command::Base
+
+    def call
+      raise "Exception step"
     end
 
   end

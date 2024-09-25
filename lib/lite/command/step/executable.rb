@@ -21,12 +21,16 @@ module Lite
           noop(e)
           after_execution
           on_noop(e)
+        rescue Lite::Command::Invalid => e
+          invalid(e)
+          after_execution
+          on_invalid(e)
         rescue Lite::Command::Failure => e
           failure(e)
           after_execution
           on_failure(e)
-        rescue StandardError => e
-          failure(e)
+        rescue Lite::Command::Error, StandardError => e
+          error(e)
           after_execution
           on_error(e)
         end
