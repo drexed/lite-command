@@ -47,48 +47,12 @@ module Lite
           !fault?
         end
 
-        def noop?(message = nil)
-          status = @noop || false
-          return status if message.nil?
-
-          reason == message
-        end
-
-        def invalid?(message = nil)
-          status = @invalid || false
-          return status if message.nil?
-
-          reason == message
-        end
-
-        def failure?(message = nil)
-          status = @failure || false
-          return status if message.nil?
-
-          reason == message
-        end
-
-        def error?(message = nil)
-          status = @error || false
-          return status if message.nil?
-
-          reason == message
-        end
-
         def fault?(message = nil)
-          noop?(message) ||
-            invalid?(message) ||
-            failure?(message) ||
-            error?(message)
+          FAULTS.any? { |s| send(:"#{s.downcase}?", message) }
         end
 
         def status
-          return SUCCESS if success?
-          return NOOP if noop?
-          return INVALID if invalid?
-          return FAILURE if failure?
-
-          ERROR
+          STATUSES.find { |s| send(:"#{s.downcase}?") }
         end
 
         def faulter?
@@ -101,6 +65,18 @@ module Lite
 
         def thrown_fault?
           fault? && !faulter?
+        end
+
+        FAULTS.each do |call_fault|
+          fault_method = call_fault.downcase
+
+          # eg: error?(message = nil)
+          define_method(:"#{fault_method}?") do |message = nil|
+            fault_result = instance_variable_get(:"@#{fault_method}") || false
+            return fault_result if message.nil?
+
+            reason == message
+          end
         end
 
         private
@@ -118,70 +94,40 @@ module Lite
             end
         end
 
-        def noop(obj)
-          fault(obj)
-          @noop = true
-        end
-
-        def noop!(obj)
-          noop(obj)
-          raise Lite::Command::Noop.new(faulter, self, reason)
-        end
-
-        def on_noop(_error)
-          # Define in your class to run code when a NOOP happens
-        end
-
-        def invalid(obj)
-          fault(obj)
-          @invalid = true
-        end
-
-        def invalid!(obj)
-          invalid(obj)
-          raise Lite::Command::Invalid.new(faulter, self, reason)
-        end
-
-        def on_invalid(_error)
-          # Define in your class to run code when a NOOP happens
-        end
-
-        def failure(obj)
-          fault(obj)
-          @failure = true
-        end
-
-        def fail!(obj)
-          failure(obj)
-          raise Lite::Command::Failure.new(faulter, self, reason)
-        end
-
-        def on_failure(_error)
-          # Define in your class to run code when a Failure happens
-        end
-
-        def error(obj)
-          fault(obj)
-          @error = true
-        end
-
-        def error!(obj)
-          error(obj)
-          raise Lite::Command::Error.new(faulter, self, reason)
-        end
-
-        def on_error(_error)
-          # Define in your class to run code when a StandardError happens
+        def fault!(klass, obj)
+          exception = klass.new(faulter, self, reason)
+          exception.set_backtrace(obj.backtrace) if obj.respond_to?(:backtrace)
+          raise exception
         end
 
         def throw!(step)
-          case step.status
-          when NOOP then noop!(step)
-          when INVALID then invalid!(step)
-          when FAILURE then fail!(step)
-          when ERROR then error!(step)
+          return if step.success?
+
+          send(:"#{step.status.downcase}!", step)
+        end
+
+        FAULTS.each do |call_fault|
+          fault_method = call_fault.downcase
+
+          # eg: error(object)
+          define_method(:"#{fault_method}") do |object|
+            fault(object)
+            instance_variable_set(:"@#{fault_method}", true)
+          end
+
+          # eg: invalid!(object)
+          define_method(:"#{fault_method}!") do |object|
+            send(:"#{fault_method}", object)
+            fault!(Lite::Command.const_get(fault_method.capitalize), object)
+          end
+
+          # eg: on_noop(exception)
+          define_method(:"on_#{fault_method}") do |_exception|
+            # Define in your class to run code when a StandardError happens
           end
         end
+
+        alias fail! failure!
 
       end
     end

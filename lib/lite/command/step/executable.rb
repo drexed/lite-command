@@ -54,10 +54,10 @@ module Lite
         STATES.each do |execution_state|
           state_method = execution_state.downcase
 
-          # Getter methods to compare current state, eg: running?
+          # eg: running?
           define_method(:"#{state_method}?") { state == execution_state }
 
-          # Getter methods to set current state, eg: dnf!
+          # eg: dnf!
           define_method(:"#{state_method}!") { @state = execution_state }
         end
 
