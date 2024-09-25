@@ -72,10 +72,10 @@ RSpec.describe Lite::Command::Base do
 
       it "raises a dynamic Lite::Command::Noop error" do
         allow(step_instance).to receive(:raise_dynamic_faults?).and_return(true)
-        expect { step_instance.execute! }.to raise_error { |error|
+        expect { step_instance.execute! }.to(raise_error do |error|
           expect(error.class.name).to eq("CommandHelpers::NoopStep::Noop")
           expect(error.message).to eq("Nooped step")
-        }
+        end)
       end
 
       it "returns a dnf state" do
@@ -103,10 +103,10 @@ RSpec.describe Lite::Command::Base do
 
       it "raises a dynamic Lite::Command::Invalid error" do
         allow(step_instance).to receive(:raise_dynamic_faults?).and_return(true)
-        expect { step_instance.execute! }.to raise_error { |error|
+        expect { step_instance.execute! }.to(raise_error do |error|
           expect(error.class.name).to eq("CommandHelpers::InvalidStep::Invalid")
           expect(error.message).to eq("Invalid step")
-        }
+        end)
       end
 
       it "returns a dnf state" do
@@ -134,10 +134,10 @@ RSpec.describe Lite::Command::Base do
 
       it "raises a dynamic Lite::Command::Failure error" do
         allow(step_instance).to receive(:raise_dynamic_faults?).and_return(true)
-        expect { step_instance.execute! }.to raise_error { |error|
+        expect { step_instance.execute! }.to(raise_error do |error|
           expect(error.class.name).to eq("CommandHelpers::FailStep::Failure")
           expect(error.message).to eq("Failed step")
-        }
+        end)
       end
 
       it "returns a dnf state" do
@@ -165,10 +165,10 @@ RSpec.describe Lite::Command::Base do
 
       it "raises a dynamic Lite::Command::Error error" do
         allow(step_instance).to receive(:raise_dynamic_faults?).and_return(true)
-        expect { step_instance.execute! }.to raise_error { |error|
+        expect { step_instance.execute! }.to(raise_error do |error|
           expect(error.class.name).to eq("CommandHelpers::ErrorStep::Error")
           expect(error.message).to eq("Errored step")
-        }
+        end)
       end
 
       it "returns a dnf state" do

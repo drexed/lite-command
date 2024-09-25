@@ -32,7 +32,9 @@ module Lite
           around_execution { call }
         rescue StandardError => e
           after_execution
+
           raise(e) unless raise_dynamic_faults? && e.is_a?(Lite::Command::Fault)
+
           raise_dynamic_fault(e)
         end
 

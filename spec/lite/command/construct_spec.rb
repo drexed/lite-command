@@ -6,13 +6,13 @@ RSpec.describe Lite::Command::Construct do
   subject(:construct) { described_class.init(context) }
 
   let(:context) do
-    { attr_1: "val_1" }
+    { attr_one: "val_one" }
   end
 
   describe ".init" do
     it "creates a new open struct" do
       expect(construct.class).to eq(described_class)
-      expect(construct.attr_1).to eq("val_1")
+      expect(construct.attr_one).to eq("val_one")
     end
   end
 
@@ -27,8 +27,8 @@ RSpec.describe Lite::Command::Construct do
 
   describe ".merge!" do
     it "adds new key value pair to the construct" do
-      construct[:attr_2] = "val_2"
-      expect(construct.attr_2).to eq("val_2")
+      construct[:attr_two] = "val_two"
+      expect(construct.attr_two).to eq("val_two")
     end
   end
 end
