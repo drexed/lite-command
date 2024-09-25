@@ -18,19 +18,11 @@ module Lite
 
         def execute
           around_execution { call }
-        rescue Lite::Command::Noop => e
-          noop(e)
+        rescue Lite::Command::Fault => e
+          send(:"#{e.type}", e)
           after_execution
-          on_noop(e)
-        rescue Lite::Command::Invalid => e
-          invalid(e)
-          after_execution
-          on_invalid(e)
-        rescue Lite::Command::Failure => e
-          failure(e)
-          after_execution
-          on_failure(e)
-        rescue Lite::Command::Error, StandardError => e
+          send(:"on_#{e.type}", e)
+        rescue StandardError => e
           error(e)
           after_execution
           on_error(e)
@@ -38,6 +30,14 @@ module Lite
 
         def execute!
           around_execution { call }
+        # rescue Lite::Command::Fault => e
+        #   after_execution
+
+        #   fault_type = e.class.name.split("::").last
+        #   self.class.const_set(fault_type, Class.new(e.class))
+        #   new_e = self.class.const_get(fault_type)
+        #   new_e = new_e.new(e.faulter, e.thrower, e.reason)
+        #   raise(new_e)
         rescue StandardError => e
           after_execution
           raise(e)

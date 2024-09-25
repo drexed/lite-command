@@ -17,6 +17,10 @@ module Lite
         super(reason)
       end
 
+      def type
+        self.class.name.split("::").last.downcase
+      end
+
     end
 
     # Noop represents skipping completion of call execution early
