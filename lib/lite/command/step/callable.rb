@@ -2,6 +2,7 @@
 
 module Lite
   module Command
+
     # Status represents the state of the callable code. If no fault
     # is thrown then a status of SUCCESS is returned even if `call`
     # has not been executed.
@@ -24,6 +25,7 @@ module Lite
         end
 
         module ClassMethods
+
           def call(context = {})
             new(context).tap(&:execute)
           end
@@ -31,6 +33,7 @@ module Lite
           def call!(context = {})
             new(context).tap(&:execute!)
           end
+
         end
 
         def call
@@ -179,5 +182,6 @@ module Lite
 
       end
     end
+
   end
 end

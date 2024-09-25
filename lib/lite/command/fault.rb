@@ -2,6 +2,7 @@
 
 module Lite
   module Command
+
     # Fault represent a stoppage of a call execution. This error should
     # not be raised directly since it wont provide any context. Use
     # `Noop`, `Invalid`, `Failure`, and `Error` to signify severity.
@@ -39,5 +40,6 @@ module Lite
     # that could not complete.
     # eg: ApiServerError: stop since there was a 3rd party issue
     class Error < Fault; end
+
   end
 end
