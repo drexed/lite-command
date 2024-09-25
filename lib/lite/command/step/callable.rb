@@ -6,12 +6,15 @@ module Lite
     # Status represents the state of the callable code. If no fault
     # is thrown then a status of SUCCESS is returned even if `call`
     # has not been executed.
-    STATUSES = [
-      SUCCESS = "SUCCESS",
+    FAULTS = [
       NOOP = "NOOP",
       INVALID = "INVALID",
       FAILURE = "FAILURE",
       ERROR = "ERROR"
+    ].freeze
+    STATUSES = [
+      *FAULTS,
+      SUCCESS = "SUCCESS"
     ].freeze
 
     module Step
