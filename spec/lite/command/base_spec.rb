@@ -70,6 +70,45 @@ RSpec.describe Lite::Command::Base do
         expect { step_instance.execute! }.to raise_error(Lite::Command::Noop, "Nooped step")
       end
 
+      it "raises a dynamic Lite::Command::Noop error" do
+        allow(step_instance).to receive(:raise_dynamic_faults?).and_return(true)
+        expect { step_instance.execute! }.to raise_error { |error|
+          expect(error.class.name).to eq("CommandHelpers::NoopStep::Noop")
+          expect(error.message).to eq("Nooped step")
+        }
+      end
+
+      it "returns a dnf state" do
+        expect(step).to be_dnf
+        expect(step.state).to eq(Lite::Command::DNF)
+      end
+    end
+
+    context "when invalid" do
+      let(:step_class) { invalid_step }
+
+      it "runs after_execution callback method within the rescue block" do
+        expect(step_instance).to receive(:after_execution).once
+        step
+      end
+
+      it "runs on_invalid callback method within the rescue block" do
+        expect(step_instance).to receive(:on_invalid).once
+        step
+      end
+
+      it "raises a Lite::Command::Invalid error" do
+        expect { step_instance.execute! }.to raise_error(Lite::Command::Invalid, "Invalid step")
+      end
+
+      it "raises a dynamic Lite::Command::Invalid error" do
+        allow(step_instance).to receive(:raise_dynamic_faults?).and_return(true)
+        expect { step_instance.execute! }.to raise_error { |error|
+          expect(error.class.name).to eq("CommandHelpers::InvalidStep::Invalid")
+          expect(error.message).to eq("Invalid step")
+        }
+      end
+
       it "returns a dnf state" do
         expect(step).to be_dnf
         expect(step.state).to eq(Lite::Command::DNF)
@@ -91,6 +130,45 @@ RSpec.describe Lite::Command::Base do
 
       it "raises a Lite::Command::Failure error" do
         expect { step_instance.execute! }.to raise_error(Lite::Command::Failure, "Failed step")
+      end
+
+      it "raises a dynamic Lite::Command::Failure error" do
+        allow(step_instance).to receive(:raise_dynamic_faults?).and_return(true)
+        expect { step_instance.execute! }.to raise_error { |error|
+          expect(error.class.name).to eq("CommandHelpers::FailStep::Failure")
+          expect(error.message).to eq("Failed step")
+        }
+      end
+
+      it "returns a dnf state" do
+        expect(step).to be_dnf
+        expect(step.state).to eq(Lite::Command::DNF)
+      end
+    end
+
+    context "when error" do
+      let(:step_class) { error_step }
+
+      it "runs after_execution callback method within the rescue block" do
+        expect(step_instance).to receive(:after_execution).once
+        step
+      end
+
+      it "runs on_error callback method within the rescue block" do
+        expect(step_instance).to receive(:on_error).once
+        step
+      end
+
+      it "raises a Lite::Command::Error error" do
+        expect { step_instance.execute! }.to raise_error(Lite::Command::Error, "Errored step")
+      end
+
+      it "raises a dynamic Lite::Command::Error error" do
+        allow(step_instance).to receive(:raise_dynamic_faults?).and_return(true)
+        expect { step_instance.execute! }.to raise_error { |error|
+          expect(error.class.name).to eq("CommandHelpers::ErrorStep::Error")
+          expect(error.message).to eq("Errored step")
+        }
       end
 
       it "returns a dnf state" do
@@ -116,6 +194,11 @@ RSpec.describe Lite::Command::Base do
       end
 
       it "raises the true exception" do
+        expect { step_instance.execute! }.to raise_error(RuntimeError, "Exception step")
+      end
+
+      it "raises the true exception when dynamic option is on" do
+        allow(step_instance).to receive(:raise_dynamic_faults?).and_return(true)
         expect { step_instance.execute! }.to raise_error(RuntimeError, "Exception step")
       end
 
@@ -395,9 +478,8 @@ RSpec.describe Lite::Command::Base do
     end
 
     context "when not enabled" do
-      let(:step_class) { fail_step }
-
       it "removes the trace key" do
+        allow_any_instance_of(step_class).to receive(:trace_key).and_return(nil)
         expect(step.to_h.keys).not_to include(:trace)
       end
     end

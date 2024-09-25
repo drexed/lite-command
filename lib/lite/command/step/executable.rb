@@ -19,9 +19,9 @@ module Lite
         def execute
           around_execution { call }
         rescue Lite::Command::Fault => e
-          send(:"#{e.type}", e)
+          send(:"#{e.fault_method}", e)
           after_execution
-          send(:"on_#{e.type}", e)
+          send(:"on_#{e.fault_method}", e)
         rescue StandardError => e
           error(e)
           after_execution
@@ -30,17 +30,10 @@ module Lite
 
         def execute!
           around_execution { call }
-        # rescue Lite::Command::Fault => e
-        #   after_execution
-
-        #   fault_type = e.class.name.split("::").last
-        #   self.class.const_set(fault_type, Class.new(e.class))
-        #   new_e = self.class.const_get(fault_type)
-        #   new_e = new_e.new(e.faulter, e.thrower, e.reason)
-        #   raise(new_e)
         rescue StandardError => e
           after_execution
-          raise(e)
+          raise(e) unless raise_dynamic_faults? && e.is_a?(Lite::Command::Fault)
+          raise_dynamic_fault(e)
         end
 
         def state
@@ -67,7 +60,7 @@ module Lite
           Time.respond_to?(:current) ? Time.current : Time.now
         end
 
-        def before_execution_run_data
+        def before_execution_metadata
           metadata.started_at = current_execution_time
         end
 
@@ -76,7 +69,7 @@ module Lite
         end
 
         def before_execution
-          before_execution_run_data
+          before_execution_metadata
           advance_execution_trace
           executing!
           on_before_execution
@@ -88,7 +81,7 @@ module Lite
           after_execution
         end
 
-        def after_execution_run_data
+        def after_execution_metadata
           metadata.finished_at = current_execution_time
           metadata.runtime = metadata.finished_at - metadata.started_at
         end
@@ -99,7 +92,7 @@ module Lite
 
         def after_execution
           fault? ? dnf! : complete!
-          after_execution_run_data
+          after_execution_metadata
           append_execution_result
           on_after_execution
         end

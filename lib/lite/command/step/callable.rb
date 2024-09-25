@@ -48,7 +48,7 @@ module Lite
         end
 
         def fault?(message = nil)
-          FAULTS.any? { |s| send(:"#{s.downcase}?", message) }
+          FAULTS.any? { |f| send(:"#{f.downcase}?", message) }
         end
 
         def status
@@ -81,23 +81,35 @@ module Lite
 
         private
 
-        def fault(obj)
-          @faulter ||= obj.try(:faulter) || self
-          @thrower ||= obj.try(:executed?) ? obj : (obj.try(:thrower) || faulter)
+        def fault(object)
+          @faulter ||= object.try(:faulter) || self
+          @thrower ||= object.try(:executed?) ? object : (object.try(:thrower) || faulter)
           @reason =
-            if obj.respond_to?(:reason)
-              obj.reason
-            elsif obj.respond_to?(:message)
-              "[#{obj.class.name}] #{obj.message}".chomp(".")
+            if object.respond_to?(:reason)
+              object.reason
+            elsif object.respond_to?(:message)
+              "[#{object.class.name}] #{object.message}".chomp(".")
             else
-              obj
+              object
             end
         end
 
-        def fault!(klass, obj)
+        # eg: Lite::Command::Noop.new(...)
+        def raise_fault(klass, object)
           exception = klass.new(faulter, self, reason)
-          exception.set_backtrace(obj.backtrace) if obj.respond_to?(:backtrace)
-          raise exception
+          exception.set_backtrace(object.backtrace) if object.respond_to?(:backtrace)
+          raise(exception)
+        end
+
+        # eg: Users::ResetPassword::Noop.new(...)
+        def raise_dynamic_fault(exception)
+          self.class.const_set(exception.demodualized_name, Class.new(exception.class))
+          fault_klass = self.class.const_get(exception.demodualized_name)
+          raise_fault(fault_klass, exception)
+        end
+
+        def raise_dynamic_faults?
+          false
         end
 
         def throw!(step)
@@ -118,7 +130,7 @@ module Lite
           # eg: invalid!(object)
           define_method(:"#{fault_method}!") do |object|
             send(:"#{fault_method}", object)
-            fault!(Lite::Command.const_get(fault_method.capitalize), object)
+            raise_fault(Lite::Command.const_get(fault_method.capitalize), object)
           end
 
           # eg: on_noop(exception)
