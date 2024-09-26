@@ -81,17 +81,36 @@ module Lite
 
         private
 
+        def fault_faulter(object)
+          if object.respond_to?(:faulter)
+            object.faulter
+          end || self
+        end
+
+        def fault_thrower(object)
+          if object.respond_to?(:executed?) && object.executed?
+            object
+          else
+            if object.respond_to?(:thrower)
+              object.thrower
+            end || faulter
+          end
+        end
+
+        def fault_reason(object)
+          if object.respond_to?(:reason)
+            object.reason
+          elsif object.respond_to?(:message)
+            "[#{object.class.name}] #{object.message}".chomp(".")
+          else
+            object
+          end
+        end
+
         def fault(object)
-          @faulter ||= object.try(:faulter) || self
-          @thrower ||= object.try(:executed?) ? object : (object.try(:thrower) || faulter)
-          @reason =
-            if object.respond_to?(:reason)
-              object.reason
-            elsif object.respond_to?(:message)
-              "[#{object.class.name}] #{object.message}".chomp(".")
-            else
-              object
-            end
+          @faulter ||= fault_faulter(object)
+          @thrower ||= fault_thrower(object)
+          @reason ||= fault_reason(object)
         end
 
         # eg: Lite::Command::Noop.new(...)
