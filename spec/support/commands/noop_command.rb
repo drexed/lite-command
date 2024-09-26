@@ -3,7 +3,7 @@
 class NoopCommand < Lite::Command::Base
 
   def call
-    noop!("Nooped command")
+    noop!("[!] command stopped due to noop")
   end
 
   private

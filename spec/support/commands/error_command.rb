@@ -3,7 +3,7 @@
 class ErrorCommand < Lite::Command::Base
 
   def call
-    error!("Errored command")
+    error!("[!] command stopped due to error")
   end
 
 end

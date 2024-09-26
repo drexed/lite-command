@@ -3,7 +3,7 @@
 class ExceptionCommand < Lite::Command::Base
 
   def call
-    raise "Exception command"
+    raise "[!] command stopped due to exception"
   end
 
 end

@@ -60,14 +60,14 @@ RSpec.describe Lite::Command::Base do
       end
 
       it "raises a Lite::Command::Noop error" do
-        expect { command_instance.execute! }.to raise_error(Lite::Command::Noop, "Nooped command")
+        expect { command_instance.execute! }.to raise_error(Lite::Command::Noop, "[!] command stopped due to noop")
       end
 
       it "raises a dynamic Lite::Command::Noop error" do
         allow(command_instance).to receive(:raise_dynamic_faults?).and_return(true)
         expect { command_instance.execute! }.to(raise_error do |error|
           expect(error.class.name).to eq("NoopCommand::Noop")
-          expect(error.message).to eq("Nooped command")
+          expect(error.message).to eq("[!] command stopped due to noop")
         end)
       end
 
@@ -91,14 +91,14 @@ RSpec.describe Lite::Command::Base do
       end
 
       it "raises a Lite::Command::Invalid error" do
-        expect { command_instance.execute! }.to raise_error(Lite::Command::Invalid, "Invalid command")
+        expect { command_instance.execute! }.to raise_error(Lite::Command::Invalid, "[!] command stopped due to invalid")
       end
 
       it "raises a dynamic Lite::Command::Invalid error" do
         allow(command_instance).to receive(:raise_dynamic_faults?).and_return(true)
         expect { command_instance.execute! }.to(raise_error do |error|
           expect(error.class.name).to eq("InvalidCommand::Invalid")
-          expect(error.message).to eq("Invalid command")
+          expect(error.message).to eq("[!] command stopped due to invalid")
         end)
       end
 
@@ -109,7 +109,7 @@ RSpec.describe Lite::Command::Base do
     end
 
     context "when failure" do
-      let(:command_class) { FailCommand }
+      let(:command_class) { FailureCommand }
 
       it "runs after_execution callback method within the rescue block" do
         expect(command_instance).to receive(:after_execution).once
@@ -122,14 +122,14 @@ RSpec.describe Lite::Command::Base do
       end
 
       it "raises a Lite::Command::Failure error" do
-        expect { command_instance.execute! }.to raise_error(Lite::Command::Failure, "Failed command")
+        expect { command_instance.execute! }.to raise_error(Lite::Command::Failure, "[!] command stopped due to failure")
       end
 
       it "raises a dynamic Lite::Command::Failure error" do
         allow(command_instance).to receive(:raise_dynamic_faults?).and_return(true)
         expect { command_instance.execute! }.to(raise_error do |error|
-          expect(error.class.name).to eq("FailCommand::Failure")
-          expect(error.message).to eq("Failed command")
+          expect(error.class.name).to eq("FailureCommand::Failure")
+          expect(error.message).to eq("[!] command stopped due to failure")
         end)
       end
 
@@ -153,14 +153,14 @@ RSpec.describe Lite::Command::Base do
       end
 
       it "raises a Lite::Command::Error error" do
-        expect { command_instance.execute! }.to raise_error(Lite::Command::Error, "Errored command")
+        expect { command_instance.execute! }.to raise_error(Lite::Command::Error, "[!] command stopped due to error")
       end
 
       it "raises a dynamic Lite::Command::Error error" do
         allow(command_instance).to receive(:raise_dynamic_faults?).and_return(true)
         expect { command_instance.execute! }.to(raise_error do |error|
           expect(error.class.name).to eq("ErrorCommand::Error")
-          expect(error.message).to eq("Errored command")
+          expect(error.message).to eq("[!] command stopped due to error")
         end)
       end
 
@@ -187,12 +187,12 @@ RSpec.describe Lite::Command::Base do
       end
 
       it "raises the true exception" do
-        expect { command_instance.execute! }.to raise_error(RuntimeError, "Exception command")
+        expect { command_instance.execute! }.to raise_error(RuntimeError, "[!] command stopped due to exception")
       end
 
       it "raises the true exception when dynamic option is on" do
         allow(command_instance).to receive(:raise_dynamic_faults?).and_return(true)
-        expect { command_instance.execute! }.to raise_error(RuntimeError, "Exception command")
+        expect { command_instance.execute! }.to raise_error(RuntimeError, "[!] command stopped due to exception")
       end
 
       it "runs on_error callback method within the rescue block" do
@@ -230,7 +230,7 @@ RSpec.describe Lite::Command::Base do
         expect(command).to be_faulter
         expect(command).to be_thrower
         expect(command).not_to be_thrown_fault
-        expect(command.noop?("Nooped command")).to be(true)
+        expect(command.noop?("[!] command stopped due to noop")).to be(true)
         expect(command.noop?("Some reason")).to be(false)
         expect(command.status).to eq(Lite::Command::NOOP)
       end
@@ -244,21 +244,21 @@ RSpec.describe Lite::Command::Base do
         expect(command).to be_faulter
         expect(command).to be_thrower
         expect(command).not_to be_thrown_fault
-        expect(command.error?("Invalid command")).to be(true)
+        expect(command.error?("[!] command stopped due to invalid")).to be(true)
         expect(command.error?("Some reason")).to be(false)
         expect(command.status).to eq(Lite::Command::INVALID)
       end
     end
 
     context "when failure" do
-      let(:command_class) { FailCommand }
+      let(:command_class) { FailureCommand }
 
       it "returns a failure status" do
         expect(command).to be_failure
         expect(command).to be_faulter
         expect(command).to be_thrower
         expect(command).not_to be_thrown_fault
-        expect(command.failure?("Failed command")).to be(true)
+        expect(command.failure?("[!] command stopped due to failure")).to be(true)
         expect(command.failure?("Some reason")).to be(false)
         expect(command.status).to eq(Lite::Command::FAILURE)
       end
@@ -272,7 +272,7 @@ RSpec.describe Lite::Command::Base do
         expect(command).to be_faulter
         expect(command).to be_thrower
         expect(command).not_to be_thrown_fault
-        expect(command.error?("Errored command")).to be(true)
+        expect(command.error?("[!] command stopped due to error")).to be(true)
         expect(command.error?("Some reason")).to be(false)
         expect(command.status).to eq(Lite::Command::ERROR)
       end
@@ -286,7 +286,7 @@ RSpec.describe Lite::Command::Base do
         expect(command).to be_faulter
         expect(command).to be_thrower
         expect(command).not_to be_thrown_fault
-        expect(command.error?("[RuntimeError] Exception command")).to be(true)
+        expect(command.error?("[RuntimeError] [!] command stopped due to exception")).to be(true)
         expect(command.error?("Some reason")).to be(false)
         expect(command.status).to eq(Lite::Command::ERROR)
       end
@@ -300,7 +300,7 @@ RSpec.describe Lite::Command::Base do
         expect(command).not_to be_faulter
         expect(command).not_to be_thrower
         expect(command).to be_thrown_fault
-        expect(command.fault?("Nooped command")).to be(true)
+        expect(command.fault?("[!] command stopped due to noop")).to be(true)
         expect(command.fault?("Some reason")).to be(false)
         expect(command.faulter?).to be(false)
         expect(command.thrower?).to be(false)
@@ -353,7 +353,7 @@ RSpec.describe Lite::Command::Base do
           "result" => "NOOP",
           "state" => "DNF",
           "status" => "NOOP",
-          "reason" => "Nooped command",
+          "reason" => "[!] command stopped due to noop",
           "fault" => 1,
           "throw" => 1,
           "started_at" => "2021-05-11T18:20:00.000-04:00",
@@ -374,7 +374,7 @@ RSpec.describe Lite::Command::Base do
           "result" => "INVALID",
           "state" => "DNF",
           "status" => "INVALID",
-          "reason" => "Invalid command",
+          "reason" => "[!] command stopped due to invalid",
           "started_at" => "2021-05-11T18:20:00.000-04:00",
           "finished_at" => "2021-05-11T18:20:00.000-04:00",
           "runtime" => 0.0
@@ -383,17 +383,17 @@ RSpec.describe Lite::Command::Base do
     end
 
     context "when failure" do
-      let(:command_class) { FailCommand }
+      let(:command_class) { FailureCommand }
 
       it "returns a failure status" do
         expect(command.results).not_to be_empty
         expect(command.result).to eq(Lite::Command::FAILURE)
         expect(command.as_json).to eq(
-          "command" => "FailCommand",
+          "command" => "FailureCommand",
           "result" => "FAILURE",
           "state" => "DNF",
           "status" => "FAILURE",
-          "reason" => "Failed command",
+          "reason" => "[!] command stopped due to failure",
           "started_at" => "2021-05-11T18:20:00.000-04:00",
           "finished_at" => "2021-05-11T18:20:00.000-04:00",
           "runtime" => 0.0
@@ -412,7 +412,7 @@ RSpec.describe Lite::Command::Base do
           "result" => "ERROR",
           "state" => "DNF",
           "status" => "ERROR",
-          "reason" => "Errored command",
+          "reason" => "[!] command stopped due to error",
           "started_at" => "2021-05-11T18:20:00.000-04:00",
           "finished_at" => "2021-05-11T18:20:00.000-04:00",
           "runtime" => 0.0
@@ -431,7 +431,7 @@ RSpec.describe Lite::Command::Base do
           "result" => "ERROR",
           "state" => "DNF",
           "status" => "ERROR",
-          "reason" => "[RuntimeError] Exception command",
+          "reason" => "[RuntimeError] [!] command stopped due to exception",
           "started_at" => "2021-05-11T18:20:00.000-04:00",
           "finished_at" => "2021-05-11T18:20:00.000-04:00",
           "runtime" => 0.0
@@ -452,7 +452,7 @@ RSpec.describe Lite::Command::Base do
           "result" => "DNF",
           "state" => "DNF",
           "status" => "NOOP",
-          "reason" => "Nooped command",
+          "reason" => "[!] command stopped due to noop",
           "fault" => 3,
           "throw" => 3,
           "started_at" => "2021-05-11T18:20:00.000-04:00",

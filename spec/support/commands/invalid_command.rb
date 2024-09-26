@@ -3,7 +3,7 @@
 class InvalidCommand < Lite::Command::Base
 
   def call
-    invalid!("Invalid command")
+    invalid!("[!] command stopped due to invalid")
   end
 
 end
