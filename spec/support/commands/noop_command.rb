@@ -9,7 +9,7 @@ class NoopCommand < Lite::Command::Base
   private
 
   def trace_key
-    :pass
+    :pass # TODO: verify this is ok
   end
 
 end
