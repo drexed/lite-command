@@ -5,7 +5,7 @@ require "spec_helper"
 RSpec.describe Lite::Command::Base do
   subject(:command) { command_class.call }
 
-  let(:command_class) { PassCommand }
+  let(:command_class) { SuccessCommand }
   let(:command_instance) { command_class.new }
 
   before { travel_to(Time.parse("2021-05-11 17:20:00.000000000 -0500")) }
@@ -314,7 +314,7 @@ RSpec.describe Lite::Command::Base do
         expect(command_instance.results).to be_empty
         expect(command_instance.result).to eq(Lite::Command::PENDING)
         expect(command_instance.as_json).to eq(
-          "command" => "PassCommand",
+          "command" => "SuccessCommand",
           "result" => "PENDING",
           "state" => "PENDING",
           "status" => "SUCCESS"
@@ -329,7 +329,7 @@ RSpec.describe Lite::Command::Base do
         expect(command.as_json).to eq(
           "index" => 1,
           "trace" => "1[1]",
-          "command" => "PassCommand",
+          "command" => "SuccessCommand",
           "result" => "SUCCESS",
           "state" => "COMPLETE",
           "status" => "SUCCESS",
@@ -439,10 +439,10 @@ RSpec.describe Lite::Command::Base do
       end
     end
 
-    context "when fault" do
+    context "when thrown" do
       let(:command_class) { ThrownCommand }
 
-      it "returns fault" do
+      it "returns childs error status" do
         expect(command.results).not_to be_empty
         expect(command.result).to eq(Lite::Command::DNF)
         expect(command.as_json).to eq(
