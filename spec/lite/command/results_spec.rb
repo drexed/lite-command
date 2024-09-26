@@ -3,15 +3,15 @@
 require "spec_helper"
 
 RSpec.describe Lite::Command::Results do
-  subject(:step) { CommandHelpers::ThrownStep.call }
+  subject(:command) { CommandHelpers::ThrownCommand.call }
 
   describe ".<<" do
     it "adds results and sorts them by trace order" do
-      expect(step.results.map(&:class)).to eq(
+      expect(command.results.map(&:class)).to eq(
         [
-          CommandHelpers::ThrownStep,
-          CommandHelpers::PassStep,
-          CommandHelpers::NoopStep
+          CommandHelpers::ThrownCommand,
+          CommandHelpers::PassCommand,
+          CommandHelpers::NoopCommand
         ]
       )
     end

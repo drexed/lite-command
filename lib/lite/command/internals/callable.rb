@@ -116,10 +116,10 @@ module Lite
           false
         end
 
-        def throw!(step)
-          return if step.success?
+        def throw!(command)
+          return if command.success?
 
-          send(:"#{step.status.downcase}!", step)
+          send(:"#{command.status.downcase}!", command)
         end
 
         FAULTS.each do |call_fault|

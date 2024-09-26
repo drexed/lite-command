@@ -27,7 +27,7 @@ module Lite
           {
             index: trace.index,
             trace: trace.to_fs,
-            step: self.class.name,
+            command: self.class.name,
             result:,
             state:,
             status:,
