@@ -17,7 +17,7 @@ module Lite
         current_depth_keys = keys[0..keys.index(key)]
         trace = Lite::Command::Trace.init(to_h.slice(*current_depth_keys))
         trace.increment(:index, key)
-        dependent_key?(key) ? Array.wrap(trace.position) << key : trace.position = [key]
+        dependent_key?(key) ? Array(trace.position) << key : trace.position = [key]
         trace
       end
 
@@ -35,7 +35,7 @@ module Lite
 
       def to_coordinates_fs
         points = traces.each_with_object([]) do |(k, v), a|
-          dependent_key?(k) ? Array.wrap(a.last) << v : a << [v]
+          dependent_key?(k) ? Array(a.last) << v : a << [v]
         end
 
         points.map { |v| v.join("^") }.join(".")

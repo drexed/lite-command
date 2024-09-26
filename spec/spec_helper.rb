@@ -9,7 +9,12 @@ require "generator_spec"
 require "lite/command"
 
 spec_path = Pathname.new(File.expand_path("../spec", File.dirname(__FILE__)))
-load(spec_path.join("support/command_helpers.rb"))
+
+%w[commands].each do |dir|
+  Dir.each_child(spec_path.join("support/#{dir}")) do |f|
+    load(spec_path.join("support/#{dir}/#{f}"))
+  end
+end
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

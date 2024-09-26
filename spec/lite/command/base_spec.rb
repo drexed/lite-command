@@ -5,15 +5,8 @@ require "spec_helper"
 RSpec.describe Lite::Command::Base do
   subject(:command) { command_class.call }
 
-  let(:command_class) { pass_command }
+  let(:command_class) { PassCommand }
   let(:command_instance) { command_class.new }
-  let(:pass_command) { CommandHelpers::PassCommand }
-  let(:noop_command) { CommandHelpers::NoopCommand }
-  let(:invalid_command) { CommandHelpers::InvalidCommand }
-  let(:fail_command) { CommandHelpers::FailCommand }
-  let(:error_command) { CommandHelpers::ErrorCommand }
-  let(:exception_command) { CommandHelpers::ExceptionCommand }
-  let(:thrown_command) { CommandHelpers::ThrownCommand }
 
   before { travel_to(Time.parse("2021-05-11 17:20:00.000000000 -0500")) }
   after { travel_back }
@@ -54,7 +47,7 @@ RSpec.describe Lite::Command::Base do
     end
 
     context "when noop" do
-      let(:command_class) { noop_command }
+      let(:command_class) { NoopCommand }
 
       it "runs after_execution callback method within the rescue block" do
         expect(command_instance).to receive(:after_execution).once
@@ -73,7 +66,7 @@ RSpec.describe Lite::Command::Base do
       it "raises a dynamic Lite::Command::Noop error" do
         allow(command_instance).to receive(:raise_dynamic_faults?).and_return(true)
         expect { command_instance.execute! }.to(raise_error do |error|
-          expect(error.class.name).to eq("CommandHelpers::NoopCommand::Noop")
+          expect(error.class.name).to eq("NoopCommand::Noop")
           expect(error.message).to eq("Nooped command")
         end)
       end
@@ -85,7 +78,7 @@ RSpec.describe Lite::Command::Base do
     end
 
     context "when invalid" do
-      let(:command_class) { invalid_command }
+      let(:command_class) { InvalidCommand }
 
       it "runs after_execution callback method within the rescue block" do
         expect(command_instance).to receive(:after_execution).once
@@ -104,7 +97,7 @@ RSpec.describe Lite::Command::Base do
       it "raises a dynamic Lite::Command::Invalid error" do
         allow(command_instance).to receive(:raise_dynamic_faults?).and_return(true)
         expect { command_instance.execute! }.to(raise_error do |error|
-          expect(error.class.name).to eq("CommandHelpers::InvalidCommand::Invalid")
+          expect(error.class.name).to eq("InvalidCommand::Invalid")
           expect(error.message).to eq("Invalid command")
         end)
       end
@@ -116,7 +109,7 @@ RSpec.describe Lite::Command::Base do
     end
 
     context "when failure" do
-      let(:command_class) { fail_command }
+      let(:command_class) { FailCommand }
 
       it "runs after_execution callback method within the rescue block" do
         expect(command_instance).to receive(:after_execution).once
@@ -135,7 +128,7 @@ RSpec.describe Lite::Command::Base do
       it "raises a dynamic Lite::Command::Failure error" do
         allow(command_instance).to receive(:raise_dynamic_faults?).and_return(true)
         expect { command_instance.execute! }.to(raise_error do |error|
-          expect(error.class.name).to eq("CommandHelpers::FailCommand::Failure")
+          expect(error.class.name).to eq("FailCommand::Failure")
           expect(error.message).to eq("Failed command")
         end)
       end
@@ -147,7 +140,7 @@ RSpec.describe Lite::Command::Base do
     end
 
     context "when error" do
-      let(:command_class) { error_command }
+      let(:command_class) { ErrorCommand }
 
       it "runs after_execution callback method within the rescue block" do
         expect(command_instance).to receive(:after_execution).once
@@ -166,7 +159,7 @@ RSpec.describe Lite::Command::Base do
       it "raises a dynamic Lite::Command::Error error" do
         allow(command_instance).to receive(:raise_dynamic_faults?).and_return(true)
         expect { command_instance.execute! }.to(raise_error do |error|
-          expect(error.class.name).to eq("CommandHelpers::ErrorCommand::Error")
+          expect(error.class.name).to eq("ErrorCommand::Error")
           expect(error.message).to eq("Errored command")
         end)
       end
@@ -178,7 +171,7 @@ RSpec.describe Lite::Command::Base do
     end
 
     context "when fault" do
-      let(:command_class) { thrown_command }
+      let(:command_class) { ThrownCommand }
 
       it "returns executed" do
         expect(command).to be_executed
@@ -186,7 +179,7 @@ RSpec.describe Lite::Command::Base do
     end
 
     context "with standard error" do
-      let(:command_class) { exception_command }
+      let(:command_class) { ExceptionCommand }
 
       it "runs after_execution callback method within the rescue block" do
         expect(command_instance).to receive(:after_execution).once
@@ -230,7 +223,7 @@ RSpec.describe Lite::Command::Base do
     end
 
     context "when noop" do
-      let(:command_class) { noop_command }
+      let(:command_class) { NoopCommand }
 
       it "returns a noop status" do
         expect(command).to be_noop
@@ -244,7 +237,7 @@ RSpec.describe Lite::Command::Base do
     end
 
     context "when invalid" do
-      let(:command_class) { invalid_command }
+      let(:command_class) { InvalidCommand }
 
       it "returns a error status" do
         expect(command).to be_invalid
@@ -258,7 +251,7 @@ RSpec.describe Lite::Command::Base do
     end
 
     context "when failure" do
-      let(:command_class) { fail_command }
+      let(:command_class) { FailCommand }
 
       it "returns a failure status" do
         expect(command).to be_failure
@@ -272,7 +265,7 @@ RSpec.describe Lite::Command::Base do
     end
 
     context "when error" do
-      let(:command_class) { error_command }
+      let(:command_class) { ErrorCommand }
 
       it "returns a error status" do
         expect(command).to be_error
@@ -286,7 +279,7 @@ RSpec.describe Lite::Command::Base do
     end
 
     context "when exception" do
-      let(:command_class) { exception_command }
+      let(:command_class) { ExceptionCommand }
 
       it "returns a error status" do
         expect(command).to be_error
@@ -300,7 +293,7 @@ RSpec.describe Lite::Command::Base do
     end
 
     context "when fault" do
-      let(:command_class) { thrown_command }
+      let(:command_class) { ThrownCommand }
 
       it "returns fault" do
         expect(command).to be_fault
@@ -321,7 +314,7 @@ RSpec.describe Lite::Command::Base do
         expect(command_instance.results).to be_empty
         expect(command_instance.result).to eq(Lite::Command::PENDING)
         expect(command_instance.as_json).to eq(
-          "command" => "CommandHelpers::PassCommand",
+          "command" => "PassCommand",
           "result" => "PENDING",
           "state" => "PENDING",
           "status" => "SUCCESS"
@@ -336,7 +329,7 @@ RSpec.describe Lite::Command::Base do
         expect(command.as_json).to eq(
           "index" => 1,
           "trace" => "1[1]",
-          "command" => "CommandHelpers::PassCommand",
+          "command" => "PassCommand",
           "result" => "SUCCESS",
           "state" => "COMPLETE",
           "status" => "SUCCESS",
@@ -348,7 +341,7 @@ RSpec.describe Lite::Command::Base do
     end
 
     context "when noop" do
-      let(:command_class) { noop_command }
+      let(:command_class) { NoopCommand }
 
       it "returns a noop status" do
         expect(command.results).not_to be_empty
@@ -356,7 +349,7 @@ RSpec.describe Lite::Command::Base do
         expect(command.as_json).to eq(
           "index" => 1,
           "trace" => "1[1]",
-          "command" => "CommandHelpers::NoopCommand",
+          "command" => "NoopCommand",
           "result" => "NOOP",
           "state" => "DNF",
           "status" => "NOOP",
@@ -371,13 +364,13 @@ RSpec.describe Lite::Command::Base do
     end
 
     context "when invalid" do
-      let(:command_class) { invalid_command }
+      let(:command_class) { InvalidCommand }
 
       it "returns a invalid status" do
         expect(command.results).not_to be_empty
         expect(command.result).to eq(Lite::Command::INVALID)
         expect(command.as_json).to eq(
-          "command" => "CommandHelpers::InvalidCommand",
+          "command" => "InvalidCommand",
           "result" => "INVALID",
           "state" => "DNF",
           "status" => "INVALID",
@@ -390,13 +383,13 @@ RSpec.describe Lite::Command::Base do
     end
 
     context "when failure" do
-      let(:command_class) { fail_command }
+      let(:command_class) { FailCommand }
 
       it "returns a failure status" do
         expect(command.results).not_to be_empty
         expect(command.result).to eq(Lite::Command::FAILURE)
         expect(command.as_json).to eq(
-          "command" => "CommandHelpers::FailCommand",
+          "command" => "FailCommand",
           "result" => "FAILURE",
           "state" => "DNF",
           "status" => "FAILURE",
@@ -409,13 +402,13 @@ RSpec.describe Lite::Command::Base do
     end
 
     context "when error" do
-      let(:command_class) { error_command }
+      let(:command_class) { ErrorCommand }
 
       it "returns a error status" do
         expect(command.results).not_to be_empty
         expect(command.result).to eq(Lite::Command::ERROR)
         expect(command.as_json).to eq(
-          "command" => "CommandHelpers::ErrorCommand",
+          "command" => "ErrorCommand",
           "result" => "ERROR",
           "state" => "DNF",
           "status" => "ERROR",
@@ -428,13 +421,13 @@ RSpec.describe Lite::Command::Base do
     end
 
     context "when exception" do
-      let(:command_class) { exception_command }
+      let(:command_class) { ExceptionCommand }
 
       it "returns a error status" do
         expect(command.results).not_to be_empty
         expect(command.result).to eq(Lite::Command::ERROR)
         expect(command.as_json).to eq(
-          "command" => "CommandHelpers::ExceptionCommand",
+          "command" => "ExceptionCommand",
           "result" => "ERROR",
           "state" => "DNF",
           "status" => "ERROR",
@@ -447,7 +440,7 @@ RSpec.describe Lite::Command::Base do
     end
 
     context "when fault" do
-      let(:command_class) { thrown_command }
+      let(:command_class) { ThrownCommand }
 
       it "returns fault" do
         expect(command.results).not_to be_empty
@@ -455,7 +448,7 @@ RSpec.describe Lite::Command::Base do
         expect(command.as_json).to eq(
           "index" => 1,
           "trace" => "1[1]",
-          "command" => "CommandHelpers::ThrownCommand",
+          "command" => "ThrownCommand",
           "result" => "DNF",
           "state" => "DNF",
           "status" => "NOOP",
