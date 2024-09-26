@@ -10,8 +10,8 @@ RSpec.describe Lite::Command::Results do
       expect(command.results.map(&:class)).to eq(
         [
           ThrownCommand,
-          SuccessCommand,
-          NoopCommand
+          ChildSuccessCommand,
+          ChildNoopCommand
         ]
       )
     end

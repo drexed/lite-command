@@ -3,10 +3,9 @@
 class ThrownCommand < Lite::Command::Base
 
   def call
-    command = SuccessCommand.call(context)
-    throw!(command)
+    ChildSuccessCommand.call(context)
 
-    command = NoopCommand.call(context)
+    command = ChildNoopCommand.call(context)
     throw!(command)
   end
 

@@ -170,7 +170,7 @@ RSpec.describe Lite::Command::Base do
       end
     end
 
-    context "when fault" do
+    context "when thrown" do
       let(:command_class) { ThrownCommand }
 
       it "returns executed" do
@@ -292,7 +292,7 @@ RSpec.describe Lite::Command::Base do
       end
     end
 
-    context "when fault" do
+    context "when thrown" do
       let(:command_class) { ThrownCommand }
 
       it "returns fault" do
@@ -300,7 +300,7 @@ RSpec.describe Lite::Command::Base do
         expect(command).not_to be_faulter
         expect(command).not_to be_thrower
         expect(command).to be_thrown_fault
-        expect(command.fault?("[!] command stopped due to noop")).to be(true)
+        expect(command.fault?("[!] command stopped due to child noop")).to be(true)
         expect(command.fault?("Some reason")).to be(false)
         expect(command.faulter?).to be(false)
         expect(command.thrower?).to be(false)
@@ -452,7 +452,7 @@ RSpec.describe Lite::Command::Base do
           "result" => "DNF",
           "state" => "DNF",
           "status" => "NOOP",
-          "reason" => "[!] command stopped due to noop",
+          "reason" => "[!] command stopped due to child noop",
           "fault" => 3,
           "throw" => 3,
           "started_at" => "2021-05-11T18:20:00.000-04:00",
