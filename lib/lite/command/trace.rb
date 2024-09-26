@@ -42,10 +42,10 @@ module Lite
       end
 
       def to_formatted_s
-        return if index.blank? || index.zero?
+        return if index.nil? || index.zero?
 
         position_fs = to_position_fs
-        return index.to_s if position_fs.blank?
+        return index.to_s if position_fs.nil?
 
         "#{index}[#{position_fs}]"
       end
@@ -54,7 +54,7 @@ module Lite
       private
 
       def dependent_key?(key)
-        key.to_s.starts_with?("__")
+        key.to_s.start_with?("__")
       end
 
     end

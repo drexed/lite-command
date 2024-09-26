@@ -17,7 +17,7 @@ module Lite
         private
 
         def advance_execution_trace
-          return if trace_key.blank?
+          return if trace_key.nil?
 
           @trace = context.trace = begin
             new_trace = trace.advance(trace_key)
