@@ -3,10 +3,10 @@
 require "generators/rails/command_generator" if defined?(Rails::Generators)
 
 require "lite/command/version"
-require "lite/command/step/traceable"
-require "lite/command/step/callable"
-require "lite/command/step/executable"
-require "lite/command/step/resultable"
+require "lite/command/internals/traceable"
+require "lite/command/internals/callable"
+require "lite/command/internals/executable"
+require "lite/command/internals/resultable"
 require "lite/command/fault"
 require "lite/command/construct"
 require "lite/command/trace"

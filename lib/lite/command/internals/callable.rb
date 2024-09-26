@@ -17,7 +17,7 @@ module Lite
       SUCCESS = "SUCCESS"
     ].freeze
 
-    module Step
+    module Internals
       module Callable
 
         def self.included(base)

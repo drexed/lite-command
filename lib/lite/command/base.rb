@@ -4,10 +4,10 @@ module Lite
   module Command
     class Base
 
-      include Lite::Command::Step::Traceable
-      include Lite::Command::Step::Callable
-      include Lite::Command::Step::Executable
-      include Lite::Command::Step::Resultable
+      include Lite::Command::Internals::Traceable
+      include Lite::Command::Internals::Callable
+      include Lite::Command::Internals::Executable
+      include Lite::Command::Internals::Resultable
 
       attr_reader :context, :metadata
 

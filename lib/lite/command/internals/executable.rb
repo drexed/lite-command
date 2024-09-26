@@ -13,7 +13,7 @@ module Lite
       DNF = "DNF"
     ].freeze
 
-    module Step
+    module Internals
       module Executable
 
         def execute

@@ -2,7 +2,7 @@
 
 module Lite
   module Command
-    module Step
+    module Internals
       module Resultable
 
         def self.included(base)
