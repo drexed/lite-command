@@ -65,10 +65,7 @@ RSpec.describe Lite::Command::Base do
 
       it "raises a dynamic Lite::Command::Noop error" do
         allow(command_instance).to receive(:raise_dynamic_faults?).and_return(true)
-        expect { command_instance.execute! }.to(raise_error do |error|
-          expect(error.class.name).to eq("NoopCommand::Noop")
-          expect(error.message).to eq("[!] command stopped due to noop")
-        end)
+        expect { command_instance.execute! }.to raise_error(NoopCommand::Noop, "[!] command stopped due to noop")
       end
 
       it "returns a dnf state" do
@@ -96,10 +93,7 @@ RSpec.describe Lite::Command::Base do
 
       it "raises a dynamic Lite::Command::Invalid error" do
         allow(command_instance).to receive(:raise_dynamic_faults?).and_return(true)
-        expect { command_instance.execute! }.to(raise_error do |error|
-          expect(error.class.name).to eq("InvalidCommand::Invalid")
-          expect(error.message).to eq("[!] command stopped due to invalid")
-        end)
+        expect { command_instance.execute! }.to raise_error(InvalidCommand::Invalid, "[!] command stopped due to invalid")
       end
 
       it "returns a dnf state" do
@@ -127,10 +121,7 @@ RSpec.describe Lite::Command::Base do
 
       it "raises a dynamic Lite::Command::Failure error" do
         allow(command_instance).to receive(:raise_dynamic_faults?).and_return(true)
-        expect { command_instance.execute! }.to(raise_error do |error|
-          expect(error.class.name).to eq("FailureCommand::Failure")
-          expect(error.message).to eq("[!] command stopped due to failure")
-        end)
+        expect { command_instance.execute! }.to raise_error(FailureCommand::Failure, "[!] command stopped due to failure")
       end
 
       it "returns a dnf state" do
@@ -158,10 +149,7 @@ RSpec.describe Lite::Command::Base do
 
       it "raises a dynamic Lite::Command::Error error" do
         allow(command_instance).to receive(:raise_dynamic_faults?).and_return(true)
-        expect { command_instance.execute! }.to(raise_error do |error|
-          expect(error.class.name).to eq("ErrorCommand::Error")
-          expect(error.message).to eq("[!] command stopped due to error")
-        end)
+        expect { command_instance.execute! }.to raise_error(ErrorCommand::Error, "[!] command stopped due to error")
       end
 
       it "returns a dnf state" do
