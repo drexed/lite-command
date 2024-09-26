@@ -164,6 +164,30 @@ RSpec.describe Lite::Command::Base do
       it "returns executed" do
         expect(command).to be_executed
       end
+
+      it "runs after_execution callback method within the rescue block" do
+        expect(command_instance).to receive(:after_execution).once
+        command
+      end
+
+      it "runs on_noop callback method within the rescue block" do
+        expect(command_instance).to receive(:on_noop).once
+        command
+      end
+
+      it "raises a Lite::Command::Error error" do
+        expect { command_instance.execute! }.to raise_error(Lite::Command::Noop, "[!] command stopped due to child noop")
+      end
+
+      it "raises a dynamic Lite::Command::Error error" do
+        allow(command_instance).to receive(:raise_dynamic_faults?).and_return(true)
+        expect { command_instance.execute! }.to raise_error(ThrownCommand::Noop, "[!] command stopped due to child noop")
+      end
+
+      it "returns a dnf state" do
+        expect(command).to be_dnf
+        expect(command.state).to eq(Lite::Command::DNF)
+      end
     end
 
     context "with standard error" do
@@ -441,8 +465,8 @@ RSpec.describe Lite::Command::Base do
           "state" => "DNF",
           "status" => "NOOP",
           "reason" => "[!] command stopped due to child noop",
-          "fault" => 3,
-          "throw" => 3,
+          "fault" => 4,
+          "throw" => 4,
           "started_at" => "2021-05-11T18:20:00.000-04:00",
           "finished_at" => "2021-05-11T18:20:00.000-04:00",
           "runtime" => 0.0

@@ -10,9 +10,9 @@ require "lite/command"
 
 spec_path = Pathname.new(File.expand_path("../spec", File.dirname(__FILE__)))
 
-%w[commands].each do |dir|
+%w[commands commands/child].each do |dir|
   Dir.each_child(spec_path.join("support/#{dir}")) do |f|
-    load(spec_path.join("support/#{dir}/#{f}"))
+    load(spec_path.join("support/#{dir}/#{f}")) if f.end_with?(".rb")
   end
 end
 
