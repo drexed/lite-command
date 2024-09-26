@@ -12,6 +12,7 @@ RSpec.describe Lite::Command::Results do
           ThrownCommand,
           SuccessCommand,
           Child::SuccessCommand,
+          Child::SuccessCommand,
           Child::NoopCommand
         ]
       )

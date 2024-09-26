@@ -7,7 +7,7 @@ RSpec.describe Lite::Command::Trace do
     described_class.new(
       pass: 1,
       noop: 1,
-      __noop_subtasks: 1,
+      __child_noop: 1,
       index: 3,
       position: %i[pass noop]
     )
@@ -61,19 +61,19 @@ RSpec.describe Lite::Command::Trace do
   end
 
   describe ".to_position_fs" do
-    it "returns correct position string format (pass.noop)" do
+    it "returns correct position string format (noop^child_noop)" do
       expect(trace.to_position_fs).to eq("1^1")
     end
   end
 
   describe ".to_coordinates_fs" do
-    it "returns correct coordinates string format (pass.noop^noop_subtasks)" do
+    it "returns correct coordinates string format (pass.noop^child_noop)" do
       expect(trace.to_coordinates_fs).to eq("1.1^1")
     end
   end
 
   describe ".to_formatted_s" do
-    it "returns correct trace string format (pass[noop^noop_subtasks])" do
+    it "returns correct trace string format (pass[noop^child_noop])" do
       expect(trace.to_formatted_s).to eq("3[1^1]")
     end
   end

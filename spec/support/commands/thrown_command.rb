@@ -6,6 +6,7 @@ class ThrownCommand < Lite::Command::Base
     SuccessCommand.call(context)
 
     Child::SuccessCommand.call(context)
+    Child::SuccessCommand.call(context)
 
     command = Child::NoopCommand.call(context)
     throw!(command)

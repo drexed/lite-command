@@ -465,8 +465,8 @@ RSpec.describe Lite::Command::Base do
           "state" => "DNF",
           "status" => "NOOP",
           "reason" => "[!] command stopped due to child noop",
-          "fault" => 4,
-          "throw" => 4,
+          "fault" => 5,
+          "throw" => 5,
           "started_at" => "2021-05-11T18:20:00.000-04:00",
           "finished_at" => "2021-05-11T18:20:00.000-04:00",
           "runtime" => 0.0
