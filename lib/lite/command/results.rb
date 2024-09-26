@@ -3,6 +3,7 @@
 module Lite
   module Command
     class Results
+
       extend Forwardable
 
       include Enumerable

@@ -3,6 +3,7 @@
 module Lite
   module Command
     class Base
+
       extend Forwardable
 
       include Lite::Command::Internals::Traceable

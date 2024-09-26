@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'forwardable' unless defined?(Forwardable)
+require "forwardable" unless defined?(Forwardable)
 require "generators/rails/command_generator" if defined?(Rails::Generators)
 
 require "lite/command/version"

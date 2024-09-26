@@ -82,18 +82,14 @@ module Lite
         private
 
         def fault_faulter(object)
-          if object.respond_to?(:faulter)
-            object.faulter
-          end || self
+          (object.faulter if object.respond_to?(:faulter)) || self
         end
 
         def fault_thrower(object)
           if object.respond_to?(:executed?) && object.executed?
             object
           else
-            if object.respond_to?(:thrower)
-              object.thrower
-            end || faulter
+            (object.thrower if object.respond_to?(:thrower)) || faulter
           end
         end
 

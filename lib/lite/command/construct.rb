@@ -5,6 +5,7 @@ require "ostruct" unless defined?(OpenStruct)
 module Lite
   module Command
     class Construct < OpenStruct
+
       extend Forwardable
 
       def_delegators :to_h, :as_json, :keys, :size, :values
