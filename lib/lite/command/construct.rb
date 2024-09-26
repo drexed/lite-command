@@ -5,8 +5,9 @@ require "ostruct" unless defined?(OpenStruct)
 module Lite
   module Command
     class Construct < OpenStruct
+      extend Forwardable
 
-      delegate :as_json, :keys, :size, :values, to: :to_h
+      def_delegators :to_h, :as_json, :keys, :size, :values
 
       def self.init(attributes = {})
         # To save memory and speed up the access to an attribute, the accessor methods

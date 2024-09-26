@@ -3,12 +3,13 @@
 module Lite
   module Command
     class Results
+      extend Forwardable
 
       include Enumerable
 
       attr_reader :values
 
-      delegate :any?, :empty?, :each, :map, :none?, :size, to: :values
+      def_delegators :values, :any?, :empty?, :each, :map, :none?, :size
 
       def initialize
         @values = []

@@ -7,7 +7,7 @@ module Lite
 
         def self.included(base)
           base.class_eval do
-            delegate :as_json, to: :to_h
+            def_delegators :to_h, :as_json
           end
         end
 
