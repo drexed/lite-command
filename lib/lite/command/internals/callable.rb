@@ -102,6 +102,7 @@ module Lite
         end
 
         # eg: Users::ResetPassword::Noop.new(...)
+        # TODO: generate this on inheritance
         def raise_dynamic_fault(exception)
           fault_klass = self.class.const_get(exception.demodualized_name)
         rescue NameError
