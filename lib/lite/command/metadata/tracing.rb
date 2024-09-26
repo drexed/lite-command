@@ -2,8 +2,8 @@
 
 module Lite
   module Command
-    module Internals
-      module Traceable
+    module Metadata
+      module Tracing
 
         def trace
           @trace ||= Lite::Command::Trace.init(context.trace.to_h)
@@ -16,7 +16,7 @@ module Lite
 
         private
 
-        def advance_execution_trace
+        def before_execution_tracing_metadata
           return if trace_key.nil?
 
           @trace = context.trace = begin

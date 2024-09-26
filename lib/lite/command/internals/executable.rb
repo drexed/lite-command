@@ -63,7 +63,8 @@ module Lite
         end
 
         def before_execution_metadata
-          metadata.started_at = current_execution_time
+          before_execution_runtime_metadata
+          before_execution_tracing_metadata
         end
 
         def on_before_execution
@@ -72,7 +73,6 @@ module Lite
 
         def before_execution
           before_execution_metadata
-          advance_execution_trace
           executing!
           on_before_execution
         end
@@ -84,8 +84,7 @@ module Lite
         end
 
         def after_execution_metadata
-          metadata.finished_at = current_execution_time
-          metadata.runtime = metadata.finished_at - metadata.started_at
+          after_execution_runtime_metadata
         end
 
         def on_after_execution
