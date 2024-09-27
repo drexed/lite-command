@@ -25,17 +25,16 @@ module Lite
 
         def to_hash
           {
-            index: trace.index,
-            trace: trace.to_fs,
+            index: result_index,
             command: self.class.name,
             result:,
             state:,
             status:,
             reason:,
-            fault: faulter&.trace&.index,
-            throw: thrower&.trace&.index,
+            fault: faulter&.result_index,
+            throw: thrower&.result_index,
             runtime: execution_runtime
-          }
+          }.compact
         end
         alias to_h to_hash
 

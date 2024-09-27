@@ -12,10 +12,4 @@ class ThrownCommand < Lite::Command::Base
     throw!(command)
   end
 
-  private
-
-  def trace_key
-    :thrown
-  end
-
 end

@@ -6,10 +6,4 @@ class SuccessCommand < Lite::Command::Base
     # Do nothing, no fault = success
   end
 
-  private
-
-  def trace_key
-    :success
-  end
-
 end

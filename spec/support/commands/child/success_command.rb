@@ -7,11 +7,5 @@ module Child
       # Do nothing, no fault = success
     end
 
-    private
-
-    def trace_key
-      :__child
-    end
-
   end
 end

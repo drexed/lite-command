@@ -6,10 +6,4 @@ class NoopCommand < Lite::Command::Base
     noop!("[!] command stopped due to noop")
   end
 
-  private
-
-  def trace_key
-    :noop
-  end
-
 end

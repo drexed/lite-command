@@ -325,10 +325,12 @@ RSpec.describe Lite::Command::Base do
         expect(command_instance.results).to be_empty
         expect(command_instance.result).to eq(Lite::Command::PENDING)
         expect(command_instance.as_json).to eq(
+          "index" => 0,
           "command" => "SuccessCommand",
           "result" => "PENDING",
           "state" => "PENDING",
-          "status" => "SUCCESS"
+          "status" => "SUCCESS",
+          "runtime" => 0.0
         )
       end
     end
@@ -339,7 +341,6 @@ RSpec.describe Lite::Command::Base do
         expect(command.result).to eq(Lite::Command::SUCCESS)
         expect(command.as_json).to eq(
           "index" => 1,
-          "trace" => "1[1]",
           "command" => "SuccessCommand",
           "result" => "SUCCESS",
           "state" => "COMPLETE",
@@ -359,7 +360,6 @@ RSpec.describe Lite::Command::Base do
         expect(command.result).to eq(Lite::Command::NOOP)
         expect(command.as_json).to eq(
           "index" => 1,
-          "trace" => "1[1]",
           "command" => "NoopCommand",
           "result" => "NOOP",
           "state" => "DNF",
@@ -381,12 +381,14 @@ RSpec.describe Lite::Command::Base do
         expect(command.results).not_to be_empty
         expect(command.result).to eq(Lite::Command::INVALID)
         expect(command.as_json).to eq(
+          "index" => 1,
           "command" => "InvalidCommand",
           "result" => "INVALID",
           "state" => "DNF",
           "status" => "INVALID",
           "reason" => "[!] command stopped due to invalid",
-
+          "fault" => 1,
+          "throw" => 1,
 
           "runtime" => 0.0
         )
@@ -400,12 +402,14 @@ RSpec.describe Lite::Command::Base do
         expect(command.results).not_to be_empty
         expect(command.result).to eq(Lite::Command::FAILURE)
         expect(command.as_json).to eq(
+          "index" => 1,
           "command" => "FailureCommand",
           "result" => "FAILURE",
           "state" => "DNF",
           "status" => "FAILURE",
           "reason" => "[!] command stopped due to failure",
-
+          "fault" => 1,
+          "throw" => 1,
 
           "runtime" => 0.0
         )
@@ -419,12 +423,14 @@ RSpec.describe Lite::Command::Base do
         expect(command.results).not_to be_empty
         expect(command.result).to eq(Lite::Command::ERROR)
         expect(command.as_json).to eq(
+          "index" => 1,
           "command" => "ErrorCommand",
           "result" => "ERROR",
           "state" => "DNF",
           "status" => "ERROR",
           "reason" => "[!] command stopped due to error",
-
+          "fault" => 1,
+          "throw" => 1,
 
           "runtime" => 0.0
         )
@@ -438,12 +444,14 @@ RSpec.describe Lite::Command::Base do
         expect(command.results).not_to be_empty
         expect(command.result).to eq(Lite::Command::ERROR)
         expect(command.as_json).to eq(
+          "index" => 1,
           "command" => "ExceptionCommand",
           "result" => "ERROR",
           "state" => "DNF",
           "status" => "ERROR",
           "reason" => "[RuntimeError] [!] command stopped due to exception",
-
+          "fault" => 1,
+          "throw" => 1,
 
           "runtime" => 0.0
         )
@@ -458,7 +466,6 @@ RSpec.describe Lite::Command::Base do
         expect(command.result).to eq(Lite::Command::DNF)
         expect(command.as_json).to eq(
           "index" => 1,
-          "trace" => "1[1]",
           "command" => "ThrownCommand",
           "result" => "DNF",
           "state" => "DNF",
@@ -470,21 +477,6 @@ RSpec.describe Lite::Command::Base do
 
           "runtime" => 0.0
         )
-      end
-    end
-  end
-
-  describe "#traceable" do
-    context "when enabled" do
-      it "includes the trace key" do
-        expect(command.to_h.keys).to include(:trace)
-      end
-    end
-
-    context "when not enabled" do
-      it "removes the trace key" do
-        allow_any_instance_of(command_class).to receive(:trace_key).and_return(nil)
-        expect(command.to_h.keys).not_to include(:trace)
       end
     end
   end

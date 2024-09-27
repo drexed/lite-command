@@ -64,6 +64,7 @@ module Lite
 
         def before_execution
           before_execution_monotonic_time
+          increment_execution_result_index
           executing!
           on_before_execution
         end

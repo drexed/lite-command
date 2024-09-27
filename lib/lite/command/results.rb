@@ -18,7 +18,7 @@ module Lite
 
       def <<(value)
         values << value
-        values.sort_by!(&:trace)
+        values.sort_by!(&:result_index)
       end
 
     end

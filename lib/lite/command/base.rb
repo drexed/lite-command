@@ -13,7 +13,6 @@ module Lite
         base.include Lite::Command::Internals::Callable
         base.include Lite::Command::Internals::Executable
         base.include Lite::Command::Internals::Resultable
-        base.include Lite::Command::Metadata::Tracing
 
         base.class_eval <<-RUBY, __FILE__, __LINE__ + 1
           # eg: Users::ResetPassword::Fault
