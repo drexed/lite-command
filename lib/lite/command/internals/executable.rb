@@ -80,9 +80,9 @@ module Lite
 
         def after_execution
           fault? ? dnf! : complete!
+          on_after_execution
           after_execution_monotonic_time
           append_execution_result
-          on_after_execution
         end
 
       end
