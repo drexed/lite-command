@@ -5,8 +5,8 @@ module Lite
     module Internals
       module Runnable
 
-        def result_index
-          @result_index ||= context.result_index ||= 0
+        def index
+          @index ||= context.index ||= 0
         end
 
         private
@@ -23,8 +23,8 @@ module Lite
           after_execution_monotonic_time - before_execution_monotonic_time
         end
 
-        def increment_execution_result_index
-          @result_index = context.result_index = result_index.next
+        def increment_execution_index
+          @index = context.index = index.next
         end
 
       end

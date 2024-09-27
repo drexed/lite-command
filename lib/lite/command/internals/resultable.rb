@@ -5,8 +5,12 @@ module Lite
     module Internals
       module Resultable
 
+        def index
+          @index ||= context.index ||= 0
+        end
+
         def results
-          context.results ||= Lite::Command::Results.new
+          context.results ||= []
         end
 
         def result
@@ -19,14 +23,14 @@ module Lite
 
         def to_hash
           {
-            index: result_index,
+            index: index,
             command: self.class.name,
             result:,
             state:,
             status:,
             reason:,
-            fault: faulter&.result_index,
-            throw: thrower&.result_index,
+            fault: faulter&.index,
+            throw: thrower&.index,
             runtime: execution_runtime
           }.compact
         end
@@ -35,7 +39,7 @@ module Lite
         private
 
         def append_execution_result
-          results << self
+          results.push(self).sort_by!(&:index)
         end
 
       end
