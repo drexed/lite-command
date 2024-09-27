@@ -34,7 +34,7 @@ module Lite
         {
           index:,
           command: self.class.name,
-          result:,
+          outcome:,
           state:,
           status:,
           reason:,

@@ -9,7 +9,7 @@ module Lite
           @index ||= context.index ||= 0
         end
 
-        def result
+        def outcome
           return state if pending? || thrown_fault?
 
           status
