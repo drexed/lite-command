@@ -7,7 +7,6 @@ module Lite
       def self.inherited(base)
         super
 
-        base.include Lite::Command::Internals::Runnable
         base.include Lite::Command::Internals::Callable
         base.include Lite::Command::Internals::Executable
         base.include Lite::Command::Internals::Resultable
@@ -30,6 +29,21 @@ module Lite
       def initialize(context = {})
         @context = Lite::Command::Context.build(context)
       end
+
+      def to_hash
+        {
+          index:,
+          command: self.class.name,
+          result:,
+          state:,
+          status:,
+          reason:,
+          fault: faulter&.index,
+          throw: thrower&.index,
+          runtime:
+        }.compact
+      end
+      alias to_h to_hash
 
     end
   end

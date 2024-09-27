@@ -3,7 +3,6 @@
 require "generators/rails/command_generator" if defined?(Rails::Generators)
 
 require "lite/command/version"
-require "lite/command/internals/runnable"
 require "lite/command/internals/callable"
 require "lite/command/internals/executable"
 require "lite/command/internals/resultable"
