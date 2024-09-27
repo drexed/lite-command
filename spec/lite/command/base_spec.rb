@@ -345,8 +345,6 @@ RSpec.describe Lite::Command::Base do
           "result" => "SUCCESS",
           "state" => "COMPLETE",
           "status" => "SUCCESS",
-
-
           "runtime" => 0.0
         )
       end
@@ -367,8 +365,6 @@ RSpec.describe Lite::Command::Base do
           "reason" => "[!] command stopped due to noop",
           "fault" => 1,
           "throw" => 1,
-
-
           "runtime" => 0.0
         )
       end
@@ -389,7 +385,6 @@ RSpec.describe Lite::Command::Base do
           "reason" => "[!] command stopped due to invalid",
           "fault" => 1,
           "throw" => 1,
-
           "runtime" => 0.0
         )
       end
@@ -410,7 +405,6 @@ RSpec.describe Lite::Command::Base do
           "reason" => "[!] command stopped due to failure",
           "fault" => 1,
           "throw" => 1,
-
           "runtime" => 0.0
         )
       end
@@ -431,7 +425,6 @@ RSpec.describe Lite::Command::Base do
           "reason" => "[!] command stopped due to error",
           "fault" => 1,
           "throw" => 1,
-
           "runtime" => 0.0
         )
       end
@@ -452,7 +445,6 @@ RSpec.describe Lite::Command::Base do
           "reason" => "[RuntimeError] [!] command stopped due to exception",
           "fault" => 1,
           "throw" => 1,
-
           "runtime" => 0.0
         )
       end
@@ -473,8 +465,6 @@ RSpec.describe Lite::Command::Base do
           "reason" => "[!] command stopped due to child noop",
           "fault" => 5,
           "throw" => 5,
-
-
           "runtime" => 0.0
         )
       end
