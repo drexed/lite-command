@@ -17,7 +17,9 @@ module Lite
       end
 
       def self.build(attributes = {})
-        attributes.is_a?(self) ? attributes : init(attributes)
+        return attributes if attributes.is_a?(self) && !attributes.frozen?
+
+        init(attributes.to_h)
       end
 
       def merge!(attributes = {})
