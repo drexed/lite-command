@@ -61,16 +61,10 @@ module Lite
         end
 
         def before_execution
-          before_execution_monotonic_time
           increment_execution_index
+          start_monotonic_time
           executing!
           on_before_execution
-        end
-
-        def around_execution
-          before_execution
-          yield
-          after_execution
         end
 
         def on_after_execution
@@ -80,8 +74,14 @@ module Lite
         def after_execution
           fault? ? dnf! : complete!
           on_after_execution
-          after_execution_monotonic_time
+          stop_monotonic_time
           append_execution_result
+        end
+
+        def around_execution
+          before_execution
+          yield
+          after_execution
         end
 
       end

@@ -21,16 +21,16 @@ module Lite
 
         private
 
-        def before_execution_monotonic_time
-          @before_execution_monotonic_time ||= Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        def start_monotonic_time
+          @start_monotonic_time ||= Process.clock_gettime(Process::CLOCK_MONOTONIC)
         end
 
-        def after_execution_monotonic_time
-          @after_execution_monotonic_time ||= Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        def stop_monotonic_time
+          @stop_monotonic_time ||= Process.clock_gettime(Process::CLOCK_MONOTONIC)
         end
 
         def runtime
-          after_execution_monotonic_time - before_execution_monotonic_time
+          stop_monotonic_time - start_monotonic_time
         end
 
         def append_execution_result
