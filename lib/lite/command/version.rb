@@ -3,7 +3,7 @@
 module Lite
   module Command
 
-    VERSION = "2.0.0"
+    VERSION = "2.0.1"
 
   end
 end
