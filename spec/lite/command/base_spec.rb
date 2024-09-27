@@ -324,13 +324,13 @@ RSpec.describe Lite::Command::Base do
       it "returns a success status" do
         expect(command_instance.results).to be_empty
         expect(command_instance.result).to eq(Lite::Command::PENDING)
-        expect(command_instance.as_json).to eq(
-          "index" => 0,
-          "command" => "SuccessCommand",
-          "result" => "PENDING",
-          "state" => "PENDING",
-          "status" => "SUCCESS",
-          "runtime" => 0.0
+        expect(command_instance.to_hash).to eq(
+          index:  0,
+          command: "SuccessCommand",
+          result: "PENDING",
+          state: "PENDING",
+          status: "SUCCESS",
+          runtime: 0.0
         )
       end
     end
@@ -339,13 +339,13 @@ RSpec.describe Lite::Command::Base do
       it "returns a success status" do
         expect(command.results).not_to be_empty
         expect(command.result).to eq(Lite::Command::SUCCESS)
-        expect(command.as_json).to eq(
-          "index" => 1,
-          "command" => "SuccessCommand",
-          "result" => "SUCCESS",
-          "state" => "COMPLETE",
-          "status" => "SUCCESS",
-          "runtime" => 0.0
+        expect(command.to_hash).to eq(
+          index:  1,
+          command: "SuccessCommand",
+          result: "SUCCESS",
+          state: "COMPLETE",
+          status: "SUCCESS",
+          runtime: 0.0
         )
       end
     end
@@ -356,16 +356,16 @@ RSpec.describe Lite::Command::Base do
       it "returns a noop status" do
         expect(command.results).not_to be_empty
         expect(command.result).to eq(Lite::Command::NOOP)
-        expect(command.as_json).to eq(
-          "index" => 1,
-          "command" => "NoopCommand",
-          "result" => "NOOP",
-          "state" => "DNF",
-          "status" => "NOOP",
-          "reason" => "[!] command stopped due to noop",
-          "fault" => 1,
-          "throw" => 1,
-          "runtime" => 0.0
+        expect(command.to_hash).to eq(
+          index:  1,
+          command: "NoopCommand",
+          result: "NOOP",
+          state: "DNF",
+          status: "NOOP",
+          reason: "[!] command stopped due to noop",
+          fault: 1,
+          throw: 1,
+          runtime: 0.0
         )
       end
     end
@@ -376,16 +376,16 @@ RSpec.describe Lite::Command::Base do
       it "returns a invalid status" do
         expect(command.results).not_to be_empty
         expect(command.result).to eq(Lite::Command::INVALID)
-        expect(command.as_json).to eq(
-          "index" => 1,
-          "command" => "InvalidCommand",
-          "result" => "INVALID",
-          "state" => "DNF",
-          "status" => "INVALID",
-          "reason" => "[!] command stopped due to invalid",
-          "fault" => 1,
-          "throw" => 1,
-          "runtime" => 0.0
+        expect(command.to_hash).to eq(
+          index:  1,
+          command: "InvalidCommand",
+          result: "INVALID",
+          state: "DNF",
+          status: "INVALID",
+          reason: "[!] command stopped due to invalid",
+          fault: 1,
+          throw: 1,
+          runtime: 0.0
         )
       end
     end
@@ -396,16 +396,16 @@ RSpec.describe Lite::Command::Base do
       it "returns a failure status" do
         expect(command.results).not_to be_empty
         expect(command.result).to eq(Lite::Command::FAILURE)
-        expect(command.as_json).to eq(
-          "index" => 1,
-          "command" => "FailureCommand",
-          "result" => "FAILURE",
-          "state" => "DNF",
-          "status" => "FAILURE",
-          "reason" => "[!] command stopped due to failure",
-          "fault" => 1,
-          "throw" => 1,
-          "runtime" => 0.0
+        expect(command.to_hash).to eq(
+          index:  1,
+          command: "FailureCommand",
+          result: "FAILURE",
+          state: "DNF",
+          status: "FAILURE",
+          reason: "[!] command stopped due to failure",
+          fault: 1,
+          throw: 1,
+          runtime: 0.0
         )
       end
     end
@@ -416,16 +416,16 @@ RSpec.describe Lite::Command::Base do
       it "returns a error status" do
         expect(command.results).not_to be_empty
         expect(command.result).to eq(Lite::Command::ERROR)
-        expect(command.as_json).to eq(
-          "index" => 1,
-          "command" => "ErrorCommand",
-          "result" => "ERROR",
-          "state" => "DNF",
-          "status" => "ERROR",
-          "reason" => "[!] command stopped due to error",
-          "fault" => 1,
-          "throw" => 1,
-          "runtime" => 0.0
+        expect(command.to_hash).to eq(
+          index:  1,
+          command: "ErrorCommand",
+          result: "ERROR",
+          state: "DNF",
+          status: "ERROR",
+          reason: "[!] command stopped due to error",
+          fault: 1,
+          throw: 1,
+          runtime: 0.0
         )
       end
     end
@@ -436,16 +436,16 @@ RSpec.describe Lite::Command::Base do
       it "returns a error status" do
         expect(command.results).not_to be_empty
         expect(command.result).to eq(Lite::Command::ERROR)
-        expect(command.as_json).to eq(
-          "index" => 1,
-          "command" => "ExceptionCommand",
-          "result" => "ERROR",
-          "state" => "DNF",
-          "status" => "ERROR",
-          "reason" => "[RuntimeError] [!] command stopped due to exception",
-          "fault" => 1,
-          "throw" => 1,
-          "runtime" => 0.0
+        expect(command.to_hash).to eq(
+          index:  1,
+          command: "ExceptionCommand",
+          result: "ERROR",
+          state: "DNF",
+          status: "ERROR",
+          reason: "[RuntimeError] [!] command stopped due to exception",
+          fault: 1,
+          throw: 1,
+          runtime: 0.0
         )
       end
     end
@@ -456,16 +456,16 @@ RSpec.describe Lite::Command::Base do
       it "returns childs error status" do
         expect(command.results).not_to be_empty
         expect(command.result).to eq(Lite::Command::DNF)
-        expect(command.as_json).to eq(
-          "index" => 1,
-          "command" => "ThrownCommand",
-          "result" => "DNF",
-          "state" => "DNF",
-          "status" => "NOOP",
-          "reason" => "[!] command stopped due to child noop",
-          "fault" => 5,
-          "throw" => 5,
-          "runtime" => 0.0
+        expect(command.to_hash).to eq(
+          index:  1,
+          command: "ThrownCommand",
+          result: "DNF",
+          state: "DNF",
+          status: "NOOP",
+          reason: "[!] command stopped due to child noop",
+          fault: 5,
+          throw: 5,
+          runtime: 0.0
         )
       end
     end

@@ -8,7 +8,7 @@ module Lite
 
       extend Forwardable
 
-      def_delegators :to_h, :as_json, :keys, :size, :values
+      def_delegators :to_h, :keys, :size, :values
 
       def self.init(attributes = {})
         # To save memory and speed up the access to an attribute, the accessor methods

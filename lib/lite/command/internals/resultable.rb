@@ -5,12 +5,6 @@ module Lite
     module Internals
       module Resultable
 
-        def self.included(base)
-          base.class_eval do
-            def_delegators :to_h, :as_json
-          end
-        end
-
         def results
           context.results ||= Lite::Command::Results.new
         end
