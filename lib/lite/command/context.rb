@@ -9,7 +9,7 @@ module Lite
       def self.init(attributes = {})
         # To save memory and speed up the access to an attribute, the accessor methods
         # of an attribute are lazy loaded at certain points. This means that the methods
-        # are defined only when a set of defined actions are triggered. This allows construct
+        # are defined only when a set of defined actions are triggered. This allows context
         # to only define the minimum amount of required methods to make your data structure work
         os = new(attributes)
         os.methods(false)

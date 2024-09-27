@@ -31,7 +31,7 @@ RSpec.configure do |config|
     FileUtils.remove_dir(temp_path) if File.directory?(temp_path)
   end
 
-  config.before do |example|
+  config.before do
     [
       Child::NoopCommand,
       Child::SuccessCommand,
