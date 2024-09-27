@@ -4,7 +4,7 @@ require "ostruct" unless defined?(OpenStruct)
 
 module Lite
   module Command
-    class Construct < OpenStruct
+    class Context < OpenStruct
 
       extend Forwardable
 

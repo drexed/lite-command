@@ -32,7 +32,7 @@ module Lite
       attr_reader :context
 
       def initialize(context = {})
-        @context = Lite::Command::Construct.build(context)
+        @context = Lite::Command::Context.build(context)
       end
 
     end
