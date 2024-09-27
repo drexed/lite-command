@@ -6,10 +6,6 @@ module Lite
   module Command
     class Context < OpenStruct
 
-      extend Forwardable
-
-      def_delegators :to_h, :keys, :size, :values
-
       def self.init(attributes = {})
         # To save memory and speed up the access to an attribute, the accessor methods
         # of an attribute are lazy loaded at certain points. This means that the methods
