@@ -54,19 +54,12 @@ module Lite
 
         private
 
-        def on_before_execution
-          # Define in your class to run code before execution
-        end
-
         def before_execution
           increment_execution_index
+          assign_execution_cid
           start_monotonic_time
           executing!
           on_before_execution
-        end
-
-        def on_after_execution
-          # Define in your class to run code after execution
         end
 
         def after_execution

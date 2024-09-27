@@ -8,7 +8,10 @@ RSpec.describe Lite::Command::Base do
   let(:command_class) { SuccessCommand }
   let(:command_instance) { command_class.new }
 
-  before { allow(Process).to receive(:clock_gettime).with(Process::CLOCK_MONOTONIC).and_return(1.0) }
+  before do
+    allow_any_instance_of(command_class).to receive(:cid).and_return("018c2b95-b764-7615-a924-cc5b910ed1e5")
+    allow_any_instance_of(command_class).to receive(:runtime).and_return(0.0123)
+  end
 
   describe "#executable" do
     subject(:command) { command_instance.tap(&:execute) }
@@ -219,7 +222,7 @@ RSpec.describe Lite::Command::Base do
 
     context "when executed" do
       it "freezes the command and its context" do
-        allow_any_instance_of(SuccessCommand).to receive(:freeze_execution_objects).and_call_original
+        allow_any_instance_of(command_class).to receive(:freeze_execution_objects).and_call_original
 
         expect(command).to be_frozen
         expect(command.context).to be_frozen
@@ -334,11 +337,12 @@ RSpec.describe Lite::Command::Base do
         expect(command_instance.results).to be_empty
         expect(command_instance.to_hash).to eq(
           index: 0,
+          cid: "018c2b95-b764-7615-a924-cc5b910ed1e5",
           command: "SuccessCommand",
           outcome: "pending",
           state: "pending",
           status: "success",
-          runtime: 0.0
+          runtime: 0.0123
         )
       end
     end
@@ -348,11 +352,12 @@ RSpec.describe Lite::Command::Base do
         expect(command.results).not_to be_empty
         expect(command.to_hash).to eq(
           index: 1,
+          cid: "018c2b95-b764-7615-a924-cc5b910ed1e5",
           command: "SuccessCommand",
           outcome: "success",
           state: "complete",
           status: "success",
-          runtime: 0.0
+          runtime: 0.0123
         )
       end
     end
@@ -364,6 +369,7 @@ RSpec.describe Lite::Command::Base do
         expect(command.results).not_to be_empty
         expect(command.to_hash).to eq(
           index: 1,
+          cid: "018c2b95-b764-7615-a924-cc5b910ed1e5",
           command: "NoopCommand",
           outcome: "noop",
           state: "dnf",
@@ -371,7 +377,7 @@ RSpec.describe Lite::Command::Base do
           reason: "[!] command stopped due to noop",
           fault: 1,
           throw: 1,
-          runtime: 0.0
+          runtime: 0.0123
         )
       end
     end
@@ -383,6 +389,7 @@ RSpec.describe Lite::Command::Base do
         expect(command.results).not_to be_empty
         expect(command.to_hash).to eq(
           index: 1,
+          cid: "018c2b95-b764-7615-a924-cc5b910ed1e5",
           command: "InvalidCommand",
           outcome: "invalid",
           state: "dnf",
@@ -390,7 +397,7 @@ RSpec.describe Lite::Command::Base do
           reason: "[!] command stopped due to invalid",
           fault: 1,
           throw: 1,
-          runtime: 0.0
+          runtime: 0.0123
         )
       end
     end
@@ -402,6 +409,7 @@ RSpec.describe Lite::Command::Base do
         expect(command.results).not_to be_empty
         expect(command.to_hash).to eq(
           index: 1,
+          cid: "018c2b95-b764-7615-a924-cc5b910ed1e5",
           command: "FailureCommand",
           outcome: "failure",
           state: "dnf",
@@ -409,7 +417,7 @@ RSpec.describe Lite::Command::Base do
           reason: "[!] command stopped due to failure",
           fault: 1,
           throw: 1,
-          runtime: 0.0
+          runtime: 0.0123
         )
       end
     end
@@ -421,6 +429,7 @@ RSpec.describe Lite::Command::Base do
         expect(command.results).not_to be_empty
         expect(command.to_hash).to eq(
           index: 1,
+          cid: "018c2b95-b764-7615-a924-cc5b910ed1e5",
           command: "ErrorCommand",
           outcome: "error",
           state: "dnf",
@@ -428,7 +437,7 @@ RSpec.describe Lite::Command::Base do
           reason: "[!] command stopped due to error",
           fault: 1,
           throw: 1,
-          runtime: 0.0
+          runtime: 0.0123
         )
       end
     end
@@ -440,6 +449,7 @@ RSpec.describe Lite::Command::Base do
         expect(command.results).not_to be_empty
         expect(command.to_hash).to eq(
           index: 1,
+          cid: "018c2b95-b764-7615-a924-cc5b910ed1e5",
           command: "ExceptionCommand",
           outcome: "error",
           state: "dnf",
@@ -447,7 +457,7 @@ RSpec.describe Lite::Command::Base do
           reason: "[RuntimeError] [!] command stopped due to exception",
           fault: 1,
           throw: 1,
-          runtime: 0.0
+          runtime: 0.0123
         )
       end
     end
@@ -459,6 +469,7 @@ RSpec.describe Lite::Command::Base do
         expect(command.results).not_to be_empty
         expect(command.to_hash).to eq(
           index: 1,
+          cid: "018c2b95-b764-7615-a924-cc5b910ed1e5",
           command: "ThrownCommand",
           outcome: "dnf",
           state: "dnf",
@@ -466,7 +477,7 @@ RSpec.describe Lite::Command::Base do
           reason: "[!] command stopped due to child noop",
           fault: 5,
           throw: 5,
-          runtime: 0.0
+          runtime: 0.0123
         )
       end
     end

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "securerandom" unless defined?(SecureRandom)
+
 module Lite
   module Command
     module Internals
@@ -9,6 +11,10 @@ module Lite
           @index ||= context.index ||= 0
         end
 
+        def cid
+          @cid ||= context.cid
+        end
+
         def outcome
           return state if pending? || thrown_fault?
 
@@ -16,10 +22,30 @@ module Lite
         end
 
         def results
-          context.results ||= []
+          @results ||= context.results ||= []
         end
 
+        def to_hash
+          {
+            index:,
+            cid:,
+            command: self.class.name,
+            outcome:,
+            state:,
+            status:,
+            reason:,
+            fault: faulter&.index,
+            throw: thrower&.index,
+            runtime:
+          }.compact
+        end
+        alias to_h to_hash
+
         private
+
+        def assign_execution_cid
+          context.cid ||= SecureRandom.uuid
+        end
 
         def increment_execution_index
           @index = context.index = index.next

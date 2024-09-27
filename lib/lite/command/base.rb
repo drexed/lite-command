@@ -30,20 +30,19 @@ module Lite
         @context = Lite::Command::Context.build(context)
       end
 
-      def to_hash
-        {
-          index:,
-          command: self.class.name,
-          outcome:,
-          state:,
-          status:,
-          reason:,
-          fault: faulter&.index,
-          throw: thrower&.index,
-          runtime:
-        }.compact
+      private
+
+      def additional_result_data
+        {} # Define in your class to add additional info to result hash
       end
-      alias to_h to_hash
+
+      def on_before_execution
+        # Define in your class to run code before execution
+      end
+
+      def on_after_execution
+        # Define in your class to run code after execution
+      end
 
     end
   end
