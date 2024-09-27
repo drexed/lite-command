@@ -21,6 +21,10 @@ module Lite
 
         private
 
+        def increment_execution_index
+          @index = context.index = index.next
+        end
+
         def start_monotonic_time
           @start_monotonic_time ||= Process.clock_gettime(Process::CLOCK_MONOTONIC)
         end
@@ -37,8 +41,9 @@ module Lite
           results.push(self).sort_by!(&:index)
         end
 
-        def increment_execution_index
-          @index = context.index = index.next
+        def freeze_execution_objects
+          context.freeze if index == 1
+          freeze
         end
 
       end

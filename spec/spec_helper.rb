@@ -10,11 +10,7 @@ require "lite/command"
 
 spec_path = Pathname.new(File.expand_path("../spec", File.dirname(__FILE__)))
 
-%w[commands commands/child].each do |dir|
-  Dir.each_child(spec_path.join("support/#{dir}")) do |f|
-    load(spec_path.join("support/#{dir}/#{f}")) if f.end_with?(".rb")
-  end
-end
+Dir.glob(spec_path.join("support/**/*.rb")).map { |f| load(f) }
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
@@ -35,5 +31,19 @@ RSpec.configure do |config|
     FileUtils.remove_dir(temp_path) if File.directory?(temp_path)
   end
 
-  config.include ActiveSupport::Testing::TimeHelpers
+  config.before do |example|
+    [
+      Child::NoopCommand,
+      Child::SuccessCommand,
+      ErrorCommand,
+      ExceptionCommand,
+      FailureCommand,
+      InvalidCommand,
+      NoopCommand,
+      SuccessCommand,
+      ThrownCommand
+    ].each do |klass|
+      allow_any_instance_of(klass).to receive(:freeze_execution_objects).and_return(true)
+    end
+  end
 end

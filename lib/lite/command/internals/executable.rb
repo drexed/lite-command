@@ -74,6 +74,7 @@ module Lite
           on_after_execution
           stop_monotonic_time
           append_execution_result
+          freeze_execution_objects
         end
 
         def around_execution

@@ -216,6 +216,15 @@ RSpec.describe Lite::Command::Base do
         expect(command.state).to eq(Lite::Command::DNF)
       end
     end
+
+    context "when executed" do
+      it "freezes the command and its context" do
+        allow_any_instance_of(SuccessCommand).to receive(:freeze_execution_objects).and_call_original
+
+        expect(command).to be_frozen
+        expect(command.context).to be_frozen
+      end
+    end
   end
 
   describe "#callable" do
