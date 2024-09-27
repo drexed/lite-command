@@ -33,8 +33,9 @@ module Lite
             status:,
             reason:,
             fault: faulter&.trace&.index,
-            throw: thrower&.trace&.index
-          }.merge!(metadata.to_h).compact_blank
+            throw: thrower&.trace&.index,
+            runtime: execution_runtime
+          }
         end
         alias to_h to_hash
 

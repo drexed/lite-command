@@ -58,21 +58,12 @@ module Lite
 
         private
 
-        def current_execution_time
-          Time.respond_to?(:current) ? Time.current : Time.now
-        end
-
-        def before_execution_metadata
-          before_execution_runtime_metadata
-          before_execution_tracing_metadata
-        end
-
         def on_before_execution
           # Define in your class to run code before execution
         end
 
         def before_execution
-          before_execution_metadata
+          before_execution_monotonic_time
           executing!
           on_before_execution
         end
@@ -83,17 +74,13 @@ module Lite
           after_execution
         end
 
-        def after_execution_metadata
-          after_execution_runtime_metadata
-        end
-
         def on_after_execution
           # Define in your class to run code after execution
         end
 
         def after_execution
           fault? ? dnf! : complete!
-          after_execution_metadata
+          after_execution_monotonic_time
           append_execution_result
           on_after_execution
         end

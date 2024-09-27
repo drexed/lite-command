@@ -8,8 +8,7 @@ RSpec.describe Lite::Command::Base do
   let(:command_class) { SuccessCommand }
   let(:command_instance) { command_class.new }
 
-  before { travel_to(Time.parse("2021-05-11 17:20:00.000000000 -0500")) }
-  after { travel_back }
+  before { allow(Process).to receive(:clock_gettime).with(Process::CLOCK_MONOTONIC).and_return(1.0) }
 
   describe "#executable" do
     subject(:command) { command_instance.tap(&:execute) }
@@ -345,8 +344,8 @@ RSpec.describe Lite::Command::Base do
           "result" => "SUCCESS",
           "state" => "COMPLETE",
           "status" => "SUCCESS",
-          "started_at" => "2021-05-11T18:20:00.000-04:00",
-          "finished_at" => "2021-05-11T18:20:00.000-04:00",
+
+
           "runtime" => 0.0
         )
       end
@@ -368,8 +367,8 @@ RSpec.describe Lite::Command::Base do
           "reason" => "[!] command stopped due to noop",
           "fault" => 1,
           "throw" => 1,
-          "started_at" => "2021-05-11T18:20:00.000-04:00",
-          "finished_at" => "2021-05-11T18:20:00.000-04:00",
+
+
           "runtime" => 0.0
         )
       end
@@ -387,8 +386,8 @@ RSpec.describe Lite::Command::Base do
           "state" => "DNF",
           "status" => "INVALID",
           "reason" => "[!] command stopped due to invalid",
-          "started_at" => "2021-05-11T18:20:00.000-04:00",
-          "finished_at" => "2021-05-11T18:20:00.000-04:00",
+
+
           "runtime" => 0.0
         )
       end
@@ -406,8 +405,8 @@ RSpec.describe Lite::Command::Base do
           "state" => "DNF",
           "status" => "FAILURE",
           "reason" => "[!] command stopped due to failure",
-          "started_at" => "2021-05-11T18:20:00.000-04:00",
-          "finished_at" => "2021-05-11T18:20:00.000-04:00",
+
+
           "runtime" => 0.0
         )
       end
@@ -425,8 +424,8 @@ RSpec.describe Lite::Command::Base do
           "state" => "DNF",
           "status" => "ERROR",
           "reason" => "[!] command stopped due to error",
-          "started_at" => "2021-05-11T18:20:00.000-04:00",
-          "finished_at" => "2021-05-11T18:20:00.000-04:00",
+
+
           "runtime" => 0.0
         )
       end
@@ -444,8 +443,8 @@ RSpec.describe Lite::Command::Base do
           "state" => "DNF",
           "status" => "ERROR",
           "reason" => "[RuntimeError] [!] command stopped due to exception",
-          "started_at" => "2021-05-11T18:20:00.000-04:00",
-          "finished_at" => "2021-05-11T18:20:00.000-04:00",
+
+
           "runtime" => 0.0
         )
       end
@@ -467,8 +466,8 @@ RSpec.describe Lite::Command::Base do
           "reason" => "[!] command stopped due to child noop",
           "fault" => 5,
           "throw" => 5,
-          "started_at" => "2021-05-11T18:20:00.000-04:00",
-          "finished_at" => "2021-05-11T18:20:00.000-04:00",
+
+
           "runtime" => 0.0
         )
       end
