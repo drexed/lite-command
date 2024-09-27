@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "forwardable" unless defined?(Forwardable)
+
 module Lite
   module Command
     class Results

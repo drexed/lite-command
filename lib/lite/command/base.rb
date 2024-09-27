@@ -7,8 +7,6 @@ module Lite
       def self.inherited(base)
         super
 
-        base.extend Forwardable
-
         base.include Lite::Command::Internals::Runnable
         base.include Lite::Command::Internals::Callable
         base.include Lite::Command::Internals::Executable
