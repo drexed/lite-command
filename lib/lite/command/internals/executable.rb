@@ -18,14 +18,12 @@ module Lite
 
         def execute
           around_execution { call }
-        rescue Lite::Command::Fault => e
-          send(:"#{e.fault_name}", e)
-          after_execution
-          send(:"on_#{e.fault_name}", e)
         rescue StandardError => e
-          error(e)
+          fn = e.respond_to?(:fault_name) ? e.fault_name : ERROR
+
+          send(:"#{fn}", e)
           after_execution
-          on_error(e)
+          send(:"on_#{fn}", e)
         end
 
         def execute!
