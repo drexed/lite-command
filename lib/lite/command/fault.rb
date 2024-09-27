@@ -11,10 +11,11 @@ module Lite
       attr_reader :faulter, :thrower, :reason
 
       def initialize(faulter, thrower, reason)
+        super(reason)
+
         @faulter = faulter
         @thrower = thrower
         @reason = reason
-        super(reason)
       end
 
       def fault_klass
