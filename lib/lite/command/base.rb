@@ -17,12 +17,10 @@ module Lite
           class #{base}::Fault < Lite::Command::Fault; end
         RUBY
 
-        FAULTS.each do |call_fault|
-          fault_method = call_fault.downcase.capitalize
-
+        FAULTS.each do |f|
           base.class_eval <<-RUBY, __FILE__, __LINE__ + 1
             # eg: Users::ResetPassword::Noop < Users::ResetPassword::Fault
-            class #{base}::#{fault_method} < #{base}::Fault; end
+            class #{base}::#{f.capitalize} < #{base}::Fault; end
           RUBY
         end
       end

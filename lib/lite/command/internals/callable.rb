@@ -48,11 +48,11 @@ module Lite
         end
 
         def fault?(message = nil)
-          FAULTS.any? { |f| send(:"#{f.downcase}?", message) }
+          FAULTS.any? { |f| send(:"#{f}?", message) }
         end
 
         def status
-          STATUSES.find { |s| send(:"#{s.downcase}?") }
+          STATUSES.find { |s| send(:"#{s}?") }
         end
 
         def faulter?
@@ -67,12 +67,10 @@ module Lite
           fault? && !faulter?
         end
 
-        FAULTS.each do |call_fault|
-          fault_method = call_fault.downcase
-
+        FAULTS.each do |f|
           # eg: error?(message = nil)
-          define_method(:"#{fault_method}?") do |message = nil|
-            fault_result = instance_variable_get(:"@#{fault_method}") || false
+          define_method(:"#{f}?") do |message = nil|
+            fault_result = instance_variable_get(:"@#{f}") || false
             return fault_result if message.nil?
 
             reason == message
@@ -129,26 +127,24 @@ module Lite
         def throw!(command)
           return if command.success?
 
-          send(:"#{command.status.downcase}!", command)
+          send(:"#{command.status}!", command)
         end
 
-        FAULTS.each do |call_fault|
-          fault_method = call_fault.downcase
-
+        FAULTS.each do |f|
           # eg: error(object)
-          define_method(:"#{fault_method}") do |object|
+          define_method(:"#{f}") do |object|
             fault(object)
-            instance_variable_set(:"@#{fault_method}", true)
+            instance_variable_set(:"@#{f}", true)
           end
 
           # eg: invalid!(object)
-          define_method(:"#{fault_method}!") do |object|
-            send(:"#{fault_method}", object)
-            raise_fault(Lite::Command.const_get(fault_method.capitalize), object)
+          define_method(:"#{f}!") do |object|
+            send(:"#{f}", object)
+            raise_fault(Lite::Command.const_get(f.capitalize), object)
           end
 
           # eg: on_noop(exception)
-          define_method(:"on_#{fault_method}") do |_exception|
+          define_method(:"on_#{f}") do |_exception|
             # Define in your class to run code when a StandardError happens
           end
         end

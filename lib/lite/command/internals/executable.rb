@@ -46,14 +46,12 @@ module Lite
           dnf? || complete?
         end
 
-        STATES.each do |execution_state|
-          state_method = execution_state.downcase
-
+        STATES.each do |s|
           # eg: running?
-          define_method(:"#{state_method}?") { state == execution_state }
+          define_method(:"#{s}?") { state == s }
 
           # eg: dnf!
-          define_method(:"#{state_method}!") { @state = execution_state }
+          define_method(:"#{s}!") { @state = s }
         end
 
         private
