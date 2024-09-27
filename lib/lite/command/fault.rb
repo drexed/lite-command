@@ -17,12 +17,12 @@ module Lite
         super(reason)
       end
 
-      def demodualized_name
-        @demodualized_name ||= self.class.name.split("::").last
+      def fault_klass
+        @fault_klass ||= self.class.name.split("::").last
       end
 
-      def fault_method
-        @fault_method ||= demodualized_name.downcase
+      def fault_name
+        @fault_name ||= fault_klass.downcase
       end
 
     end

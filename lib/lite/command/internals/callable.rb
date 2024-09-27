@@ -116,7 +116,7 @@ module Lite
 
         # eg: Users::ResetPassword::Noop.new(...)
         def raise_dynamic_fault(exception)
-          fault_klass = self.class.const_get(exception.demodualized_name)
+          fault_klass = self.class.const_get(exception.fault_klass)
           raise_fault(fault_klass, exception)
         end
 

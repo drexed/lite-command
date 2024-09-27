@@ -19,9 +19,9 @@ module Lite
         def execute
           around_execution { call }
         rescue Lite::Command::Fault => e
-          send(:"#{e.fault_method}", e)
+          send(:"#{e.fault_name}", e)
           after_execution
-          send(:"on_#{e.fault_method}", e)
+          send(:"on_#{e.fault_name}", e)
         rescue StandardError => e
           error(e)
           after_execution
