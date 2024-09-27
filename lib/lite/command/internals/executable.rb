@@ -7,10 +7,10 @@ module Lite
     # is ran, it will always complete or dnf if a fault is thrown by a
     # child command.
     STATES = [
-      PENDING = "PENDING",
-      EXECUTING = "EXECUTING",
-      COMPLETE = "COMPLETE",
-      DNF = "DNF"
+      PENDING = "pending",
+      EXECUTING = "executing",
+      COMPLETE = "complete",
+      DNF = "dnf"
     ].freeze
 
     module Internals

@@ -327,9 +327,9 @@ RSpec.describe Lite::Command::Base do
         expect(command_instance.to_hash).to eq(
           index:  0,
           command: "SuccessCommand",
-          result: "PENDING",
-          state: "PENDING",
-          status: "SUCCESS",
+          result: "pending",
+          state: "pending",
+          status: "success",
           runtime: 0.0
         )
       end
@@ -342,9 +342,9 @@ RSpec.describe Lite::Command::Base do
         expect(command.to_hash).to eq(
           index:  1,
           command: "SuccessCommand",
-          result: "SUCCESS",
-          state: "COMPLETE",
-          status: "SUCCESS",
+          result: "success",
+          state: "complete",
+          status: "success",
           runtime: 0.0
         )
       end
@@ -359,9 +359,9 @@ RSpec.describe Lite::Command::Base do
         expect(command.to_hash).to eq(
           index:  1,
           command: "NoopCommand",
-          result: "NOOP",
-          state: "DNF",
-          status: "NOOP",
+          result: "noop",
+          state: "dnf",
+          status: "noop",
           reason: "[!] command stopped due to noop",
           fault: 1,
           throw: 1,
@@ -379,9 +379,9 @@ RSpec.describe Lite::Command::Base do
         expect(command.to_hash).to eq(
           index:  1,
           command: "InvalidCommand",
-          result: "INVALID",
-          state: "DNF",
-          status: "INVALID",
+          result: "invalid",
+          state: "dnf",
+          status: "invalid",
           reason: "[!] command stopped due to invalid",
           fault: 1,
           throw: 1,
@@ -399,9 +399,9 @@ RSpec.describe Lite::Command::Base do
         expect(command.to_hash).to eq(
           index:  1,
           command: "FailureCommand",
-          result: "FAILURE",
-          state: "DNF",
-          status: "FAILURE",
+          result: "failure",
+          state: "dnf",
+          status: "failure",
           reason: "[!] command stopped due to failure",
           fault: 1,
           throw: 1,
@@ -419,9 +419,9 @@ RSpec.describe Lite::Command::Base do
         expect(command.to_hash).to eq(
           index:  1,
           command: "ErrorCommand",
-          result: "ERROR",
-          state: "DNF",
-          status: "ERROR",
+          result: "error",
+          state: "dnf",
+          status: "error",
           reason: "[!] command stopped due to error",
           fault: 1,
           throw: 1,
@@ -439,9 +439,9 @@ RSpec.describe Lite::Command::Base do
         expect(command.to_hash).to eq(
           index:  1,
           command: "ExceptionCommand",
-          result: "ERROR",
-          state: "DNF",
-          status: "ERROR",
+          result: "error",
+          state: "dnf",
+          status: "error",
           reason: "[RuntimeError] [!] command stopped due to exception",
           fault: 1,
           throw: 1,
@@ -459,9 +459,9 @@ RSpec.describe Lite::Command::Base do
         expect(command.to_hash).to eq(
           index:  1,
           command: "ThrownCommand",
-          result: "DNF",
-          state: "DNF",
-          status: "NOOP",
+          result: "dnf",
+          state: "dnf",
+          status: "noop",
           reason: "[!] command stopped due to child noop",
           fault: 5,
           throw: 5,

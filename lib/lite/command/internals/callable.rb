@@ -7,14 +7,14 @@ module Lite
     # is thrown then a status of SUCCESS is returned even if `call`
     # has not been executed.
     FAULTS = [
-      NOOP = "NOOP",
-      INVALID = "INVALID",
-      FAILURE = "FAILURE",
-      ERROR = "ERROR"
+      NOOP = "noop",
+      INVALID = "invalid",
+      FAILURE = "failure",
+      ERROR = "error"
     ].freeze
     STATUSES = [
       *FAULTS,
-      SUCCESS = "SUCCESS"
+      SUCCESS = "success"
     ].freeze
 
     module Internals
