@@ -79,11 +79,11 @@ module Lite
 
         private
 
-        def fault_faulter(object)
+        def derive_faulter_from(object)
           (object.faulter if object.respond_to?(:faulter)) || self
         end
 
-        def fault_thrower(object)
+        def derive_thrower_from(object)
           if object.respond_to?(:executed?) && object.executed?
             object
           else
@@ -91,7 +91,7 @@ module Lite
           end
         end
 
-        def fault_reason(object)
+        def derive_reason_from(object)
           if object.respond_to?(:reason)
             object.reason
           elsif object.respond_to?(:message)
@@ -102,9 +102,9 @@ module Lite
         end
 
         def fault(object)
-          @faulter ||= fault_faulter(object)
-          @thrower ||= fault_thrower(object)
-          @reason ||= fault_reason(object)
+          @faulter ||= derive_faulter_from(object)
+          @thrower ||= derive_thrower_from(object)
+          @reason ||= derive_reason_from(object)
         end
 
         # eg: Lite::Command::Noop.new(...)
