@@ -43,14 +43,14 @@ module Lite
           status == SUCCESS
         end
 
-        def fault?(r = nil)
-          !success? && reason?(r)
+        def fault?(str = nil)
+          !success? && reason?(str)
         end
 
         FAULTS.each do |f|
           # eg: noop? or failure?("idk")
-          define_method(:"#{f}?") do |r = nil|
-            status == f && reason?(r)
+          define_method(:"#{f}?") do |str = nil|
+            status == f && reason?(str)
           end
         end
 

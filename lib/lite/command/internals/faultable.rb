@@ -11,10 +11,10 @@ module Lite
           end
         end
 
-        def reason?(r)
-          return true if r.nil?
+        def reason?(str)
+          return true if str.nil?
 
-          reason == r
+          reason == str
         end
 
         def caused_fault?
@@ -84,6 +84,5 @@ module Lite
 
       end
     end
-
   end
 end
