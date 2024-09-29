@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Simplified context merge
 - Fixed invalid looking at wrong variable
 - Renamed `fault` and `thrower` to `origin` and `source` respectively
+- Removed unused `additional_result_data` method
 ### Removed
 - Removed context init
 
