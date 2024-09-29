@@ -3,9 +3,6 @@
 module Lite
   module Command
 
-    # State represents the state of the executable code. Once `execute`
-    # is ran, it will always complete or dnf if a fault is thrown by a
-    # child command.
     STATES = [
       PENDING = "pending",
       EXECUTING = "executing",

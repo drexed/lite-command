@@ -3,19 +3,14 @@
 module Lite
   module Command
 
-    # Status represents the state of the callable code. If no fault
-    # is thrown then a status of SUCCESS is returned even if `call`
-    # has not been executed.
-    FAULTS = [
+    STATUSES = [
+      SUCCESS = "success",
       NOOP = "noop",
       INVALID = "invalid",
       FAILURE = "failure",
       ERROR = "error"
     ].freeze
-    STATUSES = [
-      *FAULTS,
-      SUCCESS = "success"
-    ].freeze
+    FAULTS = (STATUSES - [SUCCESS]).freeze
 
     module Internals
       module Callable
