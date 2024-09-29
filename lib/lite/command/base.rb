@@ -33,10 +33,6 @@ module Lite
 
       private
 
-      def additional_result_data
-        {} # Define in your class to add additional info to result hash
-      end
-
       def on_before_execution
         # Define in your class to run code before execution
       end
