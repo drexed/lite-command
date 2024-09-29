@@ -267,8 +267,8 @@ RSpec.describe Lite::Command::Base do
         expect(command).to be_faulter
         expect(command).to be_thrower
         expect(command).not_to be_thrown_fault
-        expect(command.error?("[!] command stopped due to invalid")).to be(true)
-        expect(command.error?("Some reason")).to be(false)
+        expect(command.invalid?("[!] command stopped due to invalid")).to be(true)
+        expect(command.invalid?("Some reason")).to be(false)
         expect(command.status).to eq(Lite::Command::INVALID)
       end
     end

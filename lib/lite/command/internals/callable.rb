@@ -38,16 +38,22 @@ module Lite
           raise NotImplementedError, "call method not defined in #{self.class}"
         end
 
-        def success?
-          !fault?
-        end
-
-        def fault?(message = nil)
-          FAULTS.any? { |f| send(:"#{f}?", message) }
-        end
-
         def status
-          STATUSES.find { |s| send(:"#{s}?") }
+          @status || SUCCESS
+        end
+
+        def success?
+          status == SUCCESS
+        end
+
+        def fault?(r = nil)
+          !success? && reason?(r)
+        end
+
+        def reason?(r)
+          return true if r.nil?
+
+          reason == r
         end
 
         def faulter?
@@ -63,12 +69,9 @@ module Lite
         end
 
         FAULTS.each do |f|
-          # eg: error?(message = nil)
-          define_method(:"#{f}?") do |message = nil|
-            fault_result = instance_variable_get(:"@#{f}") || false
-            return fault_result if message.nil?
-
-            reason == message
+          # eg: noop? or failure?("idk")
+          define_method(:"#{f}?") do |r = nil|
+            status == f && reason?(r)
           end
         end
 
@@ -129,7 +132,7 @@ module Lite
           # eg: error(object)
           define_method(:"#{f}") do |object|
             fault(object)
-            instance_variable_set(:"@#{f}", true)
+            @status = f
           end
 
           # eg: invalid!(object)

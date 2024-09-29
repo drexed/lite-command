@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.2] - 2024-09-29
+### Changed
+- Simplified status variable check
+- Simplified context merge
+- Fixed invalid looking at wrong variable
+### Removed
+- Removed context init
+
 ## [2.0.1] - 2024-09-27
 ### Removed
 - Activemodel dependency
