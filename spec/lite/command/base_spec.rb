@@ -250,8 +250,8 @@ RSpec.describe Lite::Command::Base do
 
       it "returns a noop status" do
         expect(command).to be_noop
-        expect(command).to be_origin
-        expect(command).to be_source
+        expect(command).to be_caused_fault
+        expect(command).to be_threw_fault
         expect(command).not_to be_thrown
         expect(command.noop?("[!] command stopped due to noop")).to be(true)
         expect(command.noop?("Some reason")).to be(false)
@@ -264,8 +264,8 @@ RSpec.describe Lite::Command::Base do
 
       it "returns a error status" do
         expect(command).to be_invalid
-        expect(command).to be_origin
-        expect(command).to be_source
+        expect(command).to be_caused_fault
+        expect(command).to be_threw_fault
         expect(command).not_to be_thrown
         expect(command.invalid?("[!] command stopped due to invalid")).to be(true)
         expect(command.invalid?("Some reason")).to be(false)
@@ -278,8 +278,8 @@ RSpec.describe Lite::Command::Base do
 
       it "returns a failure status" do
         expect(command).to be_failure
-        expect(command).to be_origin
-        expect(command).to be_source
+        expect(command).to be_caused_fault
+        expect(command).to be_threw_fault
         expect(command).not_to be_thrown
         expect(command.failure?("[!] command stopped due to failure")).to be(true)
         expect(command.failure?("Some reason")).to be(false)
@@ -292,8 +292,8 @@ RSpec.describe Lite::Command::Base do
 
       it "returns a error status" do
         expect(command).to be_error
-        expect(command).to be_origin
-        expect(command).to be_source
+        expect(command).to be_caused_fault
+        expect(command).to be_threw_fault
         expect(command).not_to be_thrown
         expect(command.error?("[!] command stopped due to error")).to be(true)
         expect(command.error?("Some reason")).to be(false)
@@ -306,8 +306,8 @@ RSpec.describe Lite::Command::Base do
 
       it "returns a error status" do
         expect(command).to be_error
-        expect(command).to be_origin
-        expect(command).to be_source
+        expect(command).to be_caused_fault
+        expect(command).to be_threw_fault
         expect(command).not_to be_thrown
         expect(command.error?("[RuntimeError] [!] command stopped due to exception")).to be(true)
         expect(command.error?("Some reason")).to be(false)
@@ -320,13 +320,11 @@ RSpec.describe Lite::Command::Base do
 
       it "returns fault" do
         expect(command).to be_fault
-        expect(command).not_to be_origin
-        expect(command).not_to be_source
+        expect(command).not_to be_caused_fault
+        expect(command).not_to be_threw_fault
         expect(command).to be_thrown
         expect(command.fault?("[!] command stopped due to child noop")).to be(true)
         expect(command.fault?("Some reason")).to be(false)
-        expect(command.origin?).to be(false)
-        expect(command.source?).to be(false)
       end
     end
   end
@@ -375,8 +373,8 @@ RSpec.describe Lite::Command::Base do
           state: "dnf",
           status: "noop",
           reason: "[!] command stopped due to noop",
-          origin: 1,
-          source: 1,
+          caused_by: 1,
+          thrown_by: 1,
           runtime: 0.0123
         )
       end
@@ -395,8 +393,8 @@ RSpec.describe Lite::Command::Base do
           state: "dnf",
           status: "invalid",
           reason: "[!] command stopped due to invalid",
-          origin: 1,
-          source: 1,
+          caused_by: 1,
+          thrown_by: 1,
           runtime: 0.0123
         )
       end
@@ -415,8 +413,8 @@ RSpec.describe Lite::Command::Base do
           state: "dnf",
           status: "failure",
           reason: "[!] command stopped due to failure",
-          origin: 1,
-          source: 1,
+          caused_by: 1,
+          thrown_by: 1,
           runtime: 0.0123
         )
       end
@@ -435,8 +433,8 @@ RSpec.describe Lite::Command::Base do
           state: "dnf",
           status: "error",
           reason: "[!] command stopped due to error",
-          origin: 1,
-          source: 1,
+          caused_by: 1,
+          thrown_by: 1,
           runtime: 0.0123
         )
       end
@@ -455,8 +453,8 @@ RSpec.describe Lite::Command::Base do
           state: "dnf",
           status: "error",
           reason: "[RuntimeError] [!] command stopped due to exception",
-          origin: 1,
-          source: 1,
+          caused_by: 1,
+          thrown_by: 1,
           runtime: 0.0123
         )
       end
@@ -475,8 +473,8 @@ RSpec.describe Lite::Command::Base do
           state: "dnf",
           status: "noop",
           reason: "[!] command stopped due to child noop",
-          origin: 5,
-          source: 5,
+          caused_by: 5,
+          thrown_by: 5,
           runtime: 0.0123
         )
       end

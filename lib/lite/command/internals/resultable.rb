@@ -34,8 +34,8 @@ module Lite
             state:,
             status:,
             reason:,
-            origin: origin&.index,
-            source: source&.index,
+            caused_by: caused_by&.index,
+            thrown_by: thrown_by&.index,
             runtime:
           }.compact
         end

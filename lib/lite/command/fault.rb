@@ -5,13 +5,13 @@ module Lite
 
     class Fault < StandardError
 
-      attr_reader :origin, :source, :reason
+      attr_reader :caused_by, :thrown_by, :reason
 
-      def initialize(origin, source, reason)
+      def initialize(caused_by, thrown_by, reason)
         super(reason)
 
-        @origin = origin
-        @source = source
+        @caused_by = caused_by
+        @thrown_by = thrown_by
         @reason = reason
       end
 
