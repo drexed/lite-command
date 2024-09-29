@@ -16,7 +16,7 @@ module Lite
         end
 
         def outcome
-          return state if pending? || thrown_fault?
+          return state if pending? || thrown?
 
           status
         end
@@ -34,8 +34,8 @@ module Lite
             state:,
             status:,
             reason:,
-            fault: faulter&.index,
-            throw: thrower&.index,
+            origin: origin&.index,
+            source: source&.index,
             runtime:
           }.compact
         end

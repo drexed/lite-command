@@ -18,7 +18,7 @@ module Lite
         def self.included(base)
           base.extend ClassMethods
           base.class_eval do
-            attr_reader :faulter, :thrower, :reason
+            attr_reader :origin, :source, :reason
           end
         end
 
@@ -56,16 +56,16 @@ module Lite
           reason == r
         end
 
-        def faulter?
-          faulter == self
+        def origin?
+          origin == self
         end
 
-        def thrower?
-          thrower == self
+        def source?
+          source == self
         end
 
-        def thrown_fault?
-          fault? && !faulter?
+        def thrown?
+          fault? && !origin?
         end
 
         FAULTS.each do |f|
@@ -77,15 +77,15 @@ module Lite
 
         private
 
-        def derive_faulter_from(object)
-          (object.faulter if object.respond_to?(:faulter)) || self
+        def derive_origin_from(object)
+          (object.origin if object.respond_to?(:origin)) || self
         end
 
-        def derive_thrower_from(object)
+        def derive_source_from(object)
           if object.respond_to?(:executed?) && object.executed?
             object
           else
-            (object.thrower if object.respond_to?(:thrower)) || faulter
+            (object.source if object.respond_to?(:source)) || origin
           end
         end
 
@@ -100,14 +100,14 @@ module Lite
         end
 
         def fault(object)
-          @faulter ||= derive_faulter_from(object)
-          @thrower ||= derive_thrower_from(object)
+          @origin ||= derive_origin_from(object)
+          @source ||= derive_source_from(object)
           @reason ||= derive_reason_from(object)
         end
 
         # eg: Lite::Command::Noop.new(...)
         def raise_fault(klass, object)
-          exception = klass.new(faulter, self, reason)
+          exception = klass.new(origin, self, reason)
           exception.set_backtrace(object.backtrace) if object.respond_to?(:backtrace)
           raise(exception)
         end

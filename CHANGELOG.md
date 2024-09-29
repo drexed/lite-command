@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Simplified status variable check
 - Simplified context merge
 - Fixed invalid looking at wrong variable
+- Renamed `fault` and `thrower` to `origin` and `source` respectively
 ### Removed
 - Removed context init
 
