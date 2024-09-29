@@ -6,25 +6,20 @@ module Lite
   module Command
     class Context < OpenStruct
 
-      def self.init(attributes = {})
+      def self.build(attributes = {})
+        return attributes if attributes.is_a?(self) && !attributes.frozen?
+
         # To save memory and speed up the access to an attribute, the accessor methods
         # of an attribute are lazy loaded at certain points. This means that the methods
         # are defined only when a set of defined actions are triggered. This allows context
         # to only define the minimum amount of required methods to make your data structure work
-        os = new(attributes)
+        os = new(attributes.to_h)
         os.methods(false)
         os
       end
 
-      def self.build(attributes = {})
-        return attributes if attributes.is_a?(self) && !attributes.frozen?
-
-        init(attributes.to_h)
-      end
-
       def merge!(attributes = {})
-        attrs = attributes.is_a?(self.class) ? attributes.to_h : attributes
-        attrs.each { |k, v| self[k] = v }
+        attributes.to_h.each { |k, v| self[k] = v }
       end
 
     end

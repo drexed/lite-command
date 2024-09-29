@@ -25,6 +25,7 @@ module Lite
       end
 
       attr_reader :context
+      alias ctx context
 
       def initialize(context = {})
         @context = Lite::Command::Context.build(context)
