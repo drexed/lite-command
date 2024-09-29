@@ -9,6 +9,7 @@ module Lite
 
         base.include Lite::Command::Internals::Callable
         base.include Lite::Command::Internals::Executable
+        base.include Lite::Command::Internals::Faultable
         base.include Lite::Command::Internals::Resultable
 
         base.class_eval <<-RUBY, __FILE__, __LINE__ + 1
