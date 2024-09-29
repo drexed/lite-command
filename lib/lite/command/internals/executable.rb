@@ -42,7 +42,7 @@ module Lite
         end
 
         STATES.each do |s|
-          # eg: running?
+          # eg: executing?
           define_method(:"#{s}?") { state == s }
 
           # eg: dnf!
