@@ -37,49 +37,43 @@ module Lite
           send(:"#{command.status}!", command)
         end
 
-        def derive_caused_by_from(fault_or_string)
-          (fault_or_string.caused_by if fault_or_string.respond_to?(:caused_by)) || self
+        def derive_caused_by_from(object)
+          (object.caused_by if object.respond_to?(:caused_by)) || self
         end
 
-        def derive_thrown_by_from(fault_or_string)
-          if fault_or_string.respond_to?(:executed?) && fault_or_string.executed?
-            fault_or_string
+        def derive_thrown_by_from(object)
+          if object.respond_to?(:executed?) && object.executed?
+            object
           else
-            (fault_or_string.thrown_by if fault_or_string.respond_to?(:thrown_by)) || caused_by
+            (object.thrown_by if object.respond_to?(:thrown_by)) || caused_by
           end
         end
 
-        def derive_reason_from(fault_or_string)
-          if fault_or_string.respond_to?(:reason)
-            fault_or_string.reason
-          elsif fault_or_string.respond_to?(:message)
-            "[#{fault_or_string.class.name}] #{fault_or_string.message}".chomp(".")
+        def derive_reason_from(object)
+          if object.respond_to?(:reason)
+            object.reason
+          elsif object.respond_to?(:message)
+            "[#{object.class.name}] #{object.message}".chomp(".")
           else
-            fault_or_string
+            object
           end
         end
 
-        def derive_fault_from(fault_or_string)
-          @caused_by ||= derive_caused_by_from(fault_or_string)
-          @thrown_by ||= derive_thrown_by_from(fault_or_string)
-          @reason ||= derive_reason_from(fault_or_string)
-        end
-
-        # eg: Lite::Command::Noop.new(...)
-        def raise_fault(klass, thrower)
-          exception = klass.new(caused_by, self, reason)
-          exception.set_backtrace(thrower.backtrace) if thrower.respond_to?(:backtrace)
-          raise(exception)
-        end
-
-        # eg: Users::ResetPassword::Noop.new(...)
-        def raise_dynamic_fault(exception)
-          fault_klass = self.class.const_get(exception.fault_klass)
-          raise_fault(fault_klass, exception)
+        def derive_fault_from(object)
+          @caused_by ||= derive_caused_by_from(object)
+          @thrown_by ||= derive_thrown_by_from(object)
+          @reason ||= derive_reason_from(object)
         end
 
         def raise_dynamic_faults?
           false
+        end
+
+        # eg: Lite::Command::Noop.new(...)
+        def build_fault(klass, thrower)
+          fault = klass.new(caused_by, self, reason)
+          fault.set_backtrace(thrower.backtrace) if thrower.respond_to?(:backtrace)
+          fault
         end
 
       end

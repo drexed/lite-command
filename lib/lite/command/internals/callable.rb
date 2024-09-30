@@ -57,16 +57,19 @@ module Lite
         private
 
         FAULTS.each do |f|
-          # eg: error(fault_or_string)
-          define_method(:"#{f}") do |fault_or_string|
-            derive_fault_from(fault_or_string)
+          # eg: error(object)
+          define_method(:"#{f}") do |object|
+            derive_fault_from(object)
             @status = f
           end
 
-          # eg: invalid!(fault_or_string)
-          define_method(:"#{f}!") do |fault_or_string|
-            send(:"#{f}", fault_or_string)
-            raise_fault(Lite::Command.const_get(f.capitalize), fault_or_string)
+          # eg: invalid!(object)
+          define_method(:"#{f}!") do |object|
+            send(:"#{f}", object)
+
+            klass = raise_dynamic_faults? ? self.class : Lite::Command
+            fault = build_fault(klass.const_get(f.capitalize), object)
+            raise fault
           end
 
           # eg: on_noop(exception)

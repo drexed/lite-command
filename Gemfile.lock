@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    lite-command (2.0.2)
+    lite-command (2.0.3)
       ostruct
 
 GEM
