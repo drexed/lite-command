@@ -15,12 +15,8 @@ module Lite
         @thrown_by = thrown_by
       end
 
-      def fault_klass
-        @fault_klass ||= self.class.name.split("::").last
-      end
-
-      def fault_name
-        @fault_name ||= fault_klass.downcase
+      def type
+        @type ||= self.class.name.split("::").last.downcase
       end
 
     end

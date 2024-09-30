@@ -16,11 +16,11 @@ module Lite
         def execute
           around_execution { call }
         rescue StandardError => e
-          fn = e.respond_to?(:fault_name) ? e.fault_name : ERROR
+          f = e.respond_to?(:type) ? e.type : ERROR
 
-          send(:"#{fn}", e)
+          send(:"#{f}", e)
           after_execution
-          send(:"on_#{fn}", e)
+          send(:"on_#{f}", e)
         end
 
         def execute!

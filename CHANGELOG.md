@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Simplify error building
 - Reduced recalling error since we can just throw it once
+- Rename `fault_name` to `type`
 
 ## [2.0.2] - 2024-09-29
 ### Added
