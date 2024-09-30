@@ -13,16 +13,15 @@ module Lite
         base.include Lite::Command::Internals::Resultable
 
         base.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-          # eg: Users::ResetPassword::Fault
-          class #{base}::Fault < Lite::Command::Fault; end
-        RUBY
+          # eg: Users::ResetPassword::Fault < Lite::Command::Fault
+          #{base}::Fault = Class.new(Lite::Command::Fault)
 
-        FAULTS.each do |f|
-          base.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-            # eg: Users::ResetPassword::Noop < Users::ResetPassword::Fault
-            class #{base}::#{f.capitalize} < #{base}::Fault; end
-          RUBY
-        end
+          # eg: Users::ResetPassword::Noop < Users::ResetPassword::Fault
+          #{base}::Noop    = Class.new(#{base}::Fault)
+          #{base}::Invalid = Class.new(#{base}::Fault)
+          #{base}::Failure = Class.new(#{base}::Fault)
+          #{base}::Error   = Class.new(#{base}::Fault)
+        RUBY
       end
 
       attr_reader :context

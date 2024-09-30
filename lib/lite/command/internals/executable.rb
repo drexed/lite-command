@@ -4,10 +4,10 @@ module Lite
   module Command
 
     STATES = [
-      PENDING = "pending",
+      PENDING   = "pending",
       EXECUTING = "executing",
-      COMPLETE = "complete",
-      DNF = "dnf"
+      COMPLETE  = "complete",
+      DNF       = "dnf"
     ].freeze
 
     module Internals

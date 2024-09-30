@@ -5,10 +5,10 @@ module Lite
 
     STATUSES = [
       SUCCESS = "success",
-      NOOP = "noop",
+      NOOP    = "noop",
       INVALID = "invalid",
       FAILURE = "failure",
-      ERROR = "error"
+      ERROR   = "error"
     ].freeze
     FAULTS = (STATUSES - [SUCCESS]).freeze
 
