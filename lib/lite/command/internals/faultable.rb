@@ -69,9 +69,10 @@ module Lite
           false
         end
 
-        # eg: Lite::Command::Noop.new(...)
-        def build_fault(klass, thrower)
-          fault = klass.new(caused_by, self, reason)
+        # eg: Lite::Command::Noop.new(...) or Users::ResetPassword::Noop.new(...)
+        def fault(type, thrower)
+          klass = raise_dynamic_faults? ? self.class : Lite::Command
+          fault = klass.const_get(type.to_s).new(reason, caused_by, self)
           fault.set_backtrace(thrower.backtrace) if thrower.respond_to?(:backtrace)
           fault
         end

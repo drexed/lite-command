@@ -66,10 +66,7 @@ module Lite
           # eg: invalid!(object)
           define_method(:"#{f}!") do |object|
             send(:"#{f}", object)
-
-            klass = raise_dynamic_faults? ? self.class : Lite::Command
-            fault = build_fault(klass.const_get(f.capitalize), object)
-            raise fault
+            raise fault(f.capitalize, object)
           end
 
           # eg: on_noop(exception)

@@ -5,14 +5,14 @@ module Lite
 
     class Fault < StandardError
 
-      attr_reader :caused_by, :thrown_by, :reason
+      attr_reader :reason, :caused_by, :thrown_by
 
-      def initialize(caused_by, thrown_by, reason)
+      def initialize(reason, caused_by, thrown_by)
         super(reason)
 
+        @reason = reason
         @caused_by = caused_by
         @thrown_by = thrown_by
-        @reason = reason
       end
 
       def fault_klass
