@@ -70,9 +70,9 @@ RSpec.describe Lite::Command::Base do
         expect { command_instance.execute! }.to raise_error(NoopCommand::Noop, "[!] command stopped due to noop")
       end
 
-      it "returns a dnf state" do
-        expect(command).to be_dnf
-        expect(command.state).to eq(Lite::Command::DNF)
+      it "returns a interrupted state" do
+        expect(command).to be_interrupted
+        expect(command.state).to eq(Lite::Command::INTERRUPTED)
       end
     end
 
@@ -98,9 +98,9 @@ RSpec.describe Lite::Command::Base do
         expect { command_instance.execute! }.to raise_error(InvalidCommand::Invalid, "[!] command stopped due to invalid")
       end
 
-      it "returns a dnf state" do
-        expect(command).to be_dnf
-        expect(command.state).to eq(Lite::Command::DNF)
+      it "returns a interrupted state" do
+        expect(command).to be_interrupted
+        expect(command.state).to eq(Lite::Command::INTERRUPTED)
       end
     end
 
@@ -126,9 +126,9 @@ RSpec.describe Lite::Command::Base do
         expect { command_instance.execute! }.to raise_error(FailureCommand::Failure, "[!] command stopped due to failure")
       end
 
-      it "returns a dnf state" do
-        expect(command).to be_dnf
-        expect(command.state).to eq(Lite::Command::DNF)
+      it "returns a interrupted state" do
+        expect(command).to be_interrupted
+        expect(command.state).to eq(Lite::Command::INTERRUPTED)
       end
     end
 
@@ -154,9 +154,9 @@ RSpec.describe Lite::Command::Base do
         expect { command_instance.execute! }.to raise_error(ErrorCommand::Error, "[!] command stopped due to error")
       end
 
-      it "returns a dnf state" do
-        expect(command).to be_dnf
-        expect(command.state).to eq(Lite::Command::DNF)
+      it "returns a interrupted state" do
+        expect(command).to be_interrupted
+        expect(command.state).to eq(Lite::Command::INTERRUPTED)
       end
     end
 
@@ -186,9 +186,9 @@ RSpec.describe Lite::Command::Base do
         expect { command_instance.execute! }.to raise_error(ThrownCommand::Noop, "[!] command stopped due to child noop")
       end
 
-      it "returns a dnf state" do
-        expect(command).to be_dnf
-        expect(command.state).to eq(Lite::Command::DNF)
+      it "returns a interrupted state" do
+        expect(command).to be_interrupted
+        expect(command.state).to eq(Lite::Command::INTERRUPTED)
       end
     end
 
@@ -214,9 +214,9 @@ RSpec.describe Lite::Command::Base do
         command
       end
 
-      it "returns a dnf state" do
-        expect(command).to be_dnf
-        expect(command.state).to eq(Lite::Command::DNF)
+      it "returns a interrupted state" do
+        expect(command).to be_interrupted
+        expect(command.state).to eq(Lite::Command::INTERRUPTED)
       end
     end
 
@@ -370,7 +370,7 @@ RSpec.describe Lite::Command::Base do
           cid: "018c2b95-b764-7615-a924-cc5b910ed1e5",
           command: "NoopCommand",
           outcome: "noop",
-          state: "dnf",
+          state: "interrupted",
           status: "noop",
           reason: "[!] command stopped due to noop",
           caused_by: 1,
@@ -390,7 +390,7 @@ RSpec.describe Lite::Command::Base do
           cid: "018c2b95-b764-7615-a924-cc5b910ed1e5",
           command: "InvalidCommand",
           outcome: "invalid",
-          state: "dnf",
+          state: "interrupted",
           status: "invalid",
           reason: "[!] command stopped due to invalid",
           caused_by: 1,
@@ -410,7 +410,7 @@ RSpec.describe Lite::Command::Base do
           cid: "018c2b95-b764-7615-a924-cc5b910ed1e5",
           command: "FailureCommand",
           outcome: "failure",
-          state: "dnf",
+          state: "interrupted",
           status: "failure",
           reason: "[!] command stopped due to failure",
           caused_by: 1,
@@ -430,7 +430,7 @@ RSpec.describe Lite::Command::Base do
           cid: "018c2b95-b764-7615-a924-cc5b910ed1e5",
           command: "ErrorCommand",
           outcome: "error",
-          state: "dnf",
+          state: "interrupted",
           status: "error",
           reason: "[!] command stopped due to error",
           caused_by: 1,
@@ -450,7 +450,7 @@ RSpec.describe Lite::Command::Base do
           cid: "018c2b95-b764-7615-a924-cc5b910ed1e5",
           command: "ExceptionCommand",
           outcome: "error",
-          state: "dnf",
+          state: "interrupted",
           status: "error",
           reason: "[RuntimeError] [!] command stopped due to exception",
           caused_by: 1,
@@ -469,8 +469,8 @@ RSpec.describe Lite::Command::Base do
           index: 1,
           cid: "018c2b95-b764-7615-a924-cc5b910ed1e5",
           command: "ThrownCommand",
-          outcome: "dnf",
-          state: "dnf",
+          outcome: "interrupted",
+          state: "interrupted",
           status: "noop",
           reason: "[!] command stopped due to child noop",
           caused_by: 5,

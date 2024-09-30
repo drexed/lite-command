@@ -4,10 +4,10 @@ module Lite
   module Command
 
     STATES = [
-      PENDING   = "pending",
-      EXECUTING = "executing",
-      COMPLETE  = "complete",
-      DNF       = "dnf"
+      PENDING     = "pending",
+      EXECUTING   = "executing",
+      COMPLETE    = "complete",
+      INTERRUPTED = "interrupted"
     ].freeze
 
     module Internals
@@ -35,14 +35,14 @@ module Lite
         end
 
         def executed?
-          dnf? || complete?
+          complete? || interrupted?
         end
 
         STATES.each do |s|
           # eg: executing?
           define_method(:"#{s}?") { state == s }
 
-          # eg: dnf!
+          # eg: interrupted!
           define_method(:"#{s}!") { @state = s }
         end
 
@@ -57,7 +57,7 @@ module Lite
         end
 
         def after_execution
-          fault? ? dnf! : complete!
+          fault? ? interrupted! : complete!
           on_after_execution
           stop_monotonic_time
           append_execution_result
