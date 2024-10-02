@@ -5,14 +5,15 @@ module Lite
 
     class Fault < StandardError
 
-      attr_reader :reason, :caused_by, :thrown_by
+      attr_reader :caused_by, :thrown_by, :reason, :metadata
 
-      def initialize(reason, caused_by, thrown_by)
+      def initialize(**params)
+        @reason    = params.fetch(:reason)
+        @metadata  = params.fetch(:metadata)
+        @caused_by = params.fetch(:caused_by)
+        @thrown_by = params.fetch(:thrown_by)
+
         super(reason)
-
-        @reason = reason
-        @caused_by = caused_by
-        @thrown_by = thrown_by
       end
 
       def type

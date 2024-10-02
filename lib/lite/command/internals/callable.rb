@@ -43,31 +43,33 @@ module Lite
           status == SUCCESS
         end
 
-        def fault?(str = nil)
-          !success? && reason?(str)
+        def fault?(reason = nil)
+          !success? && reason?(reason)
         end
 
         FAULTS.each do |f|
           # eg: noop? or failure?("idk")
-          define_method(:"#{f}?") do |str = nil|
-            status == f && reason?(str)
+          define_method(:"#{f}?") do |reason = nil|
+            status == f && reason?(reason)
           end
         end
 
         private
 
-        def fault(object, type)
+        def fault(object, status, metadata)
+          @status   = status
+          @metadata = metadata
+
+          @reason    ||= derive_reason_from(object)
+          @metadata  ||= derive_metadata_from(object)
           @caused_by ||= derive_caused_by_from(object)
           @thrown_by ||= derive_thrown_by_from(object)
-          @reason    ||= derive_reason_from(object)
-
-          @status = type
         end
 
         FAULTS.each do |f|
-          # eg: invalid!("idk") or failure!(fault)
-          define_method(:"#{f}!") do |object|
-            fault(object, f)
+          # eg: invalid!("idk") or failure!(fault) or error!("idk", { error_key: "some.error" })
+          define_method(:"#{f}!") do |object, metadata = nil|
+            fault(object, f, metadata)
             raise runtime_fault(f.capitalize, object)
           end
         end

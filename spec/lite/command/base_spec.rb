@@ -435,6 +435,10 @@ RSpec.describe Lite::Command::Base do
           state: "interrupted",
           status: "failure",
           reason: "[!] command stopped due to failure",
+          metadata: {
+            errors: { name: ["is too short"] },
+            i18n_key: "command.failure"
+          },
           caused_by: 1,
           thrown_by: 1,
           runtime: 0.0123
@@ -495,6 +499,10 @@ RSpec.describe Lite::Command::Base do
           state: "interrupted",
           status: "noop",
           reason: "[!] command stopped due to child noop",
+          metadata: {
+            errors: { name: ["doesn't start with an 'S'"] },
+            i18n_key: "command.noop"
+          },
           caused_by: 5,
           thrown_by: 5,
           runtime: 0.0123

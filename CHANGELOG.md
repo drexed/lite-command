@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.0.4] - 2024-10-04
 ### Added
 - Added `on_success` callback
+- Added passing metadata to faults
 ### Changed
 - Check error descendency instead of type
 ### Removed

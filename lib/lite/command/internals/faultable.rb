@@ -7,7 +7,7 @@ module Lite
 
         def self.included(base)
           base.class_eval do
-            attr_reader :caused_by, :thrown_by, :reason
+            attr_reader :reason, :metadata, :caused_by, :thrown_by
           end
         end
 
@@ -44,7 +44,8 @@ module Lite
         # eg: Lite::Command::Noop.new(...) or Users::ResetPassword::Noop.new(...)
         def runtime_fault(type, thrower)
           klass = raise_dynamic_faults? ? self.class : Lite::Command
-          fault = klass.const_get(type.to_s).new(reason, caused_by, self)
+          fault = klass.const_get(type.to_s)
+          fault = fault.new(reason:, metadata:, caused_by:, thrown_by: self)
           fault.set_backtrace(thrower.backtrace) if thrower.respond_to?(:backtrace)
           fault
         end
@@ -57,6 +58,12 @@ module Lite
           return object if object.respond_to?(:executed?) && object.executed?
 
           (object.thrown_by if object.respond_to?(:thrown_by)) || caused_by
+        end
+
+        def derive_metadata_from(object)
+          return unless object.respond_to?(:metadata)
+
+          object.metadata
         end
 
         def derive_reason_from(object)

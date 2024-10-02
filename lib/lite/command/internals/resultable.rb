@@ -34,6 +34,7 @@ module Lite
             state:,
             status:,
             reason:,
+            metadata:,
             caused_by: caused_by&.index,
             thrown_by: thrown_by&.index,
             runtime:
