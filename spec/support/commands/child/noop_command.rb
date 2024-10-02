@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Child
-  class NoopCommand < Lite::Command::Base
+  class NoopCommand < BaseCommand
 
     def call
       noop!("[!] command stopped due to child noop")

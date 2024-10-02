@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class NoopCommand < Lite::Command::Base
+class NoopCommand < BaseCommand
 
   def call
     noop!("[!] command stopped due to noop")

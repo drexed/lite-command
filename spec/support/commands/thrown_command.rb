@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ThrownCommand < Lite::Command::Base
+class ThrownCommand < BaseCommand
 
   def call
     SuccessCommand.call(context)

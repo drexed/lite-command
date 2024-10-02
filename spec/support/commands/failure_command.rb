@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class FailureCommand < Lite::Command::Base
+class FailureCommand < BaseCommand
 
   def call
     fail!("[!] command stopped due to failure")

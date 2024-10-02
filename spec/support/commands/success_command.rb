@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class SuccessCommand < Lite::Command::Base
+class SuccessCommand < BaseCommand
 
   def call
     # Do nothing, no fault = success
