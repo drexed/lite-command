@@ -52,12 +52,14 @@ module Lite
           increment_execution_index
           assign_execution_cid
           start_monotonic_time
-          executing!
           on_before_execution if respond_to?(:on_before_execution, true)
+          executing!
+          on_executing if respond_to?(:on_executing, true)
         end
 
         def after_execution
-          fault? ? interrupted! : complete!
+          send(:"#{success? ? COMPLETE : INTERRUPTED}!")
+          send(:"on_#{state}") if respond_to?(:"on_#{state}", true)
           on_after_execution if respond_to?(:on_after_execution, true)
           stop_monotonic_time
           append_execution_result

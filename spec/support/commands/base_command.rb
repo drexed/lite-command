@@ -27,4 +27,10 @@ class BaseCommand < Lite::Command::Base
     end
   end
 
+  Lite::Command::STATES.each do |s|
+    define_method(:"on_#{s}") do
+      store_callback_executor(__method__)
+    end
+  end
+
 end

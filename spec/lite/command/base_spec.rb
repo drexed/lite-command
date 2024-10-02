@@ -45,7 +45,10 @@ RSpec.describe Lite::Command::Base do
       it "runs callbacks in correct order" do
         expect(command.context.callbacks).to eq(
           %w[
+            SuccessCommand.on_pending
             SuccessCommand.on_before_execution
+            SuccessCommand.on_executing
+            SuccessCommand.on_complete
             SuccessCommand.on_after_execution
             SuccessCommand.on_success
           ]
@@ -64,7 +67,10 @@ RSpec.describe Lite::Command::Base do
       it "runs callbacks in correct order" do
         expect(command.context.callbacks).to eq(
           %w[
+            NoopCommand.on_pending
             NoopCommand.on_before_execution
+            NoopCommand.on_executing
+            NoopCommand.on_interrupted
             NoopCommand.on_after_execution
             NoopCommand.on_noop
           ]
@@ -92,7 +98,10 @@ RSpec.describe Lite::Command::Base do
       it "runs callbacks in correct order" do
         expect(command.context.callbacks).to eq(
           %w[
+            InvalidCommand.on_pending
             InvalidCommand.on_before_execution
+            InvalidCommand.on_executing
+            InvalidCommand.on_interrupted
             InvalidCommand.on_after_execution
             InvalidCommand.on_invalid
           ]
@@ -120,7 +129,10 @@ RSpec.describe Lite::Command::Base do
       it "runs callbacks in correct order" do
         expect(command.context.callbacks).to eq(
           %w[
+            FailureCommand.on_pending
             FailureCommand.on_before_execution
+            FailureCommand.on_executing
+            FailureCommand.on_interrupted
             FailureCommand.on_after_execution
             FailureCommand.on_failure
           ]
@@ -148,7 +160,10 @@ RSpec.describe Lite::Command::Base do
       it "runs callbacks in correct order" do
         expect(command.context.callbacks).to eq(
           %w[
+            ErrorCommand.on_pending
             ErrorCommand.on_before_execution
+            ErrorCommand.on_executing
+            ErrorCommand.on_interrupted
             ErrorCommand.on_after_execution
             ErrorCommand.on_error
           ]
@@ -176,7 +191,10 @@ RSpec.describe Lite::Command::Base do
       it "runs callbacks in correct order" do
         expect(command.context.callbacks).to eq(
           %w[
+            ExceptionCommand.on_pending
             ExceptionCommand.on_before_execution
+            ExceptionCommand.on_executing
+            ExceptionCommand.on_interrupted
             ExceptionCommand.on_after_execution
             ExceptionCommand.on_error
           ]
@@ -208,19 +226,34 @@ RSpec.describe Lite::Command::Base do
       it "runs callbacks in correct order" do
         expect(command.context.callbacks).to eq(
           %w[
+            ThrownCommand.on_pending
             ThrownCommand.on_before_execution
+            ThrownCommand.on_executing
+            SuccessCommand.on_pending
             SuccessCommand.on_before_execution
+            SuccessCommand.on_executing
+            SuccessCommand.on_complete
             SuccessCommand.on_after_execution
             SuccessCommand.on_success
+            Child::SuccessCommand.on_pending
             Child::SuccessCommand.on_before_execution
+            Child::SuccessCommand.on_executing
+            Child::SuccessCommand.on_complete
             Child::SuccessCommand.on_after_execution
             Child::SuccessCommand.on_success
+            Child::SuccessCommand.on_pending
             Child::SuccessCommand.on_before_execution
+            Child::SuccessCommand.on_executing
+            Child::SuccessCommand.on_complete
             Child::SuccessCommand.on_after_execution
             Child::SuccessCommand.on_success
+            Child::NoopCommand.on_pending
             Child::NoopCommand.on_before_execution
+            Child::NoopCommand.on_executing
+            Child::NoopCommand.on_interrupted
             Child::NoopCommand.on_after_execution
             Child::NoopCommand.on_noop
+            ThrownCommand.on_interrupted
             ThrownCommand.on_after_execution
             ThrownCommand.on_noop
           ]
