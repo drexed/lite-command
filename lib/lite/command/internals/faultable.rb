@@ -54,11 +54,9 @@ module Lite
         end
 
         def derive_thrown_by_from(object)
-          if object.respond_to?(:executed?) && object.executed?
-            object
-          else
-            (object.thrown_by if object.respond_to?(:thrown_by)) || caused_by
-          end
+          return object if object.respond_to?(:executed?) && object.executed?
+
+          (object.thrown_by if object.respond_to?(:thrown_by)) || caused_by
         end
 
         def derive_reason_from(object)
