@@ -26,17 +26,17 @@ Or install it yourself as:
 * [Setup](#setup)
 * [Execution](#execution)
 * [Context](#context)
+* [States](#states)
 * [Statuses](#statuses)
 * [Callbacks](#callbacks)
     * [State Hooks](#status_hooks)
     * [Execution Hooks](#execution_hooks)
     * [Status Hooks](#status_hooks)
-* [States](#states)
 * [Generator](#generator)
 
 ## Setup
 
-Defining a command is as simple as adding a call method.
+Defining a command is as simple as adding a call method to a command object (required).
 
 ```ruby
 class CalculatePower < Lite::Command::Base
@@ -45,8 +45,15 @@ class CalculatePower < Lite::Command::Base
     # TODO: implement calculator
   end
 
+  private
+
+  # Domain logic...
+
 end
 ```
+
+> [!TIP]
+> You should make all of your domain logic private so that only the command API is exposed.
 
 ## Execution
 
@@ -165,6 +172,9 @@ command.noop?        #=> true
 command.noop?("idk") #=> false
 command.reason       #=> "Anything to the power of 1 is 1"
 ```
+
+> [!NOTE]
+> There is no `success!` method as its the default status.
 
 ## Callbacks
 
