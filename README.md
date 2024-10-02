@@ -25,13 +25,14 @@ Or install it yourself as:
 
 * [Setup](#setup)
 * [Execution](#execution)
+  * [Dynamic Faults](#dynamic_faults)
 * [Context](#context)
 * [States](#states)
 * [Statuses](#statuses)
 * [Callbacks](#callbacks)
-    * [State Hooks](#status_hooks)
-    * [Execution Hooks](#execution_hooks)
-    * [Status Hooks](#status_hooks)
+  * [State Hooks](#status_hooks)
+  * [Execution Hooks](#execution_hooks)
+  * [Status Hooks](#status_hooks)
 * [Generator](#generator)
 
 ## Setup
@@ -85,6 +86,31 @@ CalculatePower.call!(...)
 #=> raises Lite::Command::Fault
 ```
 
+### Dynamic Faults
+
+You can enable dynamic faults named after your command. This is
+especially helpful for catching + running custom logic or filtering
+out specific errors from you APM service.
+
+```ruby
+class CalculatePower < Lite::Command::Base
+
+  def call
+    # ...
+  end
+
+  private
+
+  def raise_dynamic_faults?
+    true
+  end
+
+end
+
+CalculatePower.call!(...)
+#=> raises CalculatePower::Fault
+```
+
 ## Context
 
 Accessing the call arguments can be done through its internal context.
@@ -115,8 +141,8 @@ command.context.result #=> 8
 | `complete`    | Command objects that executed to completion without fault/exception. |
 | `interrupted` | Command objects that could **NOT** be executed to completion due to a fault/exception. |
 
-**NOTE:** states are automatically set and can only be read via methods like
-`executing?` but not altered directly, eg:
+> [!CAUTION]
+> States are automatically transitioned and should NEVER be altered manually.
 
 ```ruby
 class CalculatePower < Lite::Command::Base
