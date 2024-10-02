@@ -171,7 +171,7 @@ on finalized internals. The following is an example of the hooks
 called for a failed command with a successful child command.
 
 ```ruby
--> 1. FooCommand.on_pending
+--> 1. FooCommand.on_pending
 -> 2. FooCommand.on_before_execution
 -> 3. FooCommand.on_executing
 -----> 3a. BarCommand.on_pending
