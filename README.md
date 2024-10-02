@@ -148,15 +148,21 @@ class CalculatePower < Lite::Command::Base
 
   private
 
+  def on_before_execution
+    # eg: Send working signal to frontend
+  end
+
   def on_after_execution
-    CalculatorResult.create(name: "Power calculated", result: ctx.result)
+    # eg: Store results to database
   end
 
 end
 ```
 
 Define callbacks that are executed when a fault/exception occurs.
-Available fault callbacks are `on_noop`, `on_invalid`, `on_failure`, and `on_error`.
+
+> [!NOTE]
+> The `on_success` callback does **NOT** take any arguments.
 
 ```ruby
 class CalculatePower < Lite::Command::Base
@@ -167,12 +173,24 @@ class CalculatePower < Lite::Command::Base
 
   private
 
-  def on_failure(_fault)
-    ctx.user.rollback!
+  def on_success
+    # eg: Increment KPI counter
   end
 
-  def on_error(e)
-    APM.report_error(e)
+  def on_noop(fault)
+    # eg: Log message for posterity
+  end
+
+  def on_invalid(fault)
+    # eg: Send metadata errors to frontend
+  end
+
+  def on_failure(fault)
+    # eg: rollback record changes
+  end
+
+  def on_error(fault_or_exception)
+    # eg: report to APM with tags and metadata
   end
 
 end
