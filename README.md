@@ -174,12 +174,12 @@ called for a failed command with a successful child command.
 -> 1. FooCommand.on_pending
 -> 2. FooCommand.on_before_execution
 -> 3. FooCommand.on_executing
-  --> 3a. BarCommand.on_pending
-  --> 3b. BarCommand.on_before_execution
-  --> 3c. BarCommand.on_executing
-  --> 3d. BarCommand.on_after_execution
-  --> 3e. BarCommand.on_success
-  --> 3f. BarCommand.on_complete
+  -> 3a. BarCommand.on_pending
+  -> 3b. BarCommand.on_before_execution
+  -> 3c. BarCommand.on_executing
+  -> 3d. BarCommand.on_after_execution
+  -> 3e. BarCommand.on_success
+  -> 3f. BarCommand.on_complete
 -> 4. FooCommand.on_after_execution
 -> 5. FooCommand.on_failure
 -> 6. FooCommand.on_interrupted
