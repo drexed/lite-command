@@ -20,6 +20,8 @@ module Lite
           fault(e, ERROR, metadata) unless e.is_a?(Lite::Command::Fault)
           after_execution
           send(:"on_#{status}", e) if respond_to?(:"on_#{status}", true)
+        ensure
+          send(:"on_#{state}") if respond_to?(:"on_#{state}", true)
         end
 
         def execute!
@@ -59,7 +61,6 @@ module Lite
 
         def after_execution
           send(:"#{success? ? COMPLETE : INTERRUPTED}!")
-          send(:"on_#{state}") if respond_to?(:"on_#{state}", true)
           on_after_execution if respond_to?(:on_after_execution, true)
           stop_monotonic_time
           append_execution_result

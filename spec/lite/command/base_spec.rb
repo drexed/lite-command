@@ -48,9 +48,9 @@ RSpec.describe Lite::Command::Base do
             SuccessCommand.on_pending
             SuccessCommand.on_before_execution
             SuccessCommand.on_executing
-            SuccessCommand.on_complete
             SuccessCommand.on_after_execution
             SuccessCommand.on_success
+            SuccessCommand.on_complete
           ]
         )
       end
@@ -70,9 +70,9 @@ RSpec.describe Lite::Command::Base do
             NoopCommand.on_pending
             NoopCommand.on_before_execution
             NoopCommand.on_executing
-            NoopCommand.on_interrupted
             NoopCommand.on_after_execution
             NoopCommand.on_noop
+            NoopCommand.on_interrupted
           ]
         )
       end
@@ -101,9 +101,9 @@ RSpec.describe Lite::Command::Base do
             InvalidCommand.on_pending
             InvalidCommand.on_before_execution
             InvalidCommand.on_executing
-            InvalidCommand.on_interrupted
             InvalidCommand.on_after_execution
             InvalidCommand.on_invalid
+            InvalidCommand.on_interrupted
           ]
         )
       end
@@ -132,9 +132,9 @@ RSpec.describe Lite::Command::Base do
             FailureCommand.on_pending
             FailureCommand.on_before_execution
             FailureCommand.on_executing
-            FailureCommand.on_interrupted
             FailureCommand.on_after_execution
             FailureCommand.on_failure
+            FailureCommand.on_interrupted
           ]
         )
       end
@@ -163,9 +163,9 @@ RSpec.describe Lite::Command::Base do
             ErrorCommand.on_pending
             ErrorCommand.on_before_execution
             ErrorCommand.on_executing
-            ErrorCommand.on_interrupted
             ErrorCommand.on_after_execution
             ErrorCommand.on_error
+            ErrorCommand.on_interrupted
           ]
         )
       end
@@ -194,9 +194,9 @@ RSpec.describe Lite::Command::Base do
             ExceptionCommand.on_pending
             ExceptionCommand.on_before_execution
             ExceptionCommand.on_executing
-            ExceptionCommand.on_interrupted
             ExceptionCommand.on_after_execution
             ExceptionCommand.on_error
+            ExceptionCommand.on_interrupted
           ]
         )
       end
@@ -232,30 +232,30 @@ RSpec.describe Lite::Command::Base do
             SuccessCommand.on_pending
             SuccessCommand.on_before_execution
             SuccessCommand.on_executing
-            SuccessCommand.on_complete
             SuccessCommand.on_after_execution
             SuccessCommand.on_success
+            SuccessCommand.on_complete
             Child::SuccessCommand.on_pending
             Child::SuccessCommand.on_before_execution
             Child::SuccessCommand.on_executing
-            Child::SuccessCommand.on_complete
             Child::SuccessCommand.on_after_execution
             Child::SuccessCommand.on_success
+            Child::SuccessCommand.on_complete
             Child::SuccessCommand.on_pending
             Child::SuccessCommand.on_before_execution
             Child::SuccessCommand.on_executing
-            Child::SuccessCommand.on_complete
             Child::SuccessCommand.on_after_execution
             Child::SuccessCommand.on_success
+            Child::SuccessCommand.on_complete
             Child::NoopCommand.on_pending
             Child::NoopCommand.on_before_execution
             Child::NoopCommand.on_executing
-            Child::NoopCommand.on_interrupted
             Child::NoopCommand.on_after_execution
             Child::NoopCommand.on_noop
-            ThrownCommand.on_interrupted
+            Child::NoopCommand.on_interrupted
             ThrownCommand.on_after_execution
             ThrownCommand.on_noop
+            ThrownCommand.on_interrupted
           ]
         )
       end
