@@ -136,8 +136,8 @@ A status of `success` is returned even if the command has **NOT** been executed.
 | `failure` | **Fault** to stop call execution due to an unsatisfied condition where it blocks proceeding any further. |
 | `error`   | **Fault** to stop call execution due to a thrown `StandardError` based exception. |
 
-**NOTE:** faults must be manually set in your domain logic via the available
-their bang `!` methods, eg:
+> [!IMPORTANT]
+> Faults must be manually set in your domain logic via the available their bang `!` methods.
 
 ```ruby
 class CalculatePower < Lite::Command::Base
@@ -152,6 +152,8 @@ class CalculatePower < Lite::Command::Base
     else
       ctx.result = ctx.a ** ctx.b
     end
+  rescue DivisionError => e
+    error!("Cathcing it myself")
   end
 
 end
