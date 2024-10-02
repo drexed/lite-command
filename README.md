@@ -26,7 +26,9 @@ Or install it yourself as:
 * [Setup](#setup)
 * [Execution](#execution)
 * [Context](#context)
-* [Internals](#Internals)
+* [Statuses](#statuses)
+* [Callbacks](#callbacks)
+* [States](#states)
 * [Generator](#generator)
 
 ## Setup
@@ -46,7 +48,7 @@ end
 ## Execution
 
 Executing a command can be done as an instance or class call.
-It returns the command instance in a forzen state.
+It returns the command instance in a frozen state.
 These will never call will never raise an execption, but will
 be kept track of in its internal state.
 
@@ -54,10 +56,10 @@ be kept track of in its internal state.
 
 ```ruby
 # Class call
-CalculatePower.call(..args)
+CalculatePower.call(...)
 
 # Instance call
-caculator = CalculatePower.new(..args).call
+caculator = CalculatePower.new(...).call
 
 #=> <CalculatePower ...>
 ```
@@ -67,7 +69,7 @@ Commands can be called with a `!` bang method to raise a
 `StandardError` based exception.
 
 ```ruby
-CalculatePower.call!(..args)
+CalculatePower.call!(...)
 #=> raises Lite::Command::Fault
 ```
 
@@ -81,7 +83,8 @@ of its children commands.
 class CalculatePower < Lite::Command::Base
 
   def call
-    context.result = context.a ** context.b
+    # `ctx` is an alias to `context`
+    context.result = ctx.a ** ctx.b
   end
 
 end
@@ -90,50 +93,117 @@ command = CalculatePower.call(a: 2, b: 3)
 command.context.result #=> 8
 ```
 
-## Internals
+## Statuses
 
-#### States
-State represents the state of the executable code. Once `execute`
-is ran, it will always `complete` or `interrupted` if a fault is thrown by a
-child command.
+Status represents the state of the domain logic executed via the `call` method.
+A status of `success` is returned even if the command has **NOT** been executed.
 
-- `pending`
-    - Command objects that have been initialized.
-- `executing`
-    - Command objects actively executing code.
-- `complete`
-    - Command objects that executed to completion.
-- `interrupted`
-    - Command objects that could NOT be executed to completion.
-      This could be as a result of a fault/exception on the
-      object itself or one of its children.
+| Status    | Description |
+| --------- | ----------- |
+| `success` | Call execution completed without fault/exception. |
+| `noop`    | **Fault** to skip completion of call execution early for an unsatisfied condition where proceeding is pointless. |
+| `invalid` | **Fault** to stop call execution due to missing, bad, or corrupt data. |
+| `failure` | **Fault** to stop call execution due to an unsatisfied condition where it blocks proceeding any further. |
+| `error`   | **Fault** to stop call execution due to a thrown `StandardError` based exception. |
 
-#### Statuses
+**NOTE:** faults must be manually set in your domain logic via the available
+their bang `!` methods, eg:
 
-Status represents the state of the callable code. If no fault
-is thrown then a status of `success` is returned even if `call`
-has not been executed. The list of status include (by severity):
+```ruby
+class CalculatePower < Lite::Command::Base
 
-- `success`
-    - No fault or exception
-- `noop`
-    - Noop represents skipping completion of call execution early
-      an unsatisfied condition or logic check where there is no
-      point on proceeding.
-    - **eg:** account is sample: skip since its a non-alterable record
-- `invalid`
-    - Invalid represents a stoppage of call execution due to
-      missing, bad, or corrupt data.
-    - **eg:** user not found: stop since rest of the call cant be executed
-- `failure`
-    - Failure represents a stoppage of call execution due to
-      an unsatisfied condition or logic check where it blocks
-      proceeding any further.
-    - **eg:** record not found: stop since there is nothing todo
-- `error`
-    - Error represents a caught exception for a call execution
-      that could not complete.
-    - **eg:** ApiServerError: stop since there was a 3rd party issue
+  def call
+    if ctx.a.nil? || ctx.b.nil?
+      invalid!("An a and b parameter must be passed")
+    elsif ctx.a < 1 || ctx.b < 1
+      failure!("Parameters must be >= 1")
+    elsif ctx.a == 1 || ctx.b == 1
+      noop!("Anything to the power of 1 is 1")
+    else
+      ctx.result = ctx.a ** ctx.b
+    end
+  end
+
+end
+
+command = CalculatePower.call(a: 1, b: 3)
+command.ctx.result   #=> nil
+command.status       #=> "noop"
+command.noop?        #=> true
+command.noop?("idk") #=> false
+command.reason       #=> "Anything to the power of 1 is 1"
+```
+
+## Callbacks
+
+Define `on_before_execution` and `on_after_execution` callbacks to execute
+arbituary code before and after execution.
+
+```ruby
+class CalculatePower < Lite::Command::Base
+
+  def call
+    # ...
+  end
+
+  private
+
+  def on_after_execution
+    CalculatorResult.create(name: "Power calculated", result: ctx.result)
+  end
+
+end
+```
+
+Define callbacks that are executed when a fault/exception occurs.
+Available fault callbacks are `on_noop`, `on_invalid`, `on_failure`, and `on_error`.
+
+```ruby
+class CalculatePower < Lite::Command::Base
+
+  def call
+    # ...
+  end
+
+  private
+
+  def on_failure(_e)
+    ctx.user.rollback!
+  end
+
+  def on_error(e)
+    APM.report_error(e)
+  end
+
+end
+```
+
+## States
+`state` represents the condition of all the code command should execute.
+
+| Status        | Description |
+| ------------- | ----------- |
+| `pending`     | Command objects that have been initialized. |
+| `executing`   | Command objects that are actively executing code. |
+| `complete`    | Command objects that executed to completion without fault/exception. |
+| `interrupted` | Command objects that could **NOT** be executed to completion due to a fault/exception. |
+
+**NOTE:** states are automatically set and can only be read via methods like
+`executing?` but not altered directly, eg:
+
+```ruby
+class CalculatePower < Lite::Command::Base
+
+  def call
+    # ...
+  end
+
+end
+
+command = CalculatePower.call(a: 1, b: 3)
+command.state    #=> "executed"
+command.pending? #=> false
+```
 
 ## Generator
 
