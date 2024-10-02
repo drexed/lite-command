@@ -17,9 +17,9 @@ module Lite
           around_execution { call }
           on_success if respond_to?(:on_success, true)
         rescue StandardError => e
-          f = e.respond_to?(:type) ? e.type : ERROR
+          f = e.is_a?(Lite::Command::Fault) ? e.type : ERROR
 
-          fault(e, f)
+          fault(e, f) unless e.is_a?(Lite::Command::Fault)
           after_execution
           send(:"on_#{f}", e) if respond_to?(:"on_#{f}", true)
         end
