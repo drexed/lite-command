@@ -4,7 +4,7 @@ module Child
   class SuccessCommand < BaseCommand
 
     def call
-      # Do nothing, no fault = success
+      ctx.result = 3**3
     end
 
   end

@@ -31,16 +31,6 @@ module Lite
         @context = Lite::Command::Context.build(context)
       end
 
-      private
-
-      def on_before_execution
-        # Define in your class to run code before execution
-      end
-
-      def on_after_execution
-        # Define in your class to run code after execution
-      end
-
     end
   end
 end

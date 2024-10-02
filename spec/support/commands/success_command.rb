@@ -3,7 +3,7 @@
 class SuccessCommand < BaseCommand
 
   def call
-    # Do nothing, no fault = success
+    ctx.result = 2**2
   end
 
 end

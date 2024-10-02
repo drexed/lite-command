@@ -15,16 +15,18 @@ module Lite
 
         def execute
           around_execution { call }
+          on_success if respond_to?(:on_success, true)
         rescue StandardError => e
           f = e.respond_to?(:type) ? e.type : ERROR
 
           send(:"#{f}", e)
           after_execution
-          send(:"on_#{f}", e)
+          send(:"on_#{f}", e) if respond_to?(:"on_#{f}", true)
         end
 
         def execute!
           around_execution { call }
+          on_success if respond_to?(:on_success, true)
         rescue StandardError => e
           after_execution
           raise(e)
@@ -53,12 +55,12 @@ module Lite
           assign_execution_cid
           start_monotonic_time
           executing!
-          on_before_execution
+          on_before_execution if respond_to?(:on_before_execution, true)
         end
 
         def after_execution
           fault? ? interrupted! : complete!
-          on_after_execution
+          on_after_execution if respond_to?(:on_after_execution, true)
           stop_monotonic_time
           append_execution_result
           freeze_execution_objects

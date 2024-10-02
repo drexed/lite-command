@@ -42,6 +42,16 @@ RSpec.describe Lite::Command::Base do
     end
 
     context "when success" do
+      it "runs callbacks in correct order" do
+        expect(command.context.callbacks).to eq(
+          %w[
+            SuccessCommand.on_before_execution
+            SuccessCommand.on_after_execution
+            SuccessCommand.on_success
+          ]
+        )
+      end
+
       it "returns a complete state" do
         expect(command).to be_complete
         expect(command.state).to eq(Lite::Command::COMPLETE)
@@ -51,14 +61,14 @@ RSpec.describe Lite::Command::Base do
     context "when noop" do
       let(:command_class) { NoopCommand }
 
-      it "runs after_execution callback method within the rescue block" do
-        expect(command_instance).to receive(:after_execution).once
-        command
-      end
-
-      it "runs on_noop callback method within the rescue block" do
-        expect(command_instance).to receive(:on_noop).once
-        command
+      it "runs callbacks in correct order" do
+        expect(command.context.callbacks).to eq(
+          %w[
+            NoopCommand.on_before_execution
+            NoopCommand.on_after_execution
+            NoopCommand.on_noop
+          ]
+        )
       end
 
       it "raises a Lite::Command::Noop error" do
@@ -79,14 +89,14 @@ RSpec.describe Lite::Command::Base do
     context "when invalid" do
       let(:command_class) { InvalidCommand }
 
-      it "runs after_execution callback method within the rescue block" do
-        expect(command_instance).to receive(:after_execution).once
-        command
-      end
-
-      it "runs on_invalid callback method within the rescue block" do
-        expect(command_instance).to receive(:on_invalid).once
-        command
+      it "runs callbacks in correct order" do
+        expect(command.context.callbacks).to eq(
+          %w[
+            InvalidCommand.on_before_execution
+            InvalidCommand.on_after_execution
+            InvalidCommand.on_invalid
+          ]
+        )
       end
 
       it "raises a Lite::Command::Invalid error" do
@@ -107,14 +117,14 @@ RSpec.describe Lite::Command::Base do
     context "when failure" do
       let(:command_class) { FailureCommand }
 
-      it "runs after_execution callback method within the rescue block" do
-        expect(command_instance).to receive(:after_execution).once
-        command
-      end
-
-      it "runs on_failure callback method within the rescue block" do
-        expect(command_instance).to receive(:on_failure).once
-        command
+      it "runs callbacks in correct order" do
+        expect(command.context.callbacks).to eq(
+          %w[
+            FailureCommand.on_before_execution
+            FailureCommand.on_after_execution
+            FailureCommand.on_failure
+          ]
+        )
       end
 
       it "raises a Lite::Command::Failure error" do
@@ -135,14 +145,14 @@ RSpec.describe Lite::Command::Base do
     context "when error" do
       let(:command_class) { ErrorCommand }
 
-      it "runs after_execution callback method within the rescue block" do
-        expect(command_instance).to receive(:after_execution).once
-        command
-      end
-
-      it "runs on_error callback method within the rescue block" do
-        expect(command_instance).to receive(:on_error).once
-        command
+      it "runs callbacks in correct order" do
+        expect(command.context.callbacks).to eq(
+          %w[
+            ErrorCommand.on_before_execution
+            ErrorCommand.on_after_execution
+            ErrorCommand.on_error
+          ]
+        )
       end
 
       it "raises a Lite::Command::Error error" do
@@ -160,44 +170,17 @@ RSpec.describe Lite::Command::Base do
       end
     end
 
-    context "when thrown" do
-      let(:command_class) { ThrownCommand }
-
-      it "returns executed" do
-        expect(command).to be_executed
-      end
-
-      it "runs after_execution callback method within the rescue block" do
-        expect(command_instance).to receive(:after_execution).once
-        command
-      end
-
-      it "runs on_noop callback method within the rescue block" do
-        expect(command_instance).to receive(:on_noop).once
-        command
-      end
-
-      it "raises a Lite::Command::Error error" do
-        expect { command_instance.execute! }.to raise_error(Lite::Command::Noop, "[!] command stopped due to child noop")
-      end
-
-      it "raises a dynamic Lite::Command::Error error" do
-        allow(command_instance).to receive(:raise_dynamic_faults?).and_return(true)
-        expect { command_instance.execute! }.to raise_error(ThrownCommand::Noop, "[!] command stopped due to child noop")
-      end
-
-      it "returns a interrupted state" do
-        expect(command).to be_interrupted
-        expect(command.state).to eq(Lite::Command::INTERRUPTED)
-      end
-    end
-
     context "with standard error" do
       let(:command_class) { ExceptionCommand }
 
-      it "runs after_execution callback method within the rescue block" do
-        expect(command_instance).to receive(:after_execution).once
-        command
+      it "runs callbacks in correct order" do
+        expect(command.context.callbacks).to eq(
+          %w[
+            ExceptionCommand.on_before_execution
+            ExceptionCommand.on_after_execution
+            ExceptionCommand.on_error
+          ]
+        )
       end
 
       it "raises the true exception" do
@@ -209,9 +192,48 @@ RSpec.describe Lite::Command::Base do
         expect { command_instance.execute! }.to raise_error(RuntimeError, "[!] command stopped due to exception")
       end
 
-      it "runs on_error callback method within the rescue block" do
-        expect(command_instance).to receive(:on_error).once
-        command
+      it "returns a interrupted state" do
+        expect(command).to be_interrupted
+        expect(command.state).to eq(Lite::Command::INTERRUPTED)
+      end
+    end
+
+    context "when thrown" do
+      let(:command_class) { ThrownCommand }
+
+      it "returns executed" do
+        expect(command).to be_executed
+      end
+
+      it "runs callbacks in correct order" do
+        expect(command.context.callbacks).to eq(
+          %w[
+            ThrownCommand.on_before_execution
+            SuccessCommand.on_before_execution
+            SuccessCommand.on_after_execution
+            SuccessCommand.on_success
+            Child::SuccessCommand.on_before_execution
+            Child::SuccessCommand.on_after_execution
+            Child::SuccessCommand.on_success
+            Child::SuccessCommand.on_before_execution
+            Child::SuccessCommand.on_after_execution
+            Child::SuccessCommand.on_success
+            Child::NoopCommand.on_before_execution
+            Child::NoopCommand.on_after_execution
+            Child::NoopCommand.on_noop
+            ThrownCommand.on_after_execution
+            ThrownCommand.on_noop
+          ]
+        )
+      end
+
+      it "raises a Lite::Command::Error error" do
+        expect { command_instance.execute! }.to raise_error(Lite::Command::Noop, "[!] command stopped due to child noop")
+      end
+
+      it "raises a dynamic Lite::Command::Error error" do
+        allow(command_instance).to receive(:raise_dynamic_faults?).and_return(true)
+        expect { command_instance.execute! }.to raise_error(ThrownCommand::Noop, "[!] command stopped due to child noop")
       end
 
       it "returns a interrupted state" do

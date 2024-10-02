@@ -167,7 +167,7 @@ class CalculatePower < Lite::Command::Base
 
   private
 
-  def on_failure(_e)
+  def on_failure(_fault)
     ctx.user.rollback!
   end
 

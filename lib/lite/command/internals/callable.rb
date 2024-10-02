@@ -68,12 +68,6 @@ module Lite
             send(:"#{f}", object)
             raise fault(f.capitalize, object)
           end
-
-          # eg: on_noop(exception)
-          define_method(:"on_#{f}") do |_exception|
-            # Define in your class to run code when a
-            # Lite::Command::Fault or StandardError happens
-          end
         end
 
         alias fail! failure!
