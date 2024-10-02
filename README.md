@@ -62,8 +62,6 @@ It returns the command instance in a frozen state.
 These will never call will never raise an execption, but will
 be kept track of in its internal state.
 
-**NOTE:** Class calls is the prefered format due to its readability.
-
 ```ruby
 # Class call
 CalculatePower.call(...)
@@ -74,11 +72,15 @@ caculator = CalculatePower.new(...).call
 #=> <CalculatePower ...>
 ```
 
+> [!TIP]
+> Class calls is the prefered format due to its readability.
+
 Commands can be called with a `!` bang method to raise a
 `Lite::Command::Fault` based exception or the original
 `StandardError` based exception.
 
 ```ruby
+CalculatePower.new(...).call!
 CalculatePower.call!(...)
 #=> raises Lite::Command::Fault
 ```
