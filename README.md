@@ -28,6 +28,9 @@ Or install it yourself as:
 * [Context](#context)
 * [Statuses](#statuses)
 * [Callbacks](#callbacks)
+    * [State Hooks](#status_hooks)
+    * [Execution Hooks](#execution_hooks)
+    * [Status Hooks](#status_hooks)
 * [States](#states)
 * [Generator](#generator)
 
@@ -93,6 +96,33 @@ command = CalculatePower.call(a: 2, b: 3)
 command.context.result #=> 8
 ```
 
+## States
+`state` represents the condition of all the code command should execute.
+
+| Status        | Description |
+| ------------- | ----------- |
+| `pending`     | Command objects that have been initialized. |
+| `executing`   | Command objects that are actively executing code. |
+| `complete`    | Command objects that executed to completion without fault/exception. |
+| `interrupted` | Command objects that could **NOT** be executed to completion due to a fault/exception. |
+
+**NOTE:** states are automatically set and can only be read via methods like
+`executing?` but not altered directly, eg:
+
+```ruby
+class CalculatePower < Lite::Command::Base
+
+  def call
+    # ...
+  end
+
+end
+
+command = CalculatePower.call(a: 1, b: 3)
+command.state    #=> "executed"
+command.pending? #=> false
+```
+
 ## Statuses
 
 Status represents the state of the domain logic executed via the `call` method.
@@ -136,8 +166,61 @@ command.reason       #=> "Anything to the power of 1 is 1"
 
 ## Callbacks
 
-Define `on_before_execution` and `on_after_execution` callbacks to execute
-arbituary code before and after execution.
+Use callbacks to run arbituary code at transition points and
+on finalized internals. The following is an example of the hooks
+called for a failed command with a successful child command.
+
+```ruby
+-> 1. FooCommand.on_pending
+-> 2. FooCommand.on_before_execution
+-> 3. FooCommand.on_executing
+-----> 3a. BarCommand.on_pending
+-----> 3b. BarCommand.on_before_execution
+-----> 3c. BarCommand.on_executing
+-----> 3d. BarCommand.on_after_execution
+-----> 3e. BarCommand.on_success
+-----> 3f. BarCommand.on_complete
+-> 4. FooCommand.on_after_execution
+-> 5. FooCommand.on_failure
+-> 6. FooCommand.on_interrupted
+```
+
+### Status Hooks
+
+Define one or more callbacks that are called during transitions
+between states.
+
+```ruby
+class CalculatePower < Lite::Command::Base
+
+  def call
+    # ...
+  end
+
+  private
+
+  def on_pending
+    # eg: Append additional contextual data
+  end
+
+  def on_executing
+    # eg: Insert inspection debugger
+  end
+
+  def on_complete
+    # eg: Log message for posterity
+  end
+
+  def on_interrupted
+    # eg: Report to APM with tags and metadata
+  end
+
+end
+```
+
+### Execution Hooks
+
+Define before and after callbacks to call around execution.
 
 ```ruby
 class CalculatePower < Lite::Command::Base
@@ -149,7 +232,7 @@ class CalculatePower < Lite::Command::Base
   private
 
   def on_before_execution
-    # eg: Send working signal to frontend
+    # eg: Append additional contextual data
   end
 
   def on_after_execution
@@ -159,10 +242,10 @@ class CalculatePower < Lite::Command::Base
 end
 ```
 
-Define callbacks that are executed when a fault/exception occurs.
+### Status Hooks
 
-> [!NOTE]
-> The `on_success` callback does **NOT** take any arguments.
+Define one or more callbacks that are called after execution for
+specific statuses.
 
 ```ruby
 class CalculatePower < Lite::Command::Base
@@ -186,42 +269,18 @@ class CalculatePower < Lite::Command::Base
   end
 
   def on_failure(fault)
-    # eg: rollback record changes
+    # eg: Rollback record changes
   end
 
   def on_error(fault_or_exception)
-    # eg: report to APM with tags and metadata
+    # eg: Report to APM with tags and metadata
   end
 
 end
 ```
 
-## States
-`state` represents the condition of all the code command should execute.
-
-| Status        | Description |
-| ------------- | ----------- |
-| `pending`     | Command objects that have been initialized. |
-| `executing`   | Command objects that are actively executing code. |
-| `complete`    | Command objects that executed to completion without fault/exception. |
-| `interrupted` | Command objects that could **NOT** be executed to completion due to a fault/exception. |
-
-**NOTE:** states are automatically set and can only be read via methods like
-`executing?` but not altered directly, eg:
-
-```ruby
-class CalculatePower < Lite::Command::Base
-
-  def call
-    # ...
-  end
-
-end
-
-command = CalculatePower.call(a: 1, b: 3)
-command.state    #=> "executed"
-command.pending? #=> false
-```
+> [!NOTE]
+> The `on_success` callback does **NOT** take any arguments.
 
 ## Generator
 
