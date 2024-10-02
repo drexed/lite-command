@@ -142,7 +142,7 @@ command.context.result #=> 8
 | `interrupted` | Command objects that could **NOT** be executed to completion due to a fault/exception. |
 
 > [!CAUTION]
-> States are automatically transitioned and should NEVER be altered manually.
+> States are automatically transitioned and should **NEVER** be altered manually.
 
 ```ruby
 class CalculatePower < Lite::Command::Base
@@ -172,7 +172,7 @@ A status of `success` is returned even if the command has **NOT** been executed.
 | `error`   | **Fault** to stop call execution due to a thrown `StandardError` based exception. |
 
 > [!IMPORTANT]
-> Faults must be manually set in your domain logic via the available their bang `!` methods.
+> States must be manually set in your domain logic via the available their bang `!` fault methods.
 
 ```ruby
 class CalculatePower < Lite::Command::Base
