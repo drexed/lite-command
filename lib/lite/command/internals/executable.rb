@@ -19,7 +19,7 @@ module Lite
         rescue StandardError => e
           f = e.respond_to?(:type) ? e.type : ERROR
 
-          send(:"#{f}", e)
+          fault(e, f)
           after_execution
           send(:"on_#{f}", e) if respond_to?(:"on_#{f}", true)
         end

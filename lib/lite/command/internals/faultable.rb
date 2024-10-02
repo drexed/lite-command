@@ -37,6 +37,18 @@ module Lite
           send(:"#{command.status}!", command)
         end
 
+        def raise_dynamic_faults?
+          false
+        end
+
+        # eg: Lite::Command::Noop.new(...) or Users::ResetPassword::Noop.new(...)
+        def runtime_fault(type, thrower)
+          klass = raise_dynamic_faults? ? self.class : Lite::Command
+          fault = klass.const_get(type.to_s).new(reason, caused_by, self)
+          fault.set_backtrace(thrower.backtrace) if thrower.respond_to?(:backtrace)
+          fault
+        end
+
         def derive_caused_by_from(object)
           (object.caused_by if object.respond_to?(:caused_by)) || self
         end
@@ -57,24 +69,6 @@ module Lite
           else
             object
           end
-        end
-
-        def derive_fault_from(object)
-          @caused_by ||= derive_caused_by_from(object)
-          @thrown_by ||= derive_thrown_by_from(object)
-          @reason ||= derive_reason_from(object)
-        end
-
-        def raise_dynamic_faults?
-          false
-        end
-
-        # eg: Lite::Command::Noop.new(...) or Users::ResetPassword::Noop.new(...)
-        def fault(type, thrower)
-          klass = raise_dynamic_faults? ? self.class : Lite::Command
-          fault = klass.const_get(type.to_s).new(reason, caused_by, self)
-          fault.set_backtrace(thrower.backtrace) if thrower.respond_to?(:backtrace)
-          fault
         end
 
       end

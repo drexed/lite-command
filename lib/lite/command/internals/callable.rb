@@ -56,17 +56,19 @@ module Lite
 
         private
 
-        FAULTS.each do |f|
-          # eg: error(object)
-          define_method(:"#{f}") do |object|
-            derive_fault_from(object)
-            @status = f
-          end
+        def fault(object, type)
+          @caused_by ||= derive_caused_by_from(object)
+          @thrown_by ||= derive_thrown_by_from(object)
+          @reason    ||= derive_reason_from(object)
 
-          # eg: invalid!(object)
+          @status = type
+        end
+
+        FAULTS.each do |f|
+          # eg: invalid!("idk") or failure!(fault)
           define_method(:"#{f}!") do |object|
-            send(:"#{f}", object)
-            raise fault(f.capitalize, object)
+            fault(object, f)
+            raise runtime_fault(f.capitalize, object)
           end
         end
 
