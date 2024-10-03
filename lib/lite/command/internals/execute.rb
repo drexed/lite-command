@@ -13,25 +13,6 @@ module Lite
     module Internals
       module Execute
 
-        def execute
-          around_execution { call }
-          on_success if respond_to?(:on_success, true)
-        rescue StandardError => e
-          fault(e, ERROR, metadata) unless e.is_a?(Lite::Command::Fault)
-          after_execution
-          send(:"on_#{status}", e) if respond_to?(:"on_#{status}", true)
-        ensure
-          send(:"on_#{state}") if respond_to?(:"on_#{state}", true)
-        end
-
-        def execute!
-          around_execution { call }
-          on_success if respond_to?(:on_success, true)
-        rescue StandardError => e
-          after_execution
-          raise(e)
-        end
-
         def state
           @state || PENDING
         end
@@ -71,6 +52,25 @@ module Lite
           before_execution
           yield
           after_execution
+        end
+
+        def execute
+          around_execution { call }
+          on_success if respond_to?(:on_success, true)
+        rescue StandardError => e
+          fault(e, ERROR, metadata) unless e.is_a?(Lite::Command::Fault)
+          after_execution
+          send(:"on_#{status}", e) if respond_to?(:"on_#{status}", true)
+        ensure
+          send(:"on_#{state}") if respond_to?(:"on_#{state}", true)
+        end
+
+        def execute!
+          around_execution { call }
+          on_success if respond_to?(:on_success, true)
+        rescue StandardError => e
+          after_execution
+          raise(e)
         end
 
       end

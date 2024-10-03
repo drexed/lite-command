@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Check error descendency instead of type
 - Rename internal modules
+- Make execute(!) methods private
 ### Removed
 - Remove predefined callback methods
 - Remove non-bang fault methods

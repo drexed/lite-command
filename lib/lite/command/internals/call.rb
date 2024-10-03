@@ -22,11 +22,15 @@ module Lite
         module ClassMethods
 
           def call(context = {})
-            new(context).tap(&:execute)
+            instance = new(context)
+            instance.send(:execute)
+            instance
           end
 
           def call!(context = {})
-            new(context).tap(&:execute!)
+            instance = new(context)
+            instance.send(:execute!)
+            instance
           end
 
         end
