@@ -11,7 +11,7 @@ module Lite
     ].freeze
 
     module Internals
-      module Executable
+      module Execute
 
         def execute
           around_execution { call }

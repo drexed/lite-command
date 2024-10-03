@@ -3,7 +3,7 @@
 module Lite
   module Command
     module Internals
-      module Faultable
+      module Fault
 
         def self.included(base)
           base.class_eval do

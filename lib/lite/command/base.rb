@@ -7,10 +7,10 @@ module Lite
       def self.inherited(base)
         super
 
-        base.include Lite::Command::Internals::Callable
-        base.include Lite::Command::Internals::Executable
-        base.include Lite::Command::Internals::Faultable
-        base.include Lite::Command::Internals::Resultable
+        base.include Lite::Command::Internals::Call
+        base.include Lite::Command::Internals::Execute
+        base.include Lite::Command::Internals::Fault
+        base.include Lite::Command::Internals::Result
 
         base.class_eval <<-RUBY, __FILE__, __LINE__ + 1
           # eg: Users::ResetPassword::Fault < Lite::Command::Fault

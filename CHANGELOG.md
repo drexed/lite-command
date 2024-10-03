@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `on_pending`, `on_executing`, `on_complete`, and `on_interrupted` callbacks
 ### Changed
 - Check error descendency instead of type
+- Rename internal modules
 ### Removed
 - Remove predefined callback methods
 - Remove non-bang fault methods

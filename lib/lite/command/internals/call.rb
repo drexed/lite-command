@@ -13,7 +13,7 @@ module Lite
     FAULTS = (STATUSES - [SUCCESS]).freeze
 
     module Internals
-      module Callable
+      module Call
 
         def self.included(base)
           base.extend ClassMethods
