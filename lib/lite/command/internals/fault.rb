@@ -11,12 +11,6 @@ module Lite
           end
         end
 
-        def reason?(str)
-          return true if str.nil?
-
-          reason == str
-        end
-
         def caused_fault?
           caused_by == self
         end
@@ -30,6 +24,12 @@ module Lite
         end
 
         private
+
+        def reason?(str)
+          return true if str.nil?
+
+          reason == str
+        end
 
         def throw!(command)
           return if command.success?
