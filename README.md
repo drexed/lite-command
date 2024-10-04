@@ -1,7 +1,6 @@
 # Lite::Command
 
 [![Gem Version](https://badge.fury.io/rb/lite-command.svg)](http://badge.fury.io/rb/lite-command)
-[![Build Status](https://travis-ci.org/drexed/lite-command.svg?branch=master)](https://travis-ci.org/drexed/lite-command)
 
 Lite::Command provides an API for building simple and complex command based service objects.
 
