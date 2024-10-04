@@ -30,6 +30,7 @@ module Lite
 
       def initialize(context = {})
         @context = Lite::Command::Context.build(context)
+
         on_pending if respond_to?(:on_pending, true)
       end
 

@@ -64,16 +64,18 @@ module Lite
           @status   = status
           @metadata = metadata
 
-          @reason    ||= derive_reason_from(object)
-          @metadata  ||= derive_metadata_from(object)
-          @caused_by ||= derive_caused_by_from(object)
-          @thrown_by ||= derive_thrown_by_from(object)
+          bubble = Lite::Command::Bubble.new(self, object)
+          @reason    ||= bubble.reason
+          @metadata  ||= bubble.metadata
+          @caused_by ||= bubble.caused_by
+          @thrown_by ||= bubble.thrown_by
         end
 
         FAULTS.each do |f|
           # eg: invalid!("idk") or failure!(fault) or error!("idk", { error_key: "some.error" })
           define_method(:"#{f}!") do |object, metadata = nil|
             fault(object, f, metadata)
+
             raise Lite::Command::Fault.build(
               f.capitalize,
               self,

@@ -17,6 +17,11 @@ module Lite
       end
 
       # eg: Lite::Command::Noop.new(...) or Users::ResetPassword::Noop.new(...)
+      # def self.build(**params)
+      #   klass = params.delete(:dynamic) ? params.fetch(:thrown_by).class : Lite::Command
+      #   fault = klass.const_get(params.delete(:type).to_s)
+      #   fault = fault.new(**params)
+      #   fault.set_backtrace(thrower.backtrace) if thrower.respond_to?(:backtrace)
       def self.build(type, command, thrown_exception, dynamic: false)
         klass = dynamic ? command.class : Lite::Command
         fault = klass.const_get(type.to_s)
@@ -40,6 +45,46 @@ module Lite
     class Invalid < Fault; end
     class Failure < Fault; end
     class Error < Fault; end
+
+    class Bubble
+
+      attr_reader :command, :object
+
+      def initialize(command, object)
+        @command = command
+        @object = object
+      end
+
+      def caused_by
+        try(object, :caused_by) || command
+      end
+
+      def thrown_by
+        return object if object.respond_to?(:executed?) && object.executed?
+
+        try(object, :thrown_by) || command.caused_by
+      end
+
+      def metadata
+        try(object, :metadata) || command.metadata
+      end
+
+      def reason
+        return object.reason if object.respond_to?(:reason)
+        return object unless object.is_a?(StandardError)
+
+        "[#{object.class.name}] #{object.message}".chomp(".")
+      end
+
+      private
+
+      def try(obj, method_name, include_private: false)
+        return unless obj.respond_to?(method_name, include_private)
+
+        obj.send(method_name)
+      end
+
+    end
 
   end
 end

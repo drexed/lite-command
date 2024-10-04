@@ -41,32 +41,6 @@ module Lite
           false
         end
 
-        def derive_caused_by_from(object)
-          (object.caused_by if object.respond_to?(:caused_by)) || self
-        end
-
-        def derive_thrown_by_from(object)
-          return object if object.respond_to?(:executed?) && object.executed?
-
-          (object.thrown_by if object.respond_to?(:thrown_by)) || caused_by
-        end
-
-        def derive_metadata_from(object)
-          return unless object.respond_to?(:metadata)
-
-          object.metadata
-        end
-
-        def derive_reason_from(object)
-          if object.respond_to?(:reason)
-            object.reason
-          elsif object.respond_to?(:message)
-            "[#{object.class.name}] #{object.message}".chomp(".")
-          else
-            object
-          end
-        end
-
       end
     end
   end
