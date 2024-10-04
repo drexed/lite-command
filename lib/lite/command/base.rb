@@ -5,6 +5,7 @@ module Lite
     class Base
 
       def self.inherited(base)
+        base.include Lite::Command::Internals::Context
         base.include Lite::Command::Internals::Call
         base.include Lite::Command::Internals::Execute
         base.include Lite::Command::Internals::Fault

@@ -3,18 +3,73 @@
 require "spec_helper"
 
 RSpec.describe Lite::Command::Base do
-  subject(:command) { command_class.call }
+  subject(:command) { command_class.call(command_arguments) }
 
   let(:command_class) { SuccessCommand }
-  let(:command_instance) { command_class.new }
+  let(:command_instance) { command_class.new(command_arguments) }
+  let(:command_arguments) { {} }
 
   before do
     allow_any_instance_of(command_class).to receive(:cid).and_return("018c2b95-b764-7615-a924-cc5b910ed1e5")
     allow_any_instance_of(command_class).to receive(:runtime).and_return(0.0123)
   end
 
-  describe "#executable" do
-    subject(:command) { command_instance.tap(&:execute) }
+  describe "#context" do
+    let(:command_class) { ContextCommand }
+
+    context "with required arguments" do
+      let(:command_arguments) do
+        {
+          a: 1,
+          storage: OpenStruct.new(b: 1, c: 1)
+        }
+      end
+
+      it "returns successfully" do
+        expect(command).to be_success
+        expect(command.a).to eq(1)
+        expect(command.ctx.result).to eq(3)
+      end
+    end
+
+    context "with missing required arguments" do
+      let(:command_arguments) { { a: 1 } }
+
+      it "returns invalid" do
+        expect(command).to be_invalid
+        expect(command.reason).to eq("Missing required context")
+        expect(command.metadata).to eq(
+          {
+            context: ["storage is required"],
+            storage: ["b is required", "c is required"]
+          }
+        )
+      end
+    end
+
+    context "with optional arguments" do
+      let(:command_arguments) do
+        {
+          a: 1,
+          storage: OpenStruct.new(b: 1, c: 1, f: 1),
+          d: 1,
+          e: 1
+        }
+      end
+
+      it "returns successfully" do
+        expect(command).to be_success
+        expect(command.e).to eq(1)
+        expect(command.ctx.result).to eq(6)
+      end
+    end
+  end
+
+  describe "#execute" do
+    subject(:command) do
+      command_instance.send(:execute)
+      command_instance
+    end
 
     context "when initialized" do
       it "returns a pending state" do
@@ -78,12 +133,12 @@ RSpec.describe Lite::Command::Base do
       end
 
       it "raises a Lite::Command::Noop error" do
-        expect { command_instance.execute! }.to raise_error(Lite::Command::Noop, "[!] command stopped due to noop")
+        expect { command_instance.send(:execute!) }.to raise_error(Lite::Command::Noop, "[!] command stopped due to noop")
       end
 
       it "raises a dynamic Lite::Command::Noop error" do
         allow(command_instance).to receive(:raise_dynamic_faults?).and_return(true)
-        expect { command_instance.execute! }.to raise_error(NoopCommand::Noop, "[!] command stopped due to noop")
+        expect { command_instance.send(:execute!) }.to raise_error(NoopCommand::Noop, "[!] command stopped due to noop")
       end
 
       it "returns a interrupted state" do
@@ -109,12 +164,12 @@ RSpec.describe Lite::Command::Base do
       end
 
       it "raises a Lite::Command::Invalid error" do
-        expect { command_instance.execute! }.to raise_error(Lite::Command::Invalid, "[!] command stopped due to invalid")
+        expect { command_instance.send(:execute!) }.to raise_error(Lite::Command::Invalid, "[!] command stopped due to invalid")
       end
 
       it "raises a dynamic Lite::Command::Invalid error" do
         allow(command_instance).to receive(:raise_dynamic_faults?).and_return(true)
-        expect { command_instance.execute! }.to raise_error(InvalidCommand::Invalid, "[!] command stopped due to invalid")
+        expect { command_instance.send(:execute!) }.to raise_error(InvalidCommand::Invalid, "[!] command stopped due to invalid")
       end
 
       it "returns a interrupted state" do
@@ -140,12 +195,12 @@ RSpec.describe Lite::Command::Base do
       end
 
       it "raises a Lite::Command::Failure error" do
-        expect { command_instance.execute! }.to raise_error(Lite::Command::Failure, "[!] command stopped due to failure")
+        expect { command_instance.send(:execute!) }.to raise_error(Lite::Command::Failure, "[!] command stopped due to failure")
       end
 
       it "raises a dynamic Lite::Command::Failure error" do
         allow(command_instance).to receive(:raise_dynamic_faults?).and_return(true)
-        expect { command_instance.execute! }.to raise_error(FailureCommand::Failure, "[!] command stopped due to failure")
+        expect { command_instance.send(:execute!) }.to raise_error(FailureCommand::Failure, "[!] command stopped due to failure")
       end
 
       it "returns a interrupted state" do
@@ -171,12 +226,12 @@ RSpec.describe Lite::Command::Base do
       end
 
       it "raises a Lite::Command::Error error" do
-        expect { command_instance.execute! }.to raise_error(Lite::Command::Error, "[!] command stopped due to error")
+        expect { command_instance.send(:execute!) }.to raise_error(Lite::Command::Error, "[!] command stopped due to error")
       end
 
       it "raises a dynamic Lite::Command::Error error" do
         allow(command_instance).to receive(:raise_dynamic_faults?).and_return(true)
-        expect { command_instance.execute! }.to raise_error(ErrorCommand::Error, "[!] command stopped due to error")
+        expect { command_instance.send(:execute!) }.to raise_error(ErrorCommand::Error, "[!] command stopped due to error")
       end
 
       it "returns a interrupted state" do
@@ -202,12 +257,12 @@ RSpec.describe Lite::Command::Base do
       end
 
       it "raises the true exception" do
-        expect { command_instance.execute! }.to raise_error(RuntimeError, "[!] command stopped due to exception")
+        expect { command_instance.send(:execute!) }.to raise_error(RuntimeError, "[!] command stopped due to exception")
       end
 
       it "raises the true exception when dynamic option is on" do
         allow(command_instance).to receive(:raise_dynamic_faults?).and_return(true)
-        expect { command_instance.execute! }.to raise_error(RuntimeError, "[!] command stopped due to exception")
+        expect { command_instance.send(:execute!) }.to raise_error(RuntimeError, "[!] command stopped due to exception")
       end
 
       it "returns a interrupted state" do
@@ -261,12 +316,12 @@ RSpec.describe Lite::Command::Base do
       end
 
       it "raises a Lite::Command::Error error" do
-        expect { command_instance.execute! }.to raise_error(Lite::Command::Noop, "[!] command stopped due to child noop")
+        expect { command_instance.send(:execute!) }.to raise_error(Lite::Command::Noop, "[!] command stopped due to child noop")
       end
 
       it "raises a dynamic Lite::Command::Error error" do
         allow(command_instance).to receive(:raise_dynamic_faults?).and_return(true)
-        expect { command_instance.execute! }.to raise_error(ThrownCommand::Noop, "[!] command stopped due to child noop")
+        expect { command_instance.send(:execute!) }.to raise_error(ThrownCommand::Noop, "[!] command stopped due to child noop")
       end
 
       it "returns a interrupted state" do
@@ -285,7 +340,7 @@ RSpec.describe Lite::Command::Base do
     end
   end
 
-  describe "#callable" do
+  describe "#call" do
     context "when initialized" do
       it "returns a success status" do
         expect(command_instance).to be_success
@@ -384,7 +439,7 @@ RSpec.describe Lite::Command::Base do
     end
   end
 
-  describe "#resultable" do
+  describe "#result" do
     context "when initialized" do
       it "returns a success status" do
         expect(command_instance.results).to be_empty

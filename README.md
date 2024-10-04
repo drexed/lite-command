@@ -24,10 +24,10 @@ Or install it yourself as:
 ## Table of Contents
 
 * [Setup](#setup)
-  * [Contracts - TODO](#contracts)
 * [Execution](#execution)
   * [Dynamic Faults](#dynamic_faults)
 * [Context](#context)
+  * [Arguments](#arguments)
 * [States](#states)
 * [Statuses](#statuses)
 * [Callbacks](#callbacks)
@@ -37,6 +37,9 @@ Or install it yourself as:
 * [Children - TODO](#children)
 * [Organizer - TODO](#organizer)
 * [Results - TODO](#results)
+* [Examples - TODO](#examples)
+  * ActiveModel Validations
+  * Disable instance style calls using `private_class_method :new`
 * [Generator](#generator)
 
 ## Setup
@@ -131,6 +134,49 @@ end
 
 command = CalculatePower.call(a: 2, b: 3)
 command.context.result #=> 8
+```
+
+### Arguments
+
+Delegate methods to drop having to access them via the reference object.
+Set a usage contract by declaring `required` or `optional` arguments.
+You can pass the reference object (defaults to `:context`) by using`:from`.
+
+```ruby
+class CalculatePower < Lite::Command::Base
+
+  required :storage
+  required :a, :b, from: :storage
+  optional :c
+  optional :d, from: :storage
+
+
+  def call
+    context.result = (a ** b) + c.to_i + d.to_i
+  end
+
+end
+
+# With context all required only
+storage = Storage.new(a: 2, b: 2)
+command = CalculatePower.call(storage: storage)
+command.status         #=> "success"
+command.context.result #=> 4
+
+# With context all required and optional only
+storage = Storage.new(a: 2, b: 2, d: 1)
+command = CalculatePower.call(storage: storage, c: 1)
+command.status         #=> "success"
+command.context.result #=> 6
+
+# Missing context arguments
+command = CalculatePower.call
+command.status   #=> "invalid"
+command.reason   #=> "Missing required context"
+command.metadata #=> {
+                 #=>   context: ["storage is required"],
+                 #=>   storage: ["a is required", "b is required"]
+                 #=> }
 ```
 
 ## States
