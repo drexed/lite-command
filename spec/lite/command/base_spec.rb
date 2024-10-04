@@ -37,7 +37,7 @@ RSpec.describe Lite::Command::Base do
 
       it "returns invalid" do
         expect(command).to be_invalid
-        expect(command.reason).to eq("Missing required context")
+        expect(command.reason).to eq("Required context missing")
         expect(command.metadata).to eq(
           {
             context: ["storage is required"],

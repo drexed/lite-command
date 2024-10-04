@@ -50,7 +50,7 @@ module Lite
         def validate_required_context
           return if self.class.send(:required_context).empty? || missing_context.empty?
 
-          invalid!("Missing required context", missing_context)
+          invalid!("Required context missing", missing_context)
         end
 
       end

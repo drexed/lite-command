@@ -27,7 +27,7 @@ Or install it yourself as:
 * [Execution](#execution)
   * [Dynamic Faults](#dynamic_faults)
 * [Context](#context)
-  * [Arguments](#arguments)
+  * [Delegation](#delegation)
 * [States](#states)
 * [Statuses](#statuses)
 * [Callbacks](#callbacks)
@@ -136,7 +136,7 @@ command = CalculatePower.call(a: 2, b: 3)
 command.context.result #=> 8
 ```
 
-### Arguments
+### Delegation
 
 Delegate methods to drop having to access them via the reference object.
 Set a usage contract by declaring `required` or `optional` arguments.
@@ -172,7 +172,7 @@ command.context.result #=> 6
 # Missing context arguments
 command = CalculatePower.call
 command.status   #=> "invalid"
-command.reason   #=> "Missing required context"
+command.reason   #=> "Required context missing"
 command.metadata #=> {
                  #=>   context: ["storage is required"],
                  #=>   storage: ["a is required", "b is required"]
