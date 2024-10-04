@@ -11,7 +11,7 @@ class ContextCommand < BaseCommand
   def call
     ctx.result = [
       a, b, c, d, e, f
-    ].map(&:to_i).sum
+    ].sum(&:to_i)
   end
 
 end
