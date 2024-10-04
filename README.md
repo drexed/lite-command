@@ -224,7 +224,7 @@ command.executed? #=> false
 
 ## Statuses
 
-Status represents the state of the domain logic executed via the `call` method.
+`status` represents the state of the domain logic executed via the `call` method.
 A status of `success` is returned even if the command has **NOT** been executed.
 
 | Status    | Description |
