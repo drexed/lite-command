@@ -37,8 +37,8 @@ Or install it yourself as:
 * [Organizer - TODO](#organizer)
 * [Results - TODO](#results)
 * [Examples - TODO](#examples)
-  * ActiveModel Validations
-  * Disable instance style calls using `private_class_method :new`
+  * Disable instance style calls
+  * ActiveModel validations
 * [Generator](#generator)
 
 ## Setup
@@ -388,6 +388,58 @@ end
 
 > [!NOTE]
 > The `on_success` callback does **NOT** take any arguments.
+
+### Examples
+
+Disable instance style calls:
+
+```ruby
+class CalculatePower < Lite::Command::Base
+
+  private_class_method :new
+
+  def call
+    # ...
+  end
+
+end
+
+CalculatePower.new(...).call
+#=> raise NoMethodError
+```
+
+ActiveModel validations:
+
+```ruby
+class CalculatePower < Lite::Command::Base
+  include ActiveModel::Validations
+
+  validates :a, :b, presence: true
+
+  def call
+    # ...
+  end
+
+  def read_attribute_for_validation(key)
+    context.public_send(key)
+  end
+
+  private
+
+  def on_before_execution
+    return if valid?
+
+    context.invalid!(
+      errors.full_messages.to_sentence,
+      errors.to_hash
+    )
+  end
+
+end
+
+CalculatePower.call!
+#=> raise Lite::Command::Invalid
+```
 
 ## Generator
 
