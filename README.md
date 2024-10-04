@@ -50,12 +50,18 @@ Defining a command is as simple as adding a call method to a command object (req
 class CalculatePower < Lite::Command::Base
 
   def call
-    # TODO: implement calculator
+    if all_even_numbers?
+      context.result = ctx.a ** ctx.b
+    else
+      invalid!("All values must be even")
+    end
   end
 
   private
 
-  # Domain logic...
+  def all_even_numbers?
+    # Some logic...
+  end
 
 end
 ```
@@ -74,6 +80,8 @@ be kept track of in its internal state.
 CalculatePower.call(...)
 # - or -
 CalculatePower.new(...).call
+
+# On success, fault and exception:
 #=> <CalculatePower ...>
 ```
 
@@ -88,7 +96,15 @@ Commands can be called with a `!` bang method to raise a
 CalculatePower.call!(...)
 # - or -
 CalculatePower.new(...).call!
+
+# On success:
+#=> <CalculatePower ...>
+
+# On fault:
 #=> raises Lite::Command::Fault
+
+# On exception:
+#=> raises StandardError
 ```
 
 ### Dynamic Faults
@@ -101,7 +117,7 @@ out specific errors from you APM service.
 class CalculatePower < Lite::Command::Base
 
   def call
-    # ...
+    fail!("Some failure")
   end
 
   private
@@ -202,8 +218,9 @@ class CalculatePower < Lite::Command::Base
 end
 
 command = CalculatePower.call(a: 1, b: 3)
-command.state    #=> "executed"
-command.pending? #=> false
+command.state     #=> "executed"
+command.pending?  #=> false
+command.executed? #=> false
 ```
 
 ## Statuses
@@ -220,7 +237,8 @@ A status of `success` is returned even if the command has **NOT** been executed.
 | `error`   | **Fault** to stop call execution due to a thrown `StandardError` based exception. |
 
 > [!IMPORTANT]
-> States must be manually set in your domain logic via the available their bang `!` fault methods.
+> Each **fault** status has a setter method ending in `!` that invokes a matching fault procedure.
+> Metadata may also be passed to enrich your fault response.
 
 ```ruby
 class CalculatePower < Lite::Command::Base
@@ -231,7 +249,10 @@ class CalculatePower < Lite::Command::Base
     elsif ctx.a < 1 || ctx.b < 1
       failure!("Parameters must be >= 1")
     elsif ctx.a == 1 || ctx.b == 1
-      noop!("Anything to the power of 1 is 1")
+      noop!(
+        "Anything to the power of 1 is 1",
+        { i18n: "some.key" }
+      )
     else
       ctx.result = ctx.a ** ctx.b
     end
@@ -242,15 +263,14 @@ class CalculatePower < Lite::Command::Base
 end
 
 command = CalculatePower.call(a: 1, b: 3)
-command.ctx.result   #=> nil
-command.status       #=> "noop"
-command.reason       #=> "Anything to the power of 1 is 1"
-command.noop?        #=> true
-command.noop?("idk") #=> false
+command.ctx.result #=> nil
+command.status     #=> "noop"
+command.reason     #=> "Anything to the power of 1 is 1"
+command.metadata   #=> { i18n: "some.key" }
+command.invalid?   #=> false
+command.noop?      #=> true
+command.noop?("Anything to the power of 1 is 1") #=> true
 ```
-
-> [!NOTE]
-> There is no `success!` method as its the default status.
 
 ## Callbacks
 
