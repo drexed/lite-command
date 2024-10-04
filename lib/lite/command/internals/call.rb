@@ -76,12 +76,7 @@ module Lite
           define_method(:"#{f}!") do |object, metadata = nil|
             fault(object, f, metadata)
 
-            raise Lite::Command::Fault.build(
-              f.capitalize,
-              self,
-              object,
-              dynamic: raise_dynamic_faults?
-            )
+            raise Lite::Command::Fault.build(f.capitalize, self, object, dynamic: raise_dynamic_faults?)
           end
         end
 

@@ -16,12 +16,6 @@ module Lite
         super(reason)
       end
 
-      # eg: Lite::Command::Noop.new(...) or Users::ResetPassword::Noop.new(...)
-      # def self.build(**params)
-      #   klass = params.delete(:dynamic) ? params.fetch(:thrown_by).class : Lite::Command
-      #   fault = klass.const_get(params.delete(:type).to_s)
-      #   fault = fault.new(**params)
-      #   fault.set_backtrace(thrower.backtrace) if thrower.respond_to?(:backtrace)
       def self.build(type, command, thrown_exception, dynamic: false)
         klass = dynamic ? command.class : Lite::Command
         fault = klass.const_get(type.to_s)
