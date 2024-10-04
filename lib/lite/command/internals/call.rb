@@ -74,7 +74,12 @@ module Lite
           # eg: invalid!("idk") or failure!(fault) or error!("idk", { error_key: "some.error" })
           define_method(:"#{f}!") do |object, metadata = nil|
             fault(object, f, metadata)
-            raise runtime_fault(f.capitalize, object)
+            raise Lite::Command::Fault.build(
+              f.capitalize,
+              self,
+              object,
+              dynamic: raise_dynamic_faults?
+            )
           end
         end
 

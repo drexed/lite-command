@@ -41,15 +41,6 @@ module Lite
           false
         end
 
-        # eg: Lite::Command::Noop.new(...) or Users::ResetPassword::Noop.new(...)
-        def runtime_fault(type, thrower)
-          klass = raise_dynamic_faults? ? self.class : Lite::Command
-          fault = klass.const_get(type.to_s)
-          fault = fault.new(reason:, metadata:, caused_by:, thrown_by: self)
-          fault.set_backtrace(thrower.backtrace) if thrower.respond_to?(:backtrace)
-          fault
-        end
-
         def derive_caused_by_from(object)
           (object.caused_by if object.respond_to?(:caused_by)) || self
         end
