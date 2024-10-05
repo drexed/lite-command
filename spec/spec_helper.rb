@@ -10,7 +10,9 @@ require "lite/command"
 
 spec_path = Pathname.new(File.expand_path("../spec", File.dirname(__FILE__)))
 
-Dir.glob(spec_path.join("support/**/*.rb")).map { |f| load(f) }
+Dir.glob(spec_path.join("support/**/*.rb"))
+   .sort_by { |f| [f.split("/").size, f] }
+   .each { |f| load(f) }
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

@@ -4,6 +4,8 @@ module Lite
   module Command
     class Attribute
 
+      # TODO: allow procs
+
       attr_reader :command, :method_name, :options, :errors
 
       def initialize(command, method_name, options)

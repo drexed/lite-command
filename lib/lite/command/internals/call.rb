@@ -50,7 +50,7 @@ module Lite
           status == SUCCESS
         end
 
-        def resume?(reason = nil)
+        def ok?(reason = nil)
           success? || noop?(reason)
         end
 

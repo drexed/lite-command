@@ -7,7 +7,7 @@ RSpec.describe Lite::Command::Base do
 
   let(:command_class) { SuccessCommand }
   let(:command_instance) { command_class.new(command_arguments) }
-  let(:command_arguments) { {} }
+  let(:command_arguments) { { a: 1, b: 1 } }
 
   before do
     allow_any_instance_of(command_class).to receive(:cmd_id).and_return("018c2b95-b764-7615-a924-cc5b910ed1e5")
