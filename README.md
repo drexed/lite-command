@@ -469,10 +469,6 @@ class CalculatePower < Lite::Command::Base
   private
 
   def on_before_execution
-    validate!
-
-    # - or -
-
     return if valid?
 
     context.invalid!(
