@@ -30,15 +30,15 @@ Or install it yourself as:
 * [States](#states)
 * [Statuses](#statuses)
 * [Callbacks](#callbacks)
-  * [State Hooks](#status_hooks)
-  * [Execution Hooks](#execution_hooks)
-  * [Status Hooks](#status_hooks)
+  * [State Hooks](#status-hooks)
+  * [Execution Hooks](#execution-hooks)
+  * [Status Hooks](#status-hooks)
 * [Children - TODO](#children)
 * [Organizer - TODO](#organizer)
 * [Results - TODO](#results)
 * [Examples](#examples)
-  * Disable instance style calls
-  * ActiveModel validations
+  * [Disable Instance Calls](#disable-instance-calls)
+  * [ActiveModel Validations](#activemodel-validations)
 * [Generator](#generator)
 
 ## Setup
