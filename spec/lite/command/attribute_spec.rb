@@ -118,6 +118,29 @@ RSpec.describe Lite::Command::Attribute do
         )
       end
     end
+
+    context "with filled option" do
+      let(:command_arguments) do
+        { first_name: "John", last_name: nil }
+      end
+      let(:command_class) do
+        Class.new(BaseCommand) do
+          attribute :first_name, :last_name, filled: true
+
+          def call
+            context.full_name = "#{first_name} #{last_name}"
+          end
+        end
+      end
+
+      it "returns invalid" do
+        expect(command).to be_invalid
+        expect(command.reason).to eq("Invalid context attributes")
+        expect(command.metadata).to eq(
+          { context: ["last_name must be filled"] }
+        )
+      end
+    end
   end
 
 end

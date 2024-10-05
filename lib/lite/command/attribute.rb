@@ -4,8 +4,6 @@ module Lite
   module Command
     class Attribute
 
-      # TODO: add filled check
-
       attr_reader :command, :method_name, :options, :errors
 
       def initialize(command, method_name, options)
@@ -17,6 +15,10 @@ module Lite
 
       def from
         options[:from] || :context
+      end
+
+      def filled?
+        options[:filled] || false
       end
 
       def required?
@@ -37,6 +39,7 @@ module Lite
 
         validate_required_attribute!
         validate_attribute_type!
+        validate_attribute_filled!
       end
 
       def valid?
@@ -69,6 +72,13 @@ module Lite
         return if types.include?(value.class)
 
         @errors << "#{method_name} type invalid"
+      end
+
+      def validate_attribute_filled!
+        return unless filled?
+        return unless value.nil?
+
+        @errors << "#{method_name} must be filled"
       end
 
     end
