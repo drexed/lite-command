@@ -389,9 +389,9 @@ end
 > [!NOTE]
 > The `on_success` callback does **NOT** take any arguments.
 
-### Examples
+## Examples
 
-Disable instance style calls:
+### Disable Instance Calls
 
 ```ruby
 class CalculatePower < Lite::Command::Base
@@ -408,7 +408,7 @@ CalculatePower.new(...).call
 #=> raise NoMethodError
 ```
 
-ActiveModel validations:
+### ActiveModel Validations
 
 ```ruby
 class CalculatePower < Lite::Command::Base
