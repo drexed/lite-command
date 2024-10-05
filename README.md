@@ -33,7 +33,8 @@ Or install it yourself as:
   * [State Hooks](#status-hooks)
   * [Execution Hooks](#execution-hooks)
   * [Status Hooks](#status-hooks)
-* [Children - TODO](#children)
+* [Children](#children)
+  * [Throwing Faults](#throwing-faults)
 * [Organizer - TODO](#organizer)
 * [Results](#results)
 * [Examples](#examples)
@@ -403,6 +404,49 @@ end
 
 > [!NOTE]
 > The `on_success` callback does **NOT** take any arguments.
+
+## Children
+
+When building complex commands, its best that you pass the
+parents context to the child command (unless neccessary) so
+that it gains automated indexing and the parents `cmd_id`.
+
+```ruby
+class CalculatePower < Lite::Command::Base
+
+  def call
+    CalculateSqrt.call(context.merge!(some_other: "required value"))
+  end
+
+end
+```
+
+### Throwing Faults
+
+Throwing faults allows you to bubble up child faults up to the parent.
+Use it to create branches within your logic and create clean tracing
+of your command results. You can use `throw!` as a catch-all or any
+of the bang status method `failure!`.
+
+```ruby
+class CalculatePower < Lite::Command::Base
+
+  def call
+    command = CalculateSqrt.call(context.merge!(some_other: "required value"))
+
+    if command.noop?("Sqrt of 1 is 1")
+      # Manually throw any fault you want
+      invalid!(command)
+    elsif command.fault?
+      # Automatically throws a matching fault type
+      throw!(command)
+    else
+      # Success, do nothing
+    end
+  end
+
+end
+```
 
 ## Results
 
