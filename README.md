@@ -36,7 +36,7 @@ Or install it yourself as:
 * [Children - TODO](#children)
 * [Organizer - TODO](#organizer)
 * [Results - TODO](#results)
-* [Examples - TODO](#examples)
+* [Examples](#examples)
   * Disable instance style calls
   * ActiveModel validations
 * [Generator](#generator)
