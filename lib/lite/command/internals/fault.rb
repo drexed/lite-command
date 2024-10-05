@@ -26,9 +26,7 @@ module Lite
         private
 
         def reason?(str)
-          return true if str.nil?
-
-          reason == str
+          str.nil? || str == reason
         end
 
         def throw!(command)
