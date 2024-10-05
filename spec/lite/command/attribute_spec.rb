@@ -49,7 +49,7 @@ RSpec.describe Lite::Command::Attribute do
         end
       end
 
-      context "when attribute is not context" do
+      context "when attribute is not default (:context)" do
         let(:command_arguments) do
           { passport: double("passport", first_name: "John", last_name: "Doe") }
         end
@@ -73,7 +73,7 @@ RSpec.describe Lite::Command::Attribute do
       end
     end
 
-    context "with missing required option" do
+    context "with required option" do
       let(:command_arguments) do
         { first_name: "John" }
       end
@@ -96,7 +96,7 @@ RSpec.describe Lite::Command::Attribute do
       end
     end
 
-    context "with invalid types option" do
+    context "with types option" do
       let(:command_arguments) do
         { first_name: "John", last_name: 123 }
       end
