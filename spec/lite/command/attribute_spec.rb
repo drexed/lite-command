@@ -44,12 +44,12 @@ RSpec.describe Lite::Command::Attribute do
           expect(command).to be_invalid
           expect(command.reason).to eq("Invalid context attributes")
           expect(command.metadata).to eq(
-            { fake: ["is not an attribute"] }
+            { fake: ["is not defined or an attribute"] }
           )
         end
       end
 
-      context "when attribute is not default (:context)" do
+      context "when attribute is delegated from another attribute" do
         let(:command_arguments) do
           { passport: double("passport", first_name: "John", last_name: "Doe") }
         end
@@ -60,6 +60,34 @@ RSpec.describe Lite::Command::Attribute do
 
             def call
               context.full_name = "#{first_name} #{last_name}"
+            end
+          end
+        end
+
+        it "returns invalid" do
+          expect(command).to be_success
+          expect(command.first_name).to eq("John")
+          expect(command.last_name).to eq("Doe")
+          expect(command.context.full_name).to eq("John Doe")
+        end
+      end
+
+      context "when attribute is delegated from a method" do
+        let(:command_arguments) do
+          {}
+        end
+        let(:command_class) do
+          Class.new(BaseCommand) do
+            attribute :first_name, :last_name, from: :passport
+
+            def call
+              context.full_name = "#{first_name} #{last_name}"
+            end
+
+            private
+
+            def passport
+              @passport ||= OpenStruct.new(first_name: "John", last_name: "Doe")
             end
           end
         end

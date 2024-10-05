@@ -55,9 +55,9 @@ module Lite
       private
 
       def validate_respond_attribute!
-        return if command.respond_to?(from)
+        return if command.respond_to?(from, true)
 
-        @errors << "is not an attribute"
+        @errors << "is not defined or an attribute"
       end
 
       def validate_required_attribute!
