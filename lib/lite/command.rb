@@ -3,6 +3,7 @@
 require "generators/rails/command_generator" if defined?(Rails::Generators)
 
 require "lite/command/version"
+require "lite/command/utils"
 require "lite/command/context"
 require "lite/command/attribute"
 require "lite/command/attribute_validator"

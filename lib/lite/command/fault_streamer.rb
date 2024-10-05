@@ -12,17 +12,17 @@ module Lite
       end
 
       def caused_by
-        try(object, :caused_by) || command
+        Utils.try(object, :caused_by) || command
       end
 
       def thrown_by
-        return object if object.respond_to?(:executed?) && object.executed?
+        return object if Utils.try(object, :executed?)
 
-        try(object, :thrown_by) || command.caused_by
+        Utils.try(object, :thrown_by) || command.caused_by
       end
 
       def metadata
-        try(object, :metadata) || command.metadata
+        Utils.try(object, :metadata) || command.metadata
       end
 
       def reason
@@ -30,14 +30,6 @@ module Lite
         return object unless object.is_a?(StandardError)
 
         "[#{object.class.name}] #{object.message}".chomp(".")
-      end
-
-      private
-
-      def try(obj, method_name, include_private: false)
-        return unless obj.respond_to?(method_name, include_private)
-
-        obj.send(method_name)
       end
 
     end
