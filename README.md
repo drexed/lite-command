@@ -161,8 +161,11 @@ method which automatically delegates to `context`.
 | ---------- | ------ | ------- | ----------- |
 | `from`     | Symbol, String | `:context` | The object containing the attribute. |
 | `types`    | Symbol, String, Array | | The allowed class types of the attribute value. |
-| `required` | Boolean | false | The attribute must be passed to the context or delegatable (no matter the value). |
-| `filled`   | Boolean | false | The attribute value must be not be `nil`. |
+| `required` | Boolean | `false` | The attribute must be passed to the context or delegatable (no matter the value). |
+| `filled`   | Boolean | `false` | The attribute value must be not be `nil`. |
+
+> [!NOTE]
+> If `filled: true` any `NilClass` from `types` option will be removed.
 
 ```ruby
 class CalculatePower < Lite::Command::Base
