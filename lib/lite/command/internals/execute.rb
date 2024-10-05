@@ -70,6 +70,7 @@ module Lite
           around_execution { call }
           Utils.hook(self, :on_success)
         rescue StandardError => e
+          fault(e, ERROR, metadata) unless e.is_a?(Lite::Command::Fault)
           after_execution
           raise(e)
         else
