@@ -26,11 +26,19 @@ module Lite
       end
 
       def typed?
-        options.key?(:types)
+        options.key?(:types) && types.any?
       end
 
       def types
-        Array(options[:types])
+        @types ||= begin
+          t = Array(options[:types])
+
+          if filled?
+            t - [NilClass]
+          else
+            t | [NilClass]
+          end
+        end
       end
 
       def validate!

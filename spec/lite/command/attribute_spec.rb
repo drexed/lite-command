@@ -127,11 +127,12 @@ RSpec.describe Lite::Command::Attribute do
 
     context "with types option" do
       let(:command_arguments) do
-        { first_name: "John", last_name: 123 }
+        { first_name: nil, last_name: nil }
       end
       let(:command_class) do
         Class.new(BaseCommand) do
-          attribute :first_name, :last_name, types: [String, NilClass]
+          attribute :first_name, filled: true, types: [String, Integer, NilClass]
+          attribute :last_name, types: String
 
           def call
             context.full_name = "#{first_name} #{last_name}"
@@ -143,7 +144,7 @@ RSpec.describe Lite::Command::Attribute do
         expect(command).to be_invalid
         expect(command.reason).to eq("Invalid context attributes")
         expect(command.metadata).to eq(
-          { context: ["last_name type invalid"] }
+          { context: ["first_name type invalid", "first_name must be filled"] }
         )
       end
     end
