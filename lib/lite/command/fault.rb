@@ -22,7 +22,7 @@ module Lite
         fault = fault.new(
           reason:    command.reason,
           metadata:  command.metadata,
-          caused_by: command.caused_by,
+          caused_by: command.caused_by || command,
           thrown_by: command
         )
         fault.set_backtrace(thrown_exception.backtrace) if thrown_exception.respond_to?(:backtrace)
