@@ -35,7 +35,7 @@ Or install it yourself as:
   * [Status Hooks](#status-hooks)
 * [Children - TODO](#children)
 * [Organizer - TODO](#organizer)
-* [Results - TODO](#results)
+* [Results](#results)
 * [Examples](#examples)
   * [Disable Instance Calls](#disable-instance-calls)
   * [ActiveModel Validations](#activemodel-validations)
@@ -403,6 +403,33 @@ end
 
 > [!NOTE]
 > The `on_success` callback does **NOT** take any arguments.
+
+## Results
+
+During any point in the lifecyle of a command, `to_hash` can be
+called to dump out the current values. The `index` value is
+auto-incremented and the `cmd_id` is static when its passed to
+child commands. This helps with debugging and logging.
+
+```ruby
+command = CalculatePower.call(...)
+command.to_hash #=> {
+                #=>   index: 1,
+                #=>   cmd_id: "018c2b95-b764-7615-a924-cc5b910ed1e5",
+                #=>   command: "FailureCommand",
+                #=>   outcome: "failure",
+                #=>   state: "interrupted",
+                #=>   status: "failure",
+                #=>   reason: "[!] command stopped due to failure",
+                #=>   metadata: {
+                #=>     errors: { name: ["is too short"] },
+                #=>     i18n_key: "command.failure"
+                #=>   },
+                #=>   caused_by: 1,
+                #=>   thrown_by: 1,
+                #=>   runtime: 0.0123
+                #=> }
+```
 
 ## Examples
 
