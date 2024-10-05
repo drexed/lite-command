@@ -16,11 +16,11 @@ module Lite
               attributes[method_name] = options
 
               define_method(method_name) do
-                # return instance_variable_get(method_name) if instance_variable_defined?(method_name)
+                ivar = :"@#{method_name}"
+                return instance_variable_get(ivar) if instance_variable_defined?(ivar)
 
                 attribute = Lite::Command::Attribute.new(self, method_name, options)
-                # instance_variable_set(method_name, attribute.value)
-                attribute.value
+                instance_variable_set(ivar, attribute.value)
               end
             end
           end
