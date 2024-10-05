@@ -33,7 +33,7 @@ module Lite
 
         def before_execution
           increment_execution_index
-          assign_execution_cid
+          assign_execution_cmd_id
           start_monotonic_time
           Utils.hook(self, :on_before_execution)
           validate_context_attributes

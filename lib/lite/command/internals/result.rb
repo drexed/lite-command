@@ -11,8 +11,8 @@ module Lite
           @index ||= context.index ||= 0
         end
 
-        def cid
-          @cid ||= context.cid
+        def cmd_id
+          @cmd_id ||= context.cmd_id
         end
 
         def outcome
@@ -28,7 +28,7 @@ module Lite
         def to_hash
           {
             index:,
-            cid:,
+            cmd_id:,
             command: self.class.name,
             outcome:,
             state:,
@@ -44,8 +44,8 @@ module Lite
 
         private
 
-        def assign_execution_cid
-          context.cid ||= SecureRandom.uuid
+        def assign_execution_cmd_id
+          context.cmd_id ||= SecureRandom.uuid
         end
 
         def increment_execution_index

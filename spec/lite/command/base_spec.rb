@@ -10,7 +10,7 @@ RSpec.describe Lite::Command::Base do
   let(:command_arguments) { {} }
 
   before do
-    allow_any_instance_of(command_class).to receive(:cid).and_return("018c2b95-b764-7615-a924-cc5b910ed1e5")
+    allow_any_instance_of(command_class).to receive(:cmd_id).and_return("018c2b95-b764-7615-a924-cc5b910ed1e5")
     allow_any_instance_of(command_class).to receive(:runtime).and_return(0.0123)
   end
 
@@ -394,7 +394,7 @@ RSpec.describe Lite::Command::Base do
         expect(command_instance.results).to be_empty
         expect(command_instance.to_hash).to eq(
           index: 0,
-          cid: "018c2b95-b764-7615-a924-cc5b910ed1e5",
+          cmd_id: "018c2b95-b764-7615-a924-cc5b910ed1e5",
           command: "SuccessCommand",
           outcome: "pending",
           state: "pending",
@@ -409,7 +409,7 @@ RSpec.describe Lite::Command::Base do
         expect(command.results).not_to be_empty
         expect(command.to_hash).to eq(
           index: 1,
-          cid: "018c2b95-b764-7615-a924-cc5b910ed1e5",
+          cmd_id: "018c2b95-b764-7615-a924-cc5b910ed1e5",
           command: "SuccessCommand",
           outcome: "success",
           state: "complete",
@@ -426,7 +426,7 @@ RSpec.describe Lite::Command::Base do
         expect(command.results).not_to be_empty
         expect(command.to_hash).to eq(
           index: 1,
-          cid: "018c2b95-b764-7615-a924-cc5b910ed1e5",
+          cmd_id: "018c2b95-b764-7615-a924-cc5b910ed1e5",
           command: "NoopCommand",
           outcome: "noop",
           state: "interrupted",
@@ -446,7 +446,7 @@ RSpec.describe Lite::Command::Base do
         expect(command.results).not_to be_empty
         expect(command.to_hash).to eq(
           index: 1,
-          cid: "018c2b95-b764-7615-a924-cc5b910ed1e5",
+          cmd_id: "018c2b95-b764-7615-a924-cc5b910ed1e5",
           command: "InvalidCommand",
           outcome: "invalid",
           state: "interrupted",
@@ -466,7 +466,7 @@ RSpec.describe Lite::Command::Base do
         expect(command.results).not_to be_empty
         expect(command.to_hash).to eq(
           index: 1,
-          cid: "018c2b95-b764-7615-a924-cc5b910ed1e5",
+          cmd_id: "018c2b95-b764-7615-a924-cc5b910ed1e5",
           command: "FailureCommand",
           outcome: "failure",
           state: "interrupted",
@@ -490,7 +490,7 @@ RSpec.describe Lite::Command::Base do
         expect(command.results).not_to be_empty
         expect(command.to_hash).to eq(
           index: 1,
-          cid: "018c2b95-b764-7615-a924-cc5b910ed1e5",
+          cmd_id: "018c2b95-b764-7615-a924-cc5b910ed1e5",
           command: "ErrorCommand",
           outcome: "error",
           state: "interrupted",
@@ -510,7 +510,7 @@ RSpec.describe Lite::Command::Base do
         expect(command.results).not_to be_empty
         expect(command.to_hash).to eq(
           index: 1,
-          cid: "018c2b95-b764-7615-a924-cc5b910ed1e5",
+          cmd_id: "018c2b95-b764-7615-a924-cc5b910ed1e5",
           command: "ExceptionCommand",
           outcome: "error",
           state: "interrupted",
@@ -530,7 +530,7 @@ RSpec.describe Lite::Command::Base do
         expect(command.results).not_to be_empty
         expect(command.to_hash).to eq(
           index: 1,
-          cid: "018c2b95-b764-7615-a924-cc5b910ed1e5",
+          cmd_id: "018c2b95-b764-7615-a924-cc5b910ed1e5",
           command: "ThrownCommand",
           outcome: "interrupted",
           state: "interrupted",
