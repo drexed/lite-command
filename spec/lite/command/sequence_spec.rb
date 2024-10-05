@@ -7,7 +7,7 @@ RSpec.describe Lite::Command::Sequence do
 
   let(:sequence_class) { Sequences::SuccessSequence }
   let(:sequence_instance) { sequence_class.new(sequence_arguments) }
-  let(:sequence_arguments) { {} }
+  let(:sequence_arguments) { { a: 1, b: 1 } }
 
   describe "#execute" do
     context "when success" do
@@ -16,6 +16,7 @@ RSpec.describe Lite::Command::Sequence do
         expect(sequence.state).to eq(Lite::Command::COMPLETE)
         expect(sequence).to be_success
         expect(sequence.status).to eq(Lite::Command::SUCCESS)
+        expect(sequence.context.result).to eq(103)
         expect(sequence.context.callbacks).to eq(
           %w[
             Sequences::SuccessSequence.on_pending
@@ -66,6 +67,7 @@ RSpec.describe Lite::Command::Sequence do
         expect(sequence).to be_thrown
         expect(sequence.failure?("[!] command stopped due to failure")).to be(true)
         expect(sequence.failure?("Some reason")).to be(false)
+        expect(sequence.context.result).to eq(2)
         expect(sequence.context.callbacks).to eq(
           %w[
             Sequences::FailureSequence.on_pending

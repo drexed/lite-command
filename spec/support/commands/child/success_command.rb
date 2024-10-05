@@ -4,7 +4,7 @@ module Child
   class SuccessCommand < BaseCommand
 
     def call
-      ctx.result = 3**3
+      ctx.result = ctx.result.to_i + 99
     end
 
   end

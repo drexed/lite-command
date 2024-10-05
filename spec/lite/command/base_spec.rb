@@ -294,6 +294,7 @@ RSpec.describe Lite::Command::Base do
       it "returns a success status" do
         expect(command_instance).to be_success
         expect(command_instance.status).to eq(Lite::Command::SUCCESS)
+        expect(command.context.result).to eq(2)
       end
     end
 
@@ -301,6 +302,7 @@ RSpec.describe Lite::Command::Base do
       it "returns a success status" do
         expect(command).to be_success
         expect(command.status).to eq(Lite::Command::SUCCESS)
+        expect(command.context.result).to eq(2)
       end
     end
 
@@ -384,6 +386,7 @@ RSpec.describe Lite::Command::Base do
         expect(command).to be_thrown
         expect(command.fault?("[!] command stopped due to child noop")).to be(true)
         expect(command.fault?("Some reason")).to be(false)
+        expect(command.context.result).to eq(200)
       end
     end
   end
