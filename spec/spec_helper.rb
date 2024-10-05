@@ -35,6 +35,8 @@ RSpec.configure do |config|
 
   config.before do
     [
+      Sequences::FailureSequence,
+      Sequences::SuccessSequence,
       Child::NoopCommand,
       Child::SuccessCommand,
       ErrorCommand,

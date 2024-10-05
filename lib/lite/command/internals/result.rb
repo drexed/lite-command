@@ -12,7 +12,7 @@ module Lite
         end
 
         def cmd_id
-          @cmd_id ||= context.cmd_id
+          @cmd_id ||= context.cmd_id ||= SecureRandom.uuid
         end
 
         def outcome
@@ -45,7 +45,7 @@ module Lite
         private
 
         def assign_execution_cmd_id
-          context.cmd_id ||= SecureRandom.uuid
+          @cmd_id = context.cmd_id ||= cmd_id
         end
 
         def increment_execution_index

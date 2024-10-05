@@ -9,6 +9,11 @@ RSpec.describe Lite::Command::Sequence do
   let(:sequence_instance) { sequence_class.new(sequence_arguments) }
   let(:sequence_arguments) { { a: 1, b: 1 } }
 
+  before do
+    allow_any_instance_of(sequence_class).to receive(:cmd_id).and_return("018c2b95-b764-7615-a924-cc5b910ed1e5")
+    allow_any_instance_of(sequence_class).to receive(:runtime).and_return(0.0123)
+  end
+
   describe "#execute" do
     context "when success" do
       it "runs callbacks in correct order" do
@@ -51,6 +56,16 @@ RSpec.describe Lite::Command::Sequence do
             Sequences::SuccessSequence.on_complete
           ]
         )
+        expect(sequence.results).not_to be_empty
+        expect(sequence.to_hash).to eq(
+          index: 1,
+          cmd_id: "018c2b95-b764-7615-a924-cc5b910ed1e5",
+          command: "Sequences::SuccessSequence",
+          outcome: "success",
+          state: "complete",
+          status: "success",
+          runtime: 0.0123
+        )
       end
     end
 
@@ -89,6 +104,20 @@ RSpec.describe Lite::Command::Sequence do
             Sequences::FailureSequence.on_failure
             Sequences::FailureSequence.on_interrupted
           ]
+        )
+        expect(sequence.results).not_to be_empty
+        expect(sequence.to_hash).to eq(
+          index: 1,
+          cmd_id: "018c2b95-b764-7615-a924-cc5b910ed1e5",
+          command: "Sequences::FailureSequence",
+          outcome: "interrupted",
+          state: "interrupted",
+          status: "failure",
+          reason: "[!] command stopped due to failure",
+          metadata: { i18n_key: "command.failure", errors: { name: ["is too short"] } },
+          caused_by: 3,
+          thrown_by: 3,
+          runtime: 0.0123
         )
       end
     end
