@@ -165,7 +165,8 @@ method which automatically delegates to `context`.
 | `filled`   | Boolean | `false` | The attribute value must be not be `nil`. |
 
 > [!NOTE]
-> If `filled: true` any `NilClass` from `types` option will be removed.
+> If optioned with some similar to `filled: true, types: [String, NilClass]`
+> then `NilClass` for the `types` option will be removed automatically.
 
 ```ruby
 class CalculatePower < Lite::Command::Base
