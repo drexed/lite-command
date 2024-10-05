@@ -17,6 +17,9 @@ module Lite
 
         def self.included(base)
           base.extend ClassMethods
+          base.class_eval do
+            attr_reader :reason, :metadata
+          end
         end
 
         module ClassMethods
@@ -59,6 +62,10 @@ module Lite
         end
 
         private
+
+        def reason?(str)
+          str.nil? || str == reason
+        end
 
         def fault(object, status, metadata)
           @status   = status

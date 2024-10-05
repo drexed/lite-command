@@ -7,7 +7,7 @@ module Lite
 
         def self.included(base)
           base.class_eval do
-            attr_reader :reason, :metadata, :caused_by, :thrown_by
+            attr_reader :caused_by, :thrown_by
           end
         end
 
@@ -24,10 +24,6 @@ module Lite
         end
 
         private
-
-        def reason?(str)
-          str.nil? || str == reason
-        end
 
         def throw!(command)
           return if command.success?
