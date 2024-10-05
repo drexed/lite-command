@@ -20,8 +20,8 @@ module Lite
         klass = dynamic ? command.class : Lite::Command
         fault = klass.const_get(type.to_s)
         fault = fault.new(
-          reason:    command.reason,
-          metadata:  command.metadata,
+          reason: command.reason,
+          metadata: command.metadata,
           caused_by: command.caused_by || command,
           thrown_by: command
         )

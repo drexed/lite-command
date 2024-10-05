@@ -4,6 +4,7 @@ require "spec_helper"
 
 RSpec.describe Lite::Command::Attribute do
   subject(:command) { command_class.call(command_arguments) }
+
   let(:command_arguments) do
     { first_name: "John", last_name: "Doe" }
   end
@@ -51,7 +52,7 @@ RSpec.describe Lite::Command::Attribute do
 
       context "when attribute is delegated from another attribute" do
         let(:command_arguments) do
-          { passport: double("passport", first_name: "John", last_name: "Doe") }
+          { passport: instance_double("Passport", first_name: "John", last_name: "Doe") }
         end
         let(:command_class) do
           Class.new(BaseCommand) do

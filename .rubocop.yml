@@ -51,6 +51,12 @@ RSpec/MultipleExpectations:
   Enabled: false
 RSpec/MultipleMemoizedHelpers:
   Enabled: false
+RSpec/NestedGroups:
+  Enabled: false
+RSpec/StringAsInstanceDoubleConstant:
+  Enabled: false
+RSpec/VerifiedDoubleReference:
+  EnforcedStyle: string
 Style/ArgumentsForwarding:
   Enabled: false
 Style/Documentation:
