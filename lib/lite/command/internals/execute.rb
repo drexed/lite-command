@@ -72,6 +72,8 @@ module Lite
         rescue StandardError => e
           after_execution
           raise(e)
+        else
+          Utils.hook(self, :"on_#{state}")
         end
 
       end
