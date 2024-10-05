@@ -24,7 +24,7 @@ Or install it yourself as:
 
 * [Setup](#setup)
 * [Execution](#execution)
-  * [Dynamic Faults](#dynamic_faults)
+  * [Dynamic Faults](#dynamic-faults)
 * [Context](#context)
   * [Attributes](#attributes)
 * [States](#states)
