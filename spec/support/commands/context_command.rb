@@ -2,11 +2,11 @@
 
 class ContextCommand < BaseCommand
 
-  required :a
-  required :storage
-  required :b, :c, from: :storage
-  optional :d, :e
-  optional :f, from: :storage
+  attribute :a, required: true, type: Integer
+  attribute :storage, required: true
+  attribute :b, :c, required: true, from: :storage
+  attribute :d, :e
+  attribute :f, from: :storage
 
   def call
     ctx.result = [

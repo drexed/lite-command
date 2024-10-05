@@ -17,7 +17,7 @@ RSpec.describe Lite::Command::Base do
   describe "#context" do
     let(:command_class) { ContextCommand }
 
-    context "with required arguments" do
+    context "with valid attributes" do
       let(:command_arguments) do
         {
           a: 1,
@@ -32,12 +32,57 @@ RSpec.describe Lite::Command::Base do
       end
     end
 
-    context "with missing required arguments" do
-      let(:command_arguments) { { a: 1 } }
+    context "with invalid from attributes" do
+      let(:command_arguments) do
+        {
+          a: 1,
+          storage: OpenStruct.new(b: 1, c: 1)
+        }
+      end
+
+      it "returns invalid" do
+        allow_any_instance_of(Lite::Command::Validator).to receive(:valid_from_attribute?).with(:context).and_return(true)
+        allow_any_instance_of(Lite::Command::Validator).to receive(:valid_from_attribute?).with(:storage).and_return(false)
+
+        expect(command).to be_invalid
+        expect(command.reason).to eq("Invalid context attributes")
+        expect(command.metadata).to eq(
+          {
+            storage: [
+              "does not respond to b",
+              "does not respond to c",
+              "does not respond to f"
+            ]
+          }
+        )
+      end
+    end
+
+    context "with invalid type attributes" do
+      let(:command_arguments) do
+        {
+          a: nil,
+          storage: OpenStruct.new(b: 1, c: 1)
+        }
+      end
 
       it "returns invalid" do
         expect(command).to be_invalid
-        expect(command.reason).to eq("Required context missing")
+        expect(command.reason).to eq("Invalid context attributes")
+        expect(command.metadata).to eq(
+          {
+            context: ["a type invalid"]
+          }
+        )
+      end
+    end
+
+    context "with missing required attributes" do
+      let(:command_arguments) { { a: 1 } }
+
+      it "returns invalid" do
+        # expect(command).to be_invalid
+        expect(command.reason).to eq("Invalid context attributes")
         expect(command.metadata).to eq(
           {
             context: ["storage is required"],
@@ -47,7 +92,7 @@ RSpec.describe Lite::Command::Base do
       end
     end
 
-    context "with optional arguments" do
+    context "with optional attributes" do
       let(:command_arguments) do
         {
           a: 1,

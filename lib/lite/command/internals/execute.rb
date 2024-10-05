@@ -36,7 +36,7 @@ module Lite
           assign_execution_cid
           start_monotonic_time
           on_before_execution if respond_to?(:on_before_execution, true)
-          validate_required_context
+          validate_context_attributes
           executing!
           on_executing if respond_to?(:on_executing, true)
         end

@@ -11,46 +11,31 @@ module Lite
 
         module ClassMethods
 
-          def optional(*args, from: :context)
+          def attribute(*args, **opts)
             args.each do |method_name|
+              attributes[method_name] = opts
+
               define_method(method_name) do
-                send(from).public_send(method_name)
+                send(opts[:from] || :context).public_send(method_name)
               end
             end
           end
 
-          def required(*args, from: :context)
-            required_context.merge!(from => args) { |_k, ov, nv| ov + nv }
-            optional(*args, from:)
-          end
-
           private
 
-          def required_context
-            @required_context ||= {}
+          def attributes
+            @attributes ||= {}
           end
 
         end
 
         private
 
-        def missing_context
-          @missing_context ||=
-            self.class.send(:required_context).each_with_object({}) do |(from, args), h|
-              messages = args.filter_map do |method_name|
-                next if respond_to?(from) && send(from).respond_to?(method_name)
+        def validate_context_attributes
+          validator = Lite::Command::Validator.new(self)
+          return if validator.valid?
 
-                "#{method_name} is required"
-              end
-
-              h[from] = messages unless messages.empty?
-            end
-        end
-
-        def validate_required_context
-          return if self.class.send(:required_context).empty? || missing_context.empty?
-
-          invalid!("Required context missing", missing_context)
+          invalid!("Invalid context attributes", validator.errors)
         end
 
       end
