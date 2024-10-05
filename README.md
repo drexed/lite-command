@@ -26,8 +26,7 @@ Or install it yourself as:
 * [Execution](#execution)
   * [Dynamic Faults](#dynamic_faults)
 * [Context](#context)
-  * [Delegation](#delegation)
-  # TODO: add typecaseting
+  * [Attributes](#attributes)
 * [States](#states)
 * [Statuses](#statuses)
 * [Callbacks](#callbacks)
