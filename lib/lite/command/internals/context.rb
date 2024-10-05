@@ -11,12 +11,16 @@ module Lite
 
         module ClassMethods
 
-          def attribute(*args, **opts)
+          def attribute(*args, **options)
             args.each do |method_name|
-              attributes[method_name] = opts
+              attributes[method_name] = options
 
               define_method(method_name) do
-                send(opts[:from] || :context).public_send(method_name)
+                # return instance_variable_get(method_name) if instance_variable_defined?(method_name)
+
+                attribute = Lite::Command::Attribute.new(self, method_name, options)
+                # instance_variable_set(method_name, attribute.value)
+                attribute.value
               end
             end
           end
@@ -32,7 +36,7 @@ module Lite
         private
 
         def validate_context_attributes
-          validator = Lite::Command::Validator.new(self)
+          validator = Lite::Command::AttributeValidator.new(self)
           return if validator.valid?
 
           invalid!("Invalid context attributes", validator.errors)
