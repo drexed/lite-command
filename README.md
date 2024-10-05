@@ -471,7 +471,7 @@ class CalculatePower < Lite::Command::Base
   def on_before_execution
     return if valid?
 
-    context.invalid!(
+    invalid!(
       errors.full_messages.to_sentence,
       errors.to_hash
     )
