@@ -26,10 +26,13 @@ module Lite
       end
 
       def reason
-        return object.reason if object.respond_to?(:reason)
-        return object unless object.is_a?(StandardError)
-
-        "[#{object.class.name}] #{object.message}".chomp(".")
+        if object.respond_to?(:reason)
+          object.reason
+        elsif object.is_a?(StandardError)
+          "[#{object.class.name}] #{object.message}".chomp(".")
+        else
+          object
+        end
       end
 
     end
