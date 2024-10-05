@@ -7,6 +7,7 @@ require "lite/command/context"
 require "lite/command/attribute"
 require "lite/command/attribute_validator"
 require "lite/command/fault"
+require "lite/command/fault_streamer"
 
 require "lite/command/internals/context"
 require "lite/command/internals/call"

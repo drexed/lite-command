@@ -64,11 +64,11 @@ module Lite
           @status   = status
           @metadata = metadata
 
-          bubble = Lite::Command::Bubble.new(self, object)
-          @reason    ||= bubble.reason
-          @metadata  ||= bubble.metadata
-          @caused_by ||= bubble.caused_by
-          @thrown_by ||= bubble.thrown_by
+          down_stream = Lite::Command::FaultStreamer.new(self, object)
+          @reason    ||= down_stream.reason
+          @metadata  ||= down_stream.metadata
+          @caused_by ||= down_stream.caused_by
+          @thrown_by ||= down_stream.thrown_by
         end
 
         FAULTS.each do |f|
