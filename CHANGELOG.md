@@ -6,11 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [2.0.4] - 2024-10-04
+## [2.1.0] - 2024-10-05
 ### Added
-- Added `on_success` callback
 - Added passing metadata to faults
+- Added `on_success` callback
 - Added `on_pending`, `on_executing`, `on_complete`, and `on_interrupted` callbacks
+- Added attributes and attribute validations
 ### Changed
 - Check error descendency instead of type
 - Rename internal modules
