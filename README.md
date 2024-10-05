@@ -151,46 +151,57 @@ command = CalculatePower.call(a: 2, b: 3)
 command.context.result #=> 8
 ```
 
-### Delegation
+### Attributes
 
-Delegate methods to drop having to access them via the reference object.
-Set a usage contract by declaring `required` or `optional` arguments.
-You can pass the reference object (defaults to `:context`) by using`:from`.
+Delegate methods for a cleaner command setup, type checking and
+argument requirements. Setup a contract by using the `attribute`
+method which automatically delegates to `context`.
+
+| Options    | Values | Default | Description |
+| ---------- | ------ | ------- | ----------- |
+| `from`     | Symbol, String | `:context` | The object containing the attribute. |
+| `types`    | Symbol, String, Array | | The allowed class types of the attribute value. |
+| `required` | Boolean | false | The attribute must be passed to the context or delegatable (no matter the value). |
+| `filled`   | Boolean | false | The attribute value must be not be `nil`. |
 
 ```ruby
 class CalculatePower < Lite::Command::Base
 
-  required :storage
-  required :a, :b, from: :storage
-  optional :c
-  optional :d, from: :storage
+  attribute :remote_storage, required: true, filled: true, types: RemoteStorage
 
+  attribute :a, :b
+  attribute :c, :d, from: :remote_storage, types: [Integer, Float]
+  attribute :x, :y, from: :local_storage
 
   def call
-    context.result = (a ** b) + c.to_i + d.to_i
+    context.result =
+      (a.to_i ** b.to_i) +
+      (c.to_i + d.to_i) -
+      (x.to_i + y.to_i)
+  end
+
+  private
+
+  def local_storage
+    @local_storage ||= LocalStorage.new(x: 1, y: 1, z: 99)
   end
 
 end
 
-# With context all required only
-storage = Storage.new(a: 2, b: 2)
-command = CalculatePower.call(storage: storage)
-command.status         #=> "success"
-command.context.result #=> 4
-
-# With context all required and optional only
-storage = Storage.new(a: 2, b: 2, d: 1)
-command = CalculatePower.call(storage: storage, c: 1)
+# With valid options:
+storage = RemoteStorage.new(c: 2, d: 2, j: 99)
+command = CalculatePower.call(a: 2, b: 2, remote_storage: storage)
 command.status         #=> "success"
 command.context.result #=> 6
 
-# Missing context arguments
+# With invalid options
 command = CalculatePower.call
 command.status   #=> "invalid"
-command.reason   #=> "Required context missing"
+command.reason   #=> "Invalid context attributes"
 command.metadata #=> {
-                 #=>   context: ["storage is required"],
-                 #=>   storage: ["a is required", "b is required"]
+                 #=>   context: ["a is required", "remote_storage must be filled"],
+                 #=>   remote_storage: ["d type invalid"]
+                 #=>   local_storage: ["is not defined or an attribute"]
                  #=> }
 ```
 
