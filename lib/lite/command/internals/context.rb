@@ -25,8 +25,6 @@ module Lite
             end
           end
 
-          private
-
           def attributes
             @attributes ||= {}
           end

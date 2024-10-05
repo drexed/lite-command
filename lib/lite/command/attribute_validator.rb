@@ -12,7 +12,7 @@ module Lite
 
       def attributes
         @attributes ||=
-          command.class.send(:attributes).map do |method_name, options|
+          command.class.attributes.map do |method_name, options|
             Lite::Command::Attribute.new(command, method_name, options)
           end
       end
