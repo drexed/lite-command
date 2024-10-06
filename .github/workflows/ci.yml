@@ -1,0 +1,30 @@
+name: CI
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby:
+          - '3.3'
+          - '3.2'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{matrix.ruby}}
+          bundler-cache: true
+      - name: RSpec
+        run: bundle exec rspec .
+      - name: Fasterer
+        run: bundle exec fasterer .
+      - name: Rubocop
+        run: bundle exec rubocop .
