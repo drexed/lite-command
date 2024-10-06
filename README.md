@@ -35,7 +35,7 @@ Or install it yourself as:
   * [Status Hooks](#status-hooks)
 * [Children](#children)
   * [Throwing Faults](#throwing-faults)
-* [Organizer - TODO](#organizer)
+* [Sequences](#sequences)
 * [Results](#results)
 * [Examples](#examples)
   * [Disable Instance Calls](#disable-instance-calls)
@@ -446,6 +446,42 @@ class CalculatePower < Lite::Command::Base
   end
 
 end
+```
+
+## Sequences
+
+A sequence is a command that calls commands in a linear fashion.
+This is useful for composing multiple steps into one call.
+
+> [!NOTE]
+> Sequences only stop processing on `invalid`, `failure`, and `error`
+> faults. This is due to the the idea the `noop` performs no work,
+> so its no different than just passing the context forward. To change
+> this behavior, just override the `ok?` method with you logic, eg: just `success`
+
+```ruby
+class ProcessCheckout < Lite::Command::Sequence
+
+  attribute :user, required: true, filled: true
+
+  step FinalizeInvoice
+  step ChargeCard, if: :card_available?
+  step SendConfirmationEmail, SendConfirmationText
+  step NotifyWarehouse, unless: proc { ctx.invoice.fullfilled_by_amazon? }
+
+  # Do NOT set a call method.
+  # Its defined by Lite::Command::Sequence
+
+  private
+
+  def card_available?
+    user.has_card?
+  end
+
+end
+
+sequence = ProcessCheckout.call(...)
+# <ProcessCheckout ...>
 ```
 
 ## Results

@@ -5,9 +5,9 @@ module Sequences
 
     step SuccessCommand
     step NoopCommand
-    step SuccessCommand, unless: proc { (1 + 1) == 2 }
+    step SuccessCommand, unless: proc { ctx.result == 2 }
     step FailureCommand, if: :bork?
-    step [SuccessCommand, Child::SuccessCommand]
+    step SuccessCommand, Child::SuccessCommand
 
     private
 
