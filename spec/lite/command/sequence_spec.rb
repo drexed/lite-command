@@ -14,9 +14,9 @@ RSpec.describe Lite::Command::Sequence do
     allow_any_instance_of(sequence_class).to receive(:runtime).and_return(0.0123)
   end
 
-  describe "#execute" do
+  describe "#steps" do
     context "when success" do
-      it "runs callbacks in correct order" do
+      it "returns completed data" do
         expect(sequence).to be_complete
         expect(sequence.state).to eq(Lite::Command::COMPLETE)
         expect(sequence).to be_success
@@ -72,7 +72,7 @@ RSpec.describe Lite::Command::Sequence do
     context "when failure" do
       let(:sequence_class) { Sequences::FailureSequence }
 
-      it "returns a failure status" do
+      it "returns interrupted data" do
         expect(sequence).to be_failure
         expect(sequence.status).to eq(Lite::Command::FAILURE)
         expect(sequence).to be_interrupted

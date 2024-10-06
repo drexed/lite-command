@@ -4,8 +4,6 @@ module Lite
   module Command
     class Step
 
-      # TODO: allow procs
-
       attr_reader :command, :options
 
       def initialize(command, options)
@@ -13,8 +11,14 @@ module Lite
         @options = options
       end
 
-      def execute?
-        options[:from] || :context
+      def run?(cmd)
+        if options[:if]
+          Utils.call(cmd, options[:if])
+        elsif options[:unless]
+          !Utils.call(cmd, options[:unless])
+        else
+          true
+        end
       end
 
     end

@@ -5,10 +5,9 @@ module Lite
     class Sequence < Base
 
       def self.step(*commands, **options)
-        steps << {
-          commands: commands.flatten,
-          options:
-        }
+        commands.flatten.each do |command|
+          steps << Step.new(command, options)
+        end
       end
 
       def self.steps
@@ -16,23 +15,10 @@ module Lite
       end
 
       def call
-        self.class.steps.each do |steps|
-          step!(steps[:commands], steps[:options])
-        end
-      end
+        self.class.steps.each do |step|
+          next unless step.run?(self)
 
-      private
-
-      def step!(commands, _options = {})
-        # run = if options[:if]
-        #         options[:if].is_a?(Symbol) ? send(options[:if]) : instance_eval(&options[:if])
-        #       else
-        #         true
-        #       end
-        # return unless run
-
-        commands.each do |command|
-          cmd = command.call(context)
+          cmd = step.command.call(context)
           throw!(cmd) unless cmd.ok?
         end
       end
@@ -40,46 +26,3 @@ module Lite
     end
   end
 end
-
-# frozen_string_literal: true
-
-# module Lite
-#   module Command
-#     class Sequence < Base
-
-#       def self.step(*commands, **options)
-#         commands.flatten.each do |command|
-#           steps << Step.new(command, options)
-#         end
-#       end
-
-#       def self.steps
-#         @steps ||= []
-#       end
-
-#       def call
-#         self.class.steps.each do |step|
-#           cmd = step.command.call(context)
-#           throw!(cmd) unless cmd.ok?
-#         end
-#       end
-
-#       private
-
-#       def step!(commands, _options = {})
-#         # run = if options[:if]
-#         #         options[:if].is_a?(Symbol) ? send(options[:if]) : instance_eval(&options[:if])
-#         #       else
-#         #         true
-#         #       end
-#         # return unless run
-
-#         commands.each do |command|
-#           cmd = command.call(context)
-#           throw!(cmd) unless cmd.ok?
-#         end
-#       end
-
-#     end
-#   end
-# end
