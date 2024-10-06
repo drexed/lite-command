@@ -12,15 +12,14 @@ module Lite
 
       def attributes
         @attributes ||=
-          command.class.attributes.map do |method_name, options|
-            Lite::Command::Attribute.new(command, method_name, options)
+          command.class.attributes.map do |_method_name, attribute|
+            attribute.tap { |a| a.command = command }
           end
       end
 
       def errors
         @errors ||= attributes.each_with_object({}) do |attribute, h|
-          attribute.validate!
-          next if attribute.valid?
+          next if attribute.tap(&:validate!).valid?
 
           h[attribute.from] ||= []
           h[attribute.from] = h[attribute.from] | attribute.errors

@@ -13,13 +13,13 @@ module Lite
 
           def attribute(*args, **options)
             args.each do |method_name|
-              attributes[method_name] = options
+              attribute = Lite::Command::Attribute.new(method_name, options)
+              attributes[method_name] = attribute
 
               define_method(method_name) do
                 ivar = :"@#{method_name}"
                 return instance_variable_get(ivar) if instance_variable_defined?(ivar)
 
-                attribute = Lite::Command::Attribute.new(self, method_name, options)
                 instance_variable_set(ivar, attribute.value)
               end
             end
