@@ -19,8 +19,10 @@ module Lite
       def call(object, method_name_or_proc)
         if method_name_or_proc.is_a?(Symbol) || method_name_or_proc.is_a?(String)
           object.send(method_name_or_proc)
-        else
+        elsif method_name_or_proc.is_a?(Proc)
           object.instance_eval(&method_name_or_proc)
+        else
+          method_name_or_proc
         end
       end
 

@@ -161,9 +161,9 @@ method which automatically delegates to `context`.
 | Options    | Values | Default | Description |
 | ---------- | ------ | ------- | ----------- |
 | `from`     | Symbol, String | `:context` | The object containing the attribute. |
-| `types`    | Symbol, String, Array | | The allowed class types of the attribute value. |
-| `required` | Boolean | `false` | The attribute must be passed to the context or delegatable (no matter the value). |
-| `filled`   | Boolean | `false` | The attribute value must be not be `nil`. |
+| `types`    | Symbol, String, Array, Proc | | The allowed class types of the attribute value. |
+| `required` | Boolean, Proc | `false` | The attribute must be passed to the context or delegatable (no matter the value). |
+| `filled`   | Boolean, Proc | `false` | The attribute value must be not be `nil`. |
 
 > [!NOTE]
 > If optioned with some similar to `filled: true, types: [String, NilClass]`

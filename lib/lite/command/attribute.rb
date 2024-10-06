@@ -20,11 +20,11 @@ module Lite
       end
 
       def filled?
-        options[:filled] || false
+        Utils.call(command, options[:filled]) || false
       end
 
       def required?
-        options[:required] || false
+        Utils.call(command, options[:required]) || false
       end
 
       def typed?
@@ -33,7 +33,7 @@ module Lite
 
       def types
         @types ||= begin
-          t = Array(options[:types])
+          t = Array(Utils.call(command, options[:types]))
 
           if filled?
             t - [NilClass]
