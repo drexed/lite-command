@@ -9,7 +9,7 @@ Lite::Command provides an API for building simple and complex command based serv
 Add this line to your application's Gemfile:
 
 > [!NOTE]
-> Gem versions `2.0.0`, `2.0.1`, `2.0.2`, and `2.0.3` are borked.
+> Gem versions `~> 2.0` are borked.
 > Version `~> 2.1.0` is the suggested working version.
 
 ```ruby
