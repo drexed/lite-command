@@ -48,7 +48,8 @@ Or install it yourself as:
 
 ## Setup
 
-Defining a command is as simple as adding a `call` method to a command object (required).
+Defining a command is as simple as inheriting the base class and
+adding a `call` method to a command object (required).
 
 ```ruby
 class CalculatePower < Lite::Command::Base
