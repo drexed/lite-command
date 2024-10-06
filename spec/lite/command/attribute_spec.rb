@@ -103,25 +103,56 @@ RSpec.describe Lite::Command::Attribute do
     end
 
     context "with required option" do
-      let(:command_arguments) do
-        { first_name: "John" }
-      end
-      let(:command_class) do
-        Class.new(BaseCommand) do
-          attribute :first_name, :last_name, required: true
+      context "without proc" do
+        let(:command_arguments) do
+          { first_name: "John" }
+        end
+        let(:command_class) do
+          Class.new(BaseCommand) do
+            attribute :first_name, :last_name, required: true
 
-          def call
-            context.full_name = "#{first_name} #{last_name}"
+            def call
+              context.full_name = "#{first_name} #{last_name}"
+            end
           end
+        end
+
+        it "returns invalid" do
+          expect(command).to be_invalid
+          expect(command.reason).to eq("Invalid context attributes")
+          expect(command.metadata).to eq(
+            { context: ["last_name is required"] }
+          )
         end
       end
 
-      it "returns invalid" do
-        expect(command).to be_invalid
-        expect(command.reason).to eq("Invalid context attributes")
-        expect(command.metadata).to eq(
-          { context: ["last_name is required"] }
-        )
+      context "with proc" do
+        let(:command_arguments) do
+          { first_name: "John" }
+        end
+        let(:command_class) do
+          Class.new(BaseCommand) do
+            attribute :first_name, :last_name, required: :fact?
+
+            def call
+              context.full_name = "#{first_name} #{last_name}"
+            end
+
+            private
+
+            def fact?
+              true
+            end
+          end
+        end
+
+        it "returns invalid" do
+          expect(command).to be_invalid
+          expect(command.reason).to eq("Invalid context attributes")
+          expect(command.metadata).to eq(
+            { context: ["last_name is required"] }
+          )
+        end
       end
     end
 
