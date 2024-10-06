@@ -72,6 +72,7 @@ module Lite
         rescue StandardError => e
           fault(e, ERROR, metadata) unless e.is_a?(Lite::Command::Fault)
           after_execution
+          Utils.hook(self, :"on_#{status}", e)
           raise(e)
         else
           Utils.hook(self, :"on_#{state}")

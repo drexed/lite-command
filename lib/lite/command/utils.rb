@@ -16,13 +16,13 @@ module Lite
         try(object, method_name, *args, include_private: true)
       end
 
-      def call(object, method_name_or_proc)
-        if method_name_or_proc.is_a?(Symbol) || method_name_or_proc.is_a?(String)
-          object.send(method_name_or_proc)
-        elsif method_name_or_proc.is_a?(Proc)
-          object.instance_eval(&method_name_or_proc)
+      def call(object, argument)
+        if argument.is_a?(Symbol) || argument.is_a?(String)
+          object.send(argument)
+        elsif argument.is_a?(Proc)
+          object.instance_eval(&argument)
         else
-          method_name_or_proc
+          argument
         end
       end
 

@@ -34,7 +34,7 @@ module Lite
           t = Array(Utils.call(command, options[:types]))
 
           if filled?
-            t - [NilClass]
+            t.uniq - [NilClass]
           else
             t | [NilClass]
           end
@@ -83,8 +83,7 @@ module Lite
       end
 
       def validate_attribute_filled!
-        return unless filled?
-        return unless value.nil?
+        return unless filled? && value.nil?
 
         @errors << "#{method_name} must be filled"
       end
