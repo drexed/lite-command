@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.2] - 2024-10-08
+### Added
+- Allow `filled` to pass `{ empty: false }` to check if value is empty
+
 ## [2.1.1] - 2024-10-06
 ### Added
 - Added on_status hook to `execute!`

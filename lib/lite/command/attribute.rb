@@ -82,8 +82,17 @@ module Lite
         @errors << "#{method_name} type invalid"
       end
 
+      def empty?
+        r = Utils.try(options[:filled], :[], :empty)
+        return if r.nil? || r == true
+        return unless value.respond_to?(:empty?)
+
+        value.empty?
+      end
+
       def validate_attribute_filled!
-        return unless filled? && value.nil?
+        return unless filled?
+        return unless value.nil? || empty?
 
         @errors << "#{method_name} must be filled"
       end
