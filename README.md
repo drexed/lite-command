@@ -172,7 +172,7 @@ method which automatically delegates to `context`.
 | `from`     | Symbol, String | `:context` | The object containing the attribute. |
 | `types`    | Symbol, String, Array, Proc | | The allowed class types of the attribute value. |
 | `required` | Symbol, String, Boolean, Proc | `false` | The attribute must be passed to the context or delegatable (no matter the value). |
-| `filled`   | Symbol, String, Boolean, Proc | `false` | The attribute value must be not be `nil` or `empty?`. |
+| `filled`   | Symbol, String, Boolean, Proc, Hash | `false` | The attribute value must be not be `nil`. Prevent empty values using `{ empty: false }` |
 
 > [!NOTE]
 > If optioned with some similar to `filled: true, types: [String, NilClass]`
@@ -185,7 +185,7 @@ class CalculatePower < Lite::Command::Base
 
   attribute :a, :b
   attribute :c, :d, from: :remote_storage, types: [Integer, Float]
-  attribute :x, :y, from: :local_storage, if: :signed_in?
+  attribute :x, :y, from: :local_storage, filled: { empty: false }, if: :signed_in?
 
   def call
     context.result =

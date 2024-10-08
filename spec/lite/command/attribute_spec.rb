@@ -181,25 +181,52 @@ RSpec.describe Lite::Command::Attribute do
     end
 
     context "with filled option" do
-      let(:command_arguments) do
-        { first_name: "John", last_name: nil }
-      end
-      let(:command_class) do
-        Class.new(BaseCommand) do
-          attribute :first_name, :last_name, filled: true
+      context "with boolean value" do
+        let(:command_arguments) do
+          { first_name: "John", last_name: nil }
+        end
+        let(:command_class) do
+          Class.new(BaseCommand) do
+            attribute :first_name, :last_name, filled: true
 
-          def call
-            context.full_name = "#{first_name} #{last_name}"
+            def call
+              context.full_name = "#{first_name} #{last_name}"
+            end
           end
+        end
+
+        it "returns invalid" do
+          expect(command).to be_invalid
+          expect(command.reason).to eq("Invalid context attributes")
+          expect(command.metadata).to eq(
+            { context: ["last_name must be filled"] }
+          )
         end
       end
 
-      it "returns invalid" do
-        expect(command).to be_invalid
-        expect(command.reason).to eq("Invalid context attributes")
-        expect(command.metadata).to eq(
-          { context: ["last_name must be filled"] }
-        )
+      context "with hash value" do
+        let(:command_arguments) do
+          { first_name: nil, middle_name: "", last_name: "" }
+        end
+        let(:command_class) do
+          Class.new(BaseCommand) do
+            attribute :first_name, filled: { empty: true }
+            attribute :middle_name, filled: { empty: true }
+            attribute :last_name, filled: { empty: false }
+
+            def call
+              context.full_name = "#{first_name} #{last_name}"
+            end
+          end
+        end
+
+        it "returns invalid" do
+          expect(command).to be_invalid
+          expect(command.reason).to eq("Invalid context attributes")
+          expect(command.metadata).to eq(
+            { context: ["first_name must be filled", "last_name must be filled"] }
+          )
+        end
       end
     end
   end
