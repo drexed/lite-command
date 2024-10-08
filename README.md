@@ -134,7 +134,7 @@ class CalculatePower < Lite::Command::Base
 end
 
 CalculatePower.call!(...)
-#=> raises CalculatePower::Fault
+#=> raises CalculatePower::Failure
 ```
 
 ## Context
@@ -142,6 +142,9 @@ CalculatePower.call!(...)
 Accessing the call arguments can be done through its internal context.
 It can be used as internal storage to be accessed by it self and any
 of its children commands.
+
+> [!NOTE]
+> Attributes that do **NOT** exist on the context will return `nil`.
 
 ```ruby
 class CalculatePower < Lite::Command::Base
@@ -153,8 +156,9 @@ class CalculatePower < Lite::Command::Base
 
 end
 
-command = CalculatePower.call(a: 2, b: 3)
-command.context.result #=> 8
+cmd = CalculatePower.call(a: 2, b: 3)
+cmd.context.result #=> 8
+cmd.ctx.fake       #=> nil
 ```
 
 ### Attributes
@@ -168,7 +172,7 @@ method which automatically delegates to `context`.
 | `from`     | Symbol, String | `:context` | The object containing the attribute. |
 | `types`    | Symbol, String, Array, Proc | | The allowed class types of the attribute value. |
 | `required` | Symbol, String, Boolean, Proc | `false` | The attribute must be passed to the context or delegatable (no matter the value). |
-| `filled`   | Symbol, String, Boolean, Proc | `false` | The attribute value must be not be `nil`. |
+| `filled`   | Symbol, String, Boolean, Proc | `false` | The attribute value must be not be `nil` or `empty?`. |
 
 > [!NOTE]
 > If optioned with some similar to `filled: true, types: [String, NilClass]`
@@ -203,20 +207,20 @@ class CalculatePower < Lite::Command::Base
 end
 
 # With valid options:
-storage = RemoteStorage.new(c: 2, d: 2, j: 99)
-command = CalculatePower.call(a: 2, b: 2, remote_storage: storage)
-command.status         #=> "success"
-command.context.result #=> 6
+rs  = RemoteStorage.new(c: 2, d: 2, j: 99)
+cmd = CalculatePower.call(a: 2, b: 2, remote_storage: rs)
+cmd.status         #=> "success"
+cmd.context.result #=> 6
 
-# With invalid options
-command = CalculatePower.call
-command.status   #=> "invalid"
-command.reason   #=> "Invalid context attributes"
-command.metadata #=> {
-                 #=>   context: ["a is required", "remote_storage must be filled"],
-                 #=>   remote_storage: ["d type invalid"]
-                 #=>   local_storage: ["is not defined or an attribute"]
-                 #=> }
+# With invalid options:
+cmd = CalculatePower.call
+cmd.status   #=> "invalid"
+cmd.reason   #=> "Invalid context attributes"
+cmd.metadata #=> {
+             #=>   context: ["a is required", "remote_storage must be filled"],
+             #=>   remote_storage: ["d type invalid"]
+             #=>   local_storage: ["is not defined or an attribute"]
+             #=> }
 ```
 
 ## States
@@ -233,18 +237,16 @@ command.metadata #=> {
 > States are automatically transitioned and should **NEVER** be altered manually.
 
 ```ruby
-class CalculatePower < Lite::Command::Base
+cmd = CalculatePower.call
+cmd.state        #=> "complete"
 
-  def call
-    # ...
-  end
+cmd.pending?     #=> false
+cmd.executing?   #=> false
+cmd.complete?    #=> true
+cmd.interrupted? #=> false
 
-end
-
-command = CalculatePower.call(a: 1, b: 3)
-command.state     #=> "executed"
-command.pending?  #=> false
-command.executed? #=> false
+# `complete` or `interrupted`
+cmd.executed?
 ```
 
 ## Statuses
@@ -286,14 +288,25 @@ class CalculatePower < Lite::Command::Base
 
 end
 
-command = CalculatePower.call(a: 1, b: 3)
-command.ctx.result #=> nil
-command.status     #=> "noop"
-command.reason     #=> "Anything to the power of 1 is 1"
-command.metadata   #=> { i18n: "some.key" }
-command.invalid?   #=> false
-command.noop?      #=> true
-command.noop?("Anything to the power of 1 is 1") #=> true
+cmd = CalculatePower.call(a: 1, b: 3)
+cmd.status   #=> "noop"
+cmd.reason   #=> "Anything to the power of 1 is 1"
+cmd.metadata #=> { i18n: "some.key" }
+
+cmd.success? #=> false
+cmd.noop?    #=> true
+cmd.noop?("Other reason") #=> false
+cmd.invalid? #=> false
+cmd.failure? #=> false
+cmd.error?   #=> false
+
+# `success` or `noop`
+cmd.ok?      #=> true
+cmd.ok?("Other reason") #=> false
+
+# NOT `success`
+cmd.fault?   #=> true
+cmd.fault?("Other reason") #=> false
 ```
 
 ## Callbacks
@@ -424,7 +437,8 @@ that it gains automated indexing and the parents `cmd_id`.
 class CalculatePower < Lite::Command::Base
 
   def call
-    CalculateSqrt.call(context.merge!(some_other: "required value"))
+    context.merge!(some_other: "required value")
+    CalculateSqrt.call(context)
   end
 
 end
@@ -435,7 +449,8 @@ end
 Throwing faults allows you to bubble up child faults up to the parent.
 Use it to create branches within your logic and create clean tracing
 of your command results. You can use `throw!` as a catch-all or any
-of the bang status method `failure!`.
+of the bang status method `failure!`. Any `reason` and `metadata` will
+be bubbled up from the original fault.
 
 ```ruby
 class CalculatePower < Lite::Command::Base
@@ -444,10 +459,10 @@ class CalculatePower < Lite::Command::Base
     command = CalculateSqrt.call(context.merge!(some_other: "required value"))
 
     if command.noop?("Sqrt of 1 is 1")
-      # Manually throw any fault you want
+      # Manually throw a specific fault
       invalid!(command)
     elsif command.fault?
-      # Automatically throws a matching fault type
+      # Automatically throws a matching fault
       throw!(command)
     else
       # Success, do nothing
@@ -468,6 +483,10 @@ This is useful for composing multiple steps into one call.
 > so its no different than just passing the context forward. To change
 > this behavior, just override the `ok?` method with you logic, eg: just `success`
 
+> [!IMPORTANT]
+> Do **NOT** define a call method in this class. The sequence logic is
+> automatically defined by the sequence class.
+
 ```ruby
 class ProcessCheckout < Lite::Command::Sequence
 
@@ -478,8 +497,7 @@ class ProcessCheckout < Lite::Command::Sequence
   step SendConfirmationEmail, SendConfirmationText
   step NotifyWarehouse, unless: proc { ctx.invoice.fullfilled_by_amazon? }
 
-  # Do NOT set a call method.
-  # Its defined by Lite::Command::Sequence
+  # Do NOT define a call method.
 
   private
 
@@ -489,7 +507,7 @@ class ProcessCheckout < Lite::Command::Sequence
 
 end
 
-sequence = ProcessCheckout.call(...)
+seq = ProcessCheckout.call(...)
 # <ProcessCheckout ...>
 ```
 
