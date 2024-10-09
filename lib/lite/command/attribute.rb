@@ -84,8 +84,8 @@ module Lite
 
       def empty?
         r = Utils.try(options[:filled], :[], :empty)
-        return if r.nil? || r == true
-        return unless value.respond_to?(:empty?)
+        return false if r.nil? || r == true
+        return false unless value.respond_to?(:empty?)
 
         value.empty?
       end
