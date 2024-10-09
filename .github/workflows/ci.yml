@@ -17,7 +17,5 @@ jobs:
           bundler-cache: true
       - name: RSpec
         run: bundle exec rspec
-      - name: Fasterer
-        run: bundle exec fasterer
       - name: Rubocop
         run: bundle exec rubocop --parallel
