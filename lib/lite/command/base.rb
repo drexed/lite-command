@@ -5,6 +5,8 @@ module Lite
     class Base
 
       def self.inherited(base)
+        super
+
         base.include Lite::Command::Internals::Context
         base.include Lite::Command::Internals::Call
         base.include Lite::Command::Internals::Execute
@@ -21,8 +23,6 @@ module Lite
           #{base}::Failure = Class.new(#{base}::Fault)
           #{base}::Error   = Class.new(#{base}::Fault)
         RUBY
-
-        super
       end
 
       attr_reader :context
