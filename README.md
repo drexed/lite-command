@@ -8,10 +8,6 @@ Lite::Command provides an API for building simple and complex command based serv
 
 Add this line to your application's Gemfile:
 
-> [!WARNING]
-> Gem versions `~> 2.0` are borked.
-> Version `~> 2.1.0` is the suggested working version.
-
 ```ruby
 gem 'lite-command'
 ```
@@ -483,7 +479,7 @@ This is useful for composing multiple steps into one call.
 > so its no different than just passing the context forward. To change
 > this behavior, just override the `ok?` method with you logic, eg: just `success`
 
-> [!IMPORTANT]
+> [!WARNING]
 > Do **NOT** define a call method in this class. The sequence logic is
 > automatically defined by the sequence class.
 
