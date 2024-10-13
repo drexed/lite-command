@@ -26,12 +26,12 @@ module Lite
       end
 
       def typed?
-        options.key?(:types) && types.any?
+        (options.key?(:types) || options.key?(:type)) && types.any?
       end
 
       def types
         @types ||= begin
-          t = Array(Utils.call(command, options[:types]))
+          t = Array(Utils.call(command, options[:types] || options[:type]))
 
           if filled?
             t.uniq - [NilClass]

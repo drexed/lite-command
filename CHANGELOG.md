@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.2.0] - 2024-10-12
 ### Added
 - Added `bad?` status method check
+- Added `type` attribute option to alias `types`
 - Configuration class to handle dynamic error creation
 - Added depth tracking and raise error if too deep
 ### Changed
