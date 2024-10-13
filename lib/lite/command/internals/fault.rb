@@ -37,9 +37,8 @@ module Lite
           send(:"#{command.status}!", command)
         end
 
-        # TODO: make this a config
         def raise_dynamic_faults?
-          false
+          false # TODO: derive from config option
         end
 
       end

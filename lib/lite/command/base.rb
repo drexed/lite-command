@@ -30,7 +30,7 @@ module Lite
 
       def initialize(context = {})
         @context = Lite::Command::Context.build(context)
-        Utils.hook(self, :on_pending)
+        Utils.try(self, :on_pending)
       end
 
     end

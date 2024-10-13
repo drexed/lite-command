@@ -35,15 +35,15 @@ module Lite
           increment_execution_index
           assign_execution_cmd_id
           start_monotonic_time
-          Utils.hook(self, :on_before_execution)
+          Utils.try(self, :on_before_execution)
           validate_context_attributes
           executing!
-          Utils.hook(self, :on_executing)
+          Utils.try(self, :on_executing)
         end
 
         def after_execution
           send(:"#{success? ? COMPLETE : INTERRUPTED}!")
-          Utils.hook(self, :on_after_execution)
+          Utils.try(self, :on_after_execution)
           stop_monotonic_time
           append_execution_result
           freeze_execution_objects
@@ -57,25 +57,25 @@ module Lite
 
         def execute
           around_execution { call }
-          Utils.hook(self, :on_success)
+          Utils.try(self, :on_success)
         rescue StandardError => e
           fault(e, ERROR, metadata) unless e.is_a?(Lite::Command::Fault)
           after_execution
-          Utils.hook(self, :"on_#{status}", e)
+          Utils.try(self, :"on_#{status}", e)
         ensure
-          Utils.hook(self, :"on_#{state}")
+          Utils.try(self, :"on_#{state}")
         end
 
         def execute!
           around_execution { call }
-          Utils.hook(self, :on_success)
+          Utils.try(self, :on_success)
         rescue StandardError => e
           fault(e, ERROR, metadata) unless e.is_a?(Lite::Command::Fault)
           after_execution
-          Utils.hook(self, :"on_#{status}", e)
+          Utils.try(self, :"on_#{status}", e)
           raise(e)
         else
-          Utils.hook(self, :"on_#{state}")
+          Utils.try(self, :"on_#{state}")
         end
 
       end
