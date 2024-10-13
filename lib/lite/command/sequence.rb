@@ -19,7 +19,7 @@ module Lite
           next unless step.run?(self)
 
           cmd = step.command.call(context)
-          throw!(cmd) unless cmd.ok?
+          throw!(cmd) if cmd.bad?
         end
       end
 

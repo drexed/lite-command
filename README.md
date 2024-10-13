@@ -303,6 +303,10 @@ cmd.ok?("Other reason") #=> false
 # NOT `success`
 cmd.fault?   #=> true
 cmd.fault?("Other reason") #=> false
+
+# `invalid` or `failure` or `error`
+cmd.bad?     #=> false
+cmd.bad?("Other reason") #=> false
 ```
 
 ## Callbacks

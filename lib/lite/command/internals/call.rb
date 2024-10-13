@@ -58,6 +58,10 @@ module Lite
           !success? && reason?(reason)
         end
 
+        def bad?(reason = nil)
+          ![SUCCESS, NOOP].include?(status) && reason?(reason)
+        end
+
         FAULTS.each do |f|
           # eg: noop? or failure?("idk")
           define_method(:"#{f}?") do |reason = nil|
