@@ -17,12 +17,14 @@ module Lite
         options[:from] || :context
       end
 
-      def filled?
-        Utils.call(command, options[:filled]) || false
+      def required?
+        options.key?(:required)
       end
 
-      def required?
-        Utils.call(command, options[:required]) || false
+      def requirements
+        return @requirements if defined?(@requirements)
+
+        @requirements = Utils.call(command, options[:required])
       end
 
       def typed?
@@ -33,12 +35,18 @@ module Lite
         @types ||= begin
           t = Array(Utils.call(command, options[:types] || options[:type]))
 
-          if filled?
+          if reject_nil? || reject_empty?
             t.uniq - [NilClass]
           else
             t | [NilClass]
           end
         end
+      end
+
+      def value
+        return @value if defined?(@value)
+
+        @value = command.send(from).send(method_name)
       end
 
       def validate!
@@ -47,17 +55,10 @@ module Lite
 
         validate_required_attribute!
         validate_attribute_type!
-        validate_attribute_filled!
       end
 
       def valid?
         errors.empty?
-      end
-
-      def value
-        return @value if defined?(@value)
-
-        @value = command.send(from).public_send(method_name)
       end
 
       private
@@ -70,9 +71,14 @@ module Lite
 
       def validate_required_attribute!
         return unless required?
-        return if command.send(from).respond_to?(method_name)
 
-        @errors << "#{method_name} is required"
+        if !command.send(from).respond_to?(method_name)
+          @errors << "#{method_name} is required"
+        elsif (reject_nil? || reject_empty?) && value.nil?
+          @errors << "#{method_name} cannot be nil"
+        elsif reject_empty? && Utils.try(value, :empty?)
+          @errors << "#{method_name} cannot be empty"
+        end
       end
 
       def validate_attribute_type!
@@ -82,19 +88,14 @@ module Lite
         @errors << "#{method_name} type invalid"
       end
 
-      def empty?
-        r = Utils.try(options[:filled], :[], :empty)
-        return false if r.nil? || r == true
-        return false unless value.respond_to?(:empty?)
+      %i[reject_nil reject_empty].each do |key|
+        define_method(:"#{key}?") do
+          ivar = :"@#{key}"
+          return instance_variable_get(ivar) if instance_variable_defined?(ivar)
 
-        value.empty?
-      end
-
-      def validate_attribute_filled!
-        return unless filled?
-        return unless value.nil? || empty?
-
-        @errors << "#{method_name} must be filled"
+          val = requirements.is_a?(Hash) && Utils.call(command, options.dig(:required, key))
+          instance_variable_set(ivar, val)
+        end
       end
 
     end

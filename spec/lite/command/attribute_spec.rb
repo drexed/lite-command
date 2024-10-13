@@ -141,7 +141,7 @@ RSpec.describe Lite::Command::Attribute do
             private
 
             def fact?
-              true
+              1 + 1 == 2
             end
           end
         end
@@ -154,6 +154,56 @@ RSpec.describe Lite::Command::Attribute do
           )
         end
       end
+
+      context "with reject_nil option" do
+        let(:command_arguments) do
+          { first_name: "", middle_name: nil, last_name: nil }
+        end
+        let(:command_class) do
+          Class.new(BaseCommand) do
+            attribute :first_name, required: { reject_nil: true }
+            attribute :middle_name, required: { reject_nil: true }
+            attribute :last_name, required: { reject_nil: false }
+
+            def call
+              context.full_name = "#{first_name} #{last_name}"
+            end
+          end
+        end
+
+        it "returns invalid" do
+          expect(command).to be_invalid
+          expect(command.reason).to eq("Invalid context attributes")
+          expect(command.metadata).to eq(
+            { context: ["middle_name cannot be nil"] }
+          )
+        end
+      end
+
+      context "with reject_empty option" do
+        let(:command_arguments) do
+          { first_name: nil, middle_name: "", last_name: "" }
+        end
+        let(:command_class) do
+          Class.new(BaseCommand) do
+            attribute :first_name, required: { reject_empty: true }
+            attribute :middle_name, required: { reject_empty: true }
+            attribute :last_name, required: { reject_empty: false }
+
+            def call
+              context.full_name = "#{first_name} #{last_name}"
+            end
+          end
+        end
+
+        it "returns invalid" do
+          expect(command).to be_invalid
+          expect(command.reason).to eq("Invalid context attributes")
+          expect(command.metadata).to eq(
+            { context: ["first_name cannot be nil", "middle_name cannot be empty"] }
+          )
+        end
+      end
     end
 
     context "with types option" do
@@ -162,8 +212,8 @@ RSpec.describe Lite::Command::Attribute do
       end
       let(:command_class) do
         Class.new(BaseCommand) do
-          attribute :first_name, filled: true, types: [String, Integer, NilClass]
-          attribute :last_name, types: String
+          attribute :first_name, required: { reject_nil: true }, types: [String, Integer, NilClass]
+          attribute :last_name, type: String
 
           def call
             context.full_name = "#{first_name} #{last_name}"
@@ -175,58 +225,8 @@ RSpec.describe Lite::Command::Attribute do
         expect(command).to be_invalid
         expect(command.reason).to eq("Invalid context attributes")
         expect(command.metadata).to eq(
-          { context: ["first_name type invalid", "first_name must be filled"] }
+          { context: ["first_name cannot be nil", "first_name type invalid"] }
         )
-      end
-    end
-
-    context "with filled option" do
-      context "with boolean value" do
-        let(:command_arguments) do
-          { first_name: "John", last_name: nil }
-        end
-        let(:command_class) do
-          Class.new(BaseCommand) do
-            attribute :first_name, :last_name, filled: true
-
-            def call
-              context.full_name = "#{first_name} #{last_name}"
-            end
-          end
-        end
-
-        it "returns invalid" do
-          expect(command).to be_invalid
-          expect(command.reason).to eq("Invalid context attributes")
-          expect(command.metadata).to eq(
-            { context: ["last_name must be filled"] }
-          )
-        end
-      end
-
-      context "with hash value" do
-        let(:command_arguments) do
-          { first_name: nil, middle_name: "", last_name: "" }
-        end
-        let(:command_class) do
-          Class.new(BaseCommand) do
-            attribute :first_name, filled: { empty: true }
-            attribute :middle_name, filled: { empty: true }
-            attribute :last_name, filled: { empty: false }
-
-            def call
-              context.full_name = "#{first_name} #{last_name}"
-            end
-          end
-        end
-
-        it "returns invalid" do
-          expect(command).to be_invalid
-          expect(command.reason).to eq("Invalid context attributes")
-          expect(command.metadata).to eq(
-            { context: ["first_name must be filled", "last_name must be filled"] }
-          )
-        end
       end
     end
   end

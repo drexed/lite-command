@@ -13,8 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Configuration class to handle dynamic error creation
 - Added depth tracking and raise error if too deep
 ### Changed
-- Merged required with filled options
-- Improved values of caused_by and thrown_by
+- Merged required with filled and changed the option names
+- Improved values of `caused_by` and `thrown_by`
 - Use try util instead of hook
 
 ## [2.1.3] - 2024-10-08

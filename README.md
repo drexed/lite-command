@@ -167,8 +167,7 @@ method which automatically delegates to `context`.
 | --------------- | ------ | ------- | ----------- |
 | `from`          | Symbol, String | `:context` | The object containing the attribute. |
 | `types`, `type` | Symbol, String, Array, Proc | | The allowed class types of the attribute value. |
-| `required`      | Symbol, String, Boolean, Proc | `false` | The attribute must be passed to the context or delegatable (no matter the value). |
-| `filled`        | Symbol, String, Boolean, Proc, Hash | `false` | The attribute value must be not be `nil`. Prevent empty values using `{ empty: false }` |
+| `required`      | Symbol, String, Boolean, Proc, hash | `false` | The attribute must be passed to the context or delegatable (no matter the value). Pass `{ reject_nil: true }` to invalidate `nil` values. Pass `{ reject_empty: true }` to invalidate `nil` and `empty` values. |
 
 > [!NOTE]
 > If optioned with some similar to `filled: true, types: [String, NilClass]`
@@ -177,11 +176,11 @@ method which automatically delegates to `context`.
 ```ruby
 class CalculatePower < Lite::Command::Base
 
-  attribute :remote_storage, required: true, filled: true, types: RemoteStorage
+  attribute :remote_storage, required: { reject_nil: true }, types: RemoteStorage
 
   attribute :a, :b
   attribute :c, :d, from: :remote_storage, types: [Integer, Float]
-  attribute :x, :y, from: :local_storage, filled: { empty: false }, if: :signed_in?
+  attribute :x, :y, from: :local_storage, required: { reject_empty: true }, if: :signed_in?
 
   def call
     context.result =
