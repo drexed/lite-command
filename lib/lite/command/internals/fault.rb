@@ -5,14 +5,20 @@ module Lite
     module Internals
       module Fault
 
-        def self.included(base)
-          base.class_eval do
-            attr_reader :caused_by, :thrown_by
-          end
+        def caused_by
+          return if success?
+
+          @caused_by || self
         end
 
         def caused_fault?
           caused_by == self
+        end
+
+        def thrown_by
+          return if success?
+
+          @thrown_by || self
         end
 
         def threw_fault?
@@ -31,6 +37,7 @@ module Lite
           send(:"#{command.status}!", command)
         end
 
+        # TODO: make this a config
         def raise_dynamic_faults?
           false
         end

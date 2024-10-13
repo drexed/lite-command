@@ -5,7 +5,7 @@ module Lite
 
     class Fault < StandardError
 
-      attr_reader :caused_by, :thrown_by, :reason, :metadata
+      attr_reader :reason, :metadata, :caused_by, :thrown_by
 
       def initialize(**params)
         @reason    = params.fetch(:reason)
@@ -16,16 +16,16 @@ module Lite
         super(reason)
       end
 
-      def self.build(type, command, thrown_exception, dynamic: false)
-        klass = dynamic ? command.class : Lite::Command
+      def self.build(type, catcher, thrower, dynamic: false)
+        klass = dynamic ? catcher.class : Lite::Command
         fault = klass.const_get(type.to_s)
         fault = fault.new(
-          reason: command.reason,
-          metadata: command.metadata,
-          caused_by: command.caused_by || command,
-          thrown_by: command
+          reason: catcher.reason,
+          metadata: catcher.metadata,
+          caused_by: catcher.caused_by,
+          thrown_by: catcher.thrown_by
         )
-        fault.set_backtrace(thrown_exception.backtrace) if thrown_exception.respond_to?(:backtrace)
+        fault.set_backtrace(thrower.backtrace) if thrower.respond_to?(:backtrace)
         fault
       end
 
