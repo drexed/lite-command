@@ -9,7 +9,7 @@ module Lite
 
       def initialize
         @max_call_depth = Float::INFINITY
-        @raise_dynamic_faults = false
+        @raise_dynamic_faults = true
       end
 
     end

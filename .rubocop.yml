@@ -44,6 +44,8 @@ Naming/MemoizedInstanceVariableName:
   Enabled: false
 RSpec/AnyInstance:
   Enabled: false
+RSpec/DescribedClass:
+  Enabled: false
 RSpec/ExampleLength:
   Enabled: false
 RSpec/MessageSpies:

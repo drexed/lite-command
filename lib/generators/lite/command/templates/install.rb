@@ -2,5 +2,5 @@
 
 Lite::Command.configure do |config|
   config.max_call_depth = Float::INFINITY
-  config.raise_dynamic_errors = false
+  config.raise_dynamic_errors = true
 end

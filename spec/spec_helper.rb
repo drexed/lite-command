@@ -10,9 +10,11 @@ require "lite/command"
 
 spec_path = Pathname.new(File.expand_path("../spec", File.dirname(__FILE__)))
 
-Dir.glob(spec_path.join("support/**/*.rb"))
-   .sort_by { |f| [f.split("/").size, f] }
-   .each { |f| load(f) }
+%w[matchers models helpers commands sequencers].each do |dir|
+  Dir.glob(spec_path.join("support/#{dir}/**/*.rb"))
+     .sort_by { |f| [f.split("/").size, f] }
+     .each { |f| load(f) }
+end
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
@@ -31,23 +33,5 @@ RSpec.configure do |config|
 
     temp_path = spec_path.join("generators/lite/tmp")
     FileUtils.remove_dir(temp_path) if File.directory?(temp_path)
-  end
-
-  config.before do
-    [
-      Sequences::FailureSequence,
-      Sequences::SuccessSequence,
-      Child::NoopCommand,
-      Child::SuccessCommand,
-      ErrorCommand,
-      ExceptionCommand,
-      FailureCommand,
-      InvalidCommand,
-      NoopCommand,
-      SuccessCommand,
-      ThrownCommand
-    ].each do |klass|
-      allow_any_instance_of(klass).to receive(:freeze_execution_objects).and_return(true)
-    end
   end
 end
