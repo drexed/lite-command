@@ -19,7 +19,7 @@ module Lite
                 ivar = :"@#{method_name}"
                 return instance_variable_get(ivar) if instance_variable_defined?(ivar)
 
-                instance_variable_set(ivar, attributes[method_name].value)
+                instance_variable_set(ivar, self.class.attributes[method_name].value)
               end
             end
           end

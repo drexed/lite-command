@@ -4,7 +4,7 @@ module Notifiers
   class EmailCommand < BaseCommand
 
     def call
-      cmd = ValidatorCommand.call(context)
+      cmd = EmailValidatorCommand.call(context)
       cmd.fault? ? throw!(cmd) : deliver_by_channel
     end
 

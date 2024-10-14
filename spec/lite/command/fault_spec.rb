@@ -3,6 +3,8 @@
 require "spec_helper"
 
 RSpec.describe Lite::Command::Fault do
+  let(:command) { EmailValidatorCommand.call }
+
   describe "#types" do
     context "when not dynamic" do
       it "builds domainer specific faults" do
@@ -16,17 +18,16 @@ RSpec.describe Lite::Command::Fault do
 
     context "when dynamic" do
       it "builds class specific faults" do
-        expect(ValidatorCommand::Fault).to inherit_from(Lite::Command::Fault)
-        expect(ValidatorCommand::Noop).to inherit_from(ValidatorCommand::Fault)
-        expect(ValidatorCommand::Invalid).to inherit_from(ValidatorCommand::Fault)
-        expect(ValidatorCommand::Failure).to inherit_from(ValidatorCommand::Fault)
-        expect(ValidatorCommand::Error).to inherit_from(ValidatorCommand::Fault)
+        expect(EmailValidatorCommand::Fault).to inherit_from(Lite::Command::Fault)
+        expect(EmailValidatorCommand::Noop).to inherit_from(EmailValidatorCommand::Fault)
+        expect(EmailValidatorCommand::Invalid).to inherit_from(EmailValidatorCommand::Fault)
+        expect(EmailValidatorCommand::Failure).to inherit_from(EmailValidatorCommand::Fault)
+        expect(EmailValidatorCommand::Error).to inherit_from(EmailValidatorCommand::Fault)
       end
     end
   end
 
   describe "#build" do
-    let(:command) { ValidatorCommand.call }
     let(:fault) { Lite::Command::Fault.build("Invalid", command, command, dynamic:) }
 
     context "when not dynamic" do
@@ -41,13 +42,12 @@ RSpec.describe Lite::Command::Fault do
       let(:dynamic) { true }
 
       it "instantiates a matching class based fault" do
-        expect(fault.class).to eq(ValidatorCommand::Invalid)
+        expect(fault.class).to eq(EmailValidatorCommand::Invalid)
       end
     end
   end
 
   describe ".type" do
-    let(:command) { ValidatorCommand.call }
     let(:fault) do
       Lite::Command::Noop.new(
         reason: "Some reason",

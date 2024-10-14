@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-class ValidatorCommand < ApplicationCommand
+class EmailValidatorCommand < ApplicationCommand
 
-  attribute :user, required: { reject_nil: true }, type: String
-  attribute :email, required: { reject_empty: true }, type: String
+  attribute :user, required: { reject_nil: true }, type: User
+  attribute :email, required: { reject_empty: true }, type: String, from: :user
 
   def call
-    if email.include?("@")
+    if !email.include?("@")
       invalid!("Invalid email format", i18n: { errors: :invalid_email })
     elsif email.include?("@cia.gov")
       noop!("Ummm, didn't see anything")
@@ -20,8 +20,8 @@ class ValidatorCommand < ApplicationCommand
     else
       context.validation_token = "123abc"
     end
-  rescue NotImplementedError
-    error!("Womp womp, lost connection")
+  rescue NotImplementedError => e
+    error!("Womp womp, lost connection: #{e.message}")
   end
 
 end

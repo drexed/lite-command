@@ -44,9 +44,7 @@ module Lite
       end
 
       def value
-        return @value if defined?(@value)
-
-        @value = command.send(from).send(method_name)
+        command.send(from).send(method_name)
       end
 
       def validate!

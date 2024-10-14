@@ -2,18 +2,12 @@
 
 class User
 
-  attr_writer :first_name, :last_name, :email
+  attr_reader :first_name, :last_name, :email
 
-  def first_name
-    @first_name ||= "John"
-  end
-
-  def last_name
-    @last_name ||= "Doe"
-  end
-
-  def email
-    @email ||= "john.doe@example.com"
+  def initialize(opts = {})
+    @first_name = opts.fetch(:first_name, "John")
+    @last_name = opts.fetch(:last_name, "Doe")
+    @email = opts.fetch(:email, "john.doe@example.com")
   end
 
   private
