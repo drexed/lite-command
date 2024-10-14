@@ -7,11 +7,11 @@ module Lite
       def self.inherited(base)
         super
 
-        base.include Lite::Command::Internals::Context
-        base.include Lite::Command::Internals::Call
-        base.include Lite::Command::Internals::Execute
-        base.include Lite::Command::Internals::Fault
-        base.include Lite::Command::Internals::Result
+        base.include Lite::Command::Internals::Attributes
+        base.include Lite::Command::Internals::Calls
+        base.include Lite::Command::Internals::Executions
+        base.include Lite::Command::Internals::Faults
+        base.include Lite::Command::Internals::Results
 
         return unless Lite::Command.configuration.raise_dynamic_faults
 

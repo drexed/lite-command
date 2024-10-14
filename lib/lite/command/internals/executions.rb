@@ -11,7 +11,7 @@ module Lite
     ].freeze
 
     module Internals
-      module Execute
+      module Executions
 
         def state
           @state || PENDING

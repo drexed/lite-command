@@ -3,7 +3,7 @@
 module Lite
   module Command
     module Internals
-      module Fault
+      module Faults
 
         def caused_by
           return if success?

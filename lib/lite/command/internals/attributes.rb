@@ -3,7 +3,7 @@
 module Lite
   module Command
     module Internals
-      module Context
+      module Attributes
 
         def self.included(base)
           base.extend ClassMethods
