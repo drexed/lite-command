@@ -38,7 +38,7 @@ module Lite
         end
 
         def raise_dynamic_faults?
-          false # TODO: derive from config option
+          Lite::Command.configuration.raise_dynamic_faults
         end
 
       end

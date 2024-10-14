@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
-require "generators/rails/command_generator" if defined?(Rails::Generators)
+if defined?(Rails::Generators)
+  require "generators/lite/command/install_generator"
+  require "generators/rails/command_generator"
+end
 
 require "lite/command/version"
+require "lite/command/configuration"
 require "lite/command/utils"
 require "lite/command/context"
 require "lite/command/attribute"

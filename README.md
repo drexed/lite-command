@@ -22,7 +22,8 @@ Or install it yourself as:
 
 ## Table of Contents
 
-* [Setup](#setup)
+* [Configuration](#configuration)
+* [Usage](#usage)
 * [Execution](#execution)
   * [Dynamic Faults](#dynamic-faults)
 * [Context](#context)
@@ -42,7 +43,19 @@ Or install it yourself as:
   * [ActiveModel Validations](#activemodel-validations)
 * [Generator](#generator)
 
-## Setup
+## Configuration
+
+`rails g lite:command:install` will generate the following file in your application root:
+`config/initalizers/lite_command.rb`
+
+```ruby
+Lite::Command.configure do |config|
+  config.max_call_depth = Float::INFINITY
+  config.raise_dynamic_errors = false
+end
+```
+
+## Usage
 
 Defining a command is as simple as inheriting the base class and
 adding a `call` method to a command object (required).
