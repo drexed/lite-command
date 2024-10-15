@@ -34,4 +34,12 @@ RSpec.configure do |config|
     temp_path = spec_path.join("generators/lite/tmp")
     FileUtils.remove_dir(temp_path) if File.directory?(temp_path)
   end
+
+  config.before do
+    [
+      ValidationTokenCommand
+    ].each do |klass|
+      allow_any_instance_of(klass).to receive(:freeze_execution_objects).and_return(true)
+    end
+  end
 end

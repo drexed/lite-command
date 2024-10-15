@@ -3,7 +3,7 @@
 require "spec_helper"
 
 RSpec.describe Lite::Command::Context do
-  subject(:ctx) { described_class.build(params) }
+  subject(:ctx) { Lite::Command::Context.build(params) }
 
   let(:params) do
     { attr_one: "val_one" }
@@ -12,7 +12,7 @@ RSpec.describe Lite::Command::Context do
   describe ".build" do
     context "when context is not frozen" do
       it "returns same context" do
-        other_ctx = described_class.build(ctx)
+        other_ctx = Lite::Command::Context.build(ctx)
 
         expect(ctx.object_id).to eq(other_ctx.object_id)
       end
@@ -20,7 +20,7 @@ RSpec.describe Lite::Command::Context do
 
     context "when context is frozen" do
       it "returns a new context" do
-        other_ctx = described_class.build(ctx.freeze)
+        other_ctx = Lite::Command::Context.build(ctx.freeze)
 
         expect(ctx.object_id).not_to eq(other_ctx.object_id)
       end
