@@ -3,9 +3,10 @@
 require "spec_helper"
 
 RSpec.describe Lite::Command::Internals::Calls do
-  subject(:command) { EmailValidatorCommand.call(user:) }
+  subject(:command) { EmailValidatorCommand.call(user:, simulate_token_collision:) }
 
   let(:user) { User.new }
+  let(:simulate_token_collision) { false }
 
   describe "#statuses" do
     context "when success" do
@@ -94,6 +95,21 @@ RSpec.describe Lite::Command::Internals::Calls do
             metadata: nil
           )
         end
+      end
+    end
+
+    context "when thrown" do
+      let(:simulate_token_collision) { true }
+
+      it "returns correct data" do
+        expect(command).to be_failure
+        expect(command).to be_fault
+        expect(command).to be_bad
+        expect(command).to have_attributes(
+          status: Lite::Command::FAILURE,
+          reason: "Validation token already exists",
+          metadata: nil
+        )
       end
     end
   end
