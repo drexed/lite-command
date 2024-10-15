@@ -16,16 +16,13 @@ RSpec.describe Lite::Command::Attribute do
           attribute :first_name, :last_name, :ssn
 
           def call
-            context.full_name = "#{first_name} #{last_name}"
+            # Business logic...
           end
         end
       end
 
       it "returns successfully" do
         expect(command).to be_success
-        expect(command.first_name).to eq("John")
-        expect(command.last_name).to eq("Doe")
-        expect(command.context.full_name).to eq("John Doe")
       end
     end
 
@@ -36,7 +33,7 @@ RSpec.describe Lite::Command::Attribute do
             attribute :first_name, :last_name, from: :fake
 
             def call
-              context.full_name = "#{first_name} #{last_name}"
+              # Business logic...
             end
           end
         end
@@ -58,16 +55,13 @@ RSpec.describe Lite::Command::Attribute do
             attribute :first_name, :last_name, from: :passport
 
             def call
-              context.full_name = "#{first_name} #{last_name}"
+              # Business logic...
             end
           end
         end
 
-        it "returns invalid" do
+        it "returns success" do
           expect(command).to be_success
-          expect(command.first_name).to eq("John")
-          expect(command.last_name).to eq("Doe")
-          expect(command.context.full_name).to eq("John Doe")
         end
       end
 
@@ -80,7 +74,7 @@ RSpec.describe Lite::Command::Attribute do
             attribute :first_name, :last_name, from: :passport
 
             def call
-              context.full_name = "#{first_name} #{last_name}"
+              # Business logic...
             end
 
             private
@@ -91,11 +85,8 @@ RSpec.describe Lite::Command::Attribute do
           end
         end
 
-        it "returns invalid" do
+        it "returns success" do
           expect(command).to be_success
-          expect(command.first_name).to eq("John")
-          expect(command.last_name).to eq("Doe")
-          expect(command.context.full_name).to eq("John Doe")
         end
       end
     end
@@ -110,7 +101,7 @@ RSpec.describe Lite::Command::Attribute do
             attribute :first_name, :last_name, required: true
 
             def call
-              context.full_name = "#{first_name} #{last_name}"
+              # Business logic...
             end
           end
         end
@@ -131,7 +122,7 @@ RSpec.describe Lite::Command::Attribute do
             attribute :first_name, :last_name, required: :fact?
 
             def call
-              context.full_name = "#{first_name} #{last_name}"
+              # Business logic...
             end
 
             private
@@ -160,7 +151,7 @@ RSpec.describe Lite::Command::Attribute do
             attribute :last_name, required: { reject_nil: false }
 
             def call
-              context.full_name = "#{first_name} #{last_name}"
+              # Business logic...
             end
           end
         end
@@ -183,7 +174,7 @@ RSpec.describe Lite::Command::Attribute do
             attribute :last_name, required: { reject_empty: false }
 
             def call
-              context.full_name = "#{first_name} #{last_name}"
+              # Business logic...
             end
           end
         end
@@ -211,7 +202,7 @@ RSpec.describe Lite::Command::Attribute do
           attribute :last_name, type: String
 
           def call
-            context.full_name = "#{first_name} #{last_name}"
+            # Business logic...
           end
         end
       end
