@@ -5,10 +5,9 @@ module Lite
 
     class Configuration
 
-      attr_accessor :max_call_depth, :raise_dynamic_faults
+      attr_accessor :raise_dynamic_faults
 
       def initialize
-        @max_call_depth = Float::INFINITY
         @raise_dynamic_faults = true
       end
 

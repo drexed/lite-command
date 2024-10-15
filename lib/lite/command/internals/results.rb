@@ -7,8 +7,6 @@ module Lite
     module Internals
       module Results
 
-        # TODO: track depth and add config to raise error if too deep
-
         def index
           @index ||= context.index ||= 0
         end
