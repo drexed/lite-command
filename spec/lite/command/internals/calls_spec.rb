@@ -25,6 +25,7 @@ RSpec.describe Lite::Command::Internals::Calls do
 
       it "returns correct data" do
         expect(command).to be_noop
+        expect(command).to be_fault
         expect(command).to be_ok
         expect(command).to have_attributes(
           status: Lite::Command::NOOP,
@@ -39,6 +40,7 @@ RSpec.describe Lite::Command::Internals::Calls do
 
       it "returns correct data" do
         expect(command).to be_invalid
+        expect(command).to be_fault
         expect(command).to be_bad
         expect(command).to have_attributes(
           status: Lite::Command::INVALID,
@@ -53,6 +55,7 @@ RSpec.describe Lite::Command::Internals::Calls do
 
       it "returns correct data" do
         expect(command).to be_failure
+        expect(command).to be_fault
         expect(command).to be_bad
         expect(command).to have_attributes(
           status: Lite::Command::FAILURE,
@@ -68,6 +71,7 @@ RSpec.describe Lite::Command::Internals::Calls do
 
         it "returns correct data" do
           expect(command).to be_error
+          expect(command).to be_fault
           expect(command).to be_bad
           expect(command).to have_attributes(
             status: Lite::Command::ERROR,
@@ -82,6 +86,7 @@ RSpec.describe Lite::Command::Internals::Calls do
 
         it "returns correct data" do
           expect(command).to be_error
+          expect(command).to be_fault
           expect(command).to be_bad
           expect(command).to have_attributes(
             status: Lite::Command::ERROR,
