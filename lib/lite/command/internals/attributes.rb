@@ -1,23 +1,18 @@
 # frozen_string_literal: true
 
-require "forwardable" unless defined?(Forwardable)
-require "active_model" unless defined?(ActiveModel)
-
 module Lite
   module Command
     module Internals
       module Attributes
 
         def self.included(base)
-          base.extend Forwardable
           base.extend ClassMethods
         end
 
         module ClassMethods
 
-          def requires(*attributes, **options)
-            from = options.delete(:from) || :context
-            def_delegators(from, *attributes)
+          def requires(*attributes, from: :context, **options)
+            delegate(*attributes, from:)
 
             validates_each(*attributes, **options) do |command, method_name, _attr_value|
               next if command.errors.added?(from, :undefined) || command.errors.added?(method_name, :required)
@@ -30,10 +25,28 @@ module Lite
             end
           end
 
-          def optional(*attributes, from: :context)
-            def_delegators(from, *attributes)
+          def optional(*attributes, from: :context, **_options)
+            delegate(*attributes, from:)
           end
 
+          private
+
+          def delegate(*attributes, from: :context)
+            attributes.each do |method_name|
+              define_method(method_name) do
+                return unless respond_to?(from)
+
+                Utils.try(send(from), method_name)
+              end
+            end
+          end
+
+        end
+
+        def read_attribute_for_validation(method_name)
+          Utils.try(self, method_name)
+        rescue NameError
+          # Do nothing, fallback to :undefined error
         end
 
         private

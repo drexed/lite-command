@@ -17,9 +17,7 @@ module Lite
 
         def self.included(base)
           base.extend ClassMethods
-          base.class_eval do
-            attr_reader :reason, :metadata
-          end
+          base.class_eval { attr_reader :reason, :metadata }
         end
 
         module ClassMethods

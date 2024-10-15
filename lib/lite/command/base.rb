@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "active_model" unless defined?(ActiveModel)
+
 module Lite
   module Command
     class Base
