@@ -3,45 +3,69 @@
 require "spec_helper"
 
 RSpec.describe Lite::Command::Internals::Attributes do
-  subject(:command) { command_class.call(command_arguments) }
+  subject(:command) { command_class.call(args) }
 
-  let(:command_arguments) do
+  let(:args) do
     { first_name: "John", last_name: "Doe" }
   end
 
   describe "#validations" do
     context "with valid attributes" do
       let(:command_class) do
-        Class.new(ApplicationCommand) do
-          attribute :first_name, :last_name, :ssn
-
-          def call
-            context.full_name = "#{first_name} #{last_name}"
-          end
+        Class.new(AnonCommand) do
+          requires :first_name, :last_name
+          optional :ssn
         end
       end
 
       it "returns successfully" do
         expect(command).to be_success
-        expect(command.class.attributes).not_to be_empty
+        expect(command.reason).to be_nil
+        expect(command.metadata).to be_nil
+        expect(command).to have_attributes(
+          first_name: "John",
+          last_name: "Doe",
+          ssn: nil
+        )
       end
     end
 
-    context "with invalid attributes" do
+    context "with valid delegation" do
+      let(:args) do
+        { user: User.new }
+      end
       let(:command_class) do
-        Class.new(ApplicationCommand) do
-          attribute :first_name, :last_name, from: :fake
+        Class.new(AnonCommand) do
+          requires :user
+          requires :first_name, :last_name, from: :user
+          optional :ssn, from: :user
+        end
+      end
 
-          def call
-            context.full_name = "#{first_name} #{last_name}"
-          end
+      it "returns success" do
+        expect(command).to be_success
+        expect(command.reason).to be_nil
+        expect(command.metadata).to be_nil
+        expect(command).to have_attributes(
+          first_name: "John",
+          last_name: "Doe",
+          ssn: "001-555-6789"
+        )
+      end
+    end
+
+    context "with invalid delegation" do
+      let(:command_class) do
+        Class.new(AnonCommand) do
+          requires :first_name, :last_name, from: :fake
+          optional :ssn, from: :fake
         end
       end
 
       it "returns invalid" do
         expect(command).to be_invalid
-        expect(command.reason).to eq("Invalid context attributes")
-        expect(command.metadata).to include(fake: ["is not defined or an attribute"])
+        expect(command.reason).to eq("Fake is an undefined argument")
+        expect(command.metadata).to include(fake: ["is an undefined argument"])
       end
     end
   end

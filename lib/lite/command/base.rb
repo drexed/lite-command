@@ -7,24 +7,23 @@ module Lite
       def self.inherited(base)
         super
 
+        base.include ActiveModel::Validations
+
         base.include Lite::Command::Internals::Attributes
         base.include Lite::Command::Internals::Calls
         base.include Lite::Command::Internals::Executions
         base.include Lite::Command::Internals::Faults
         base.include Lite::Command::Internals::Results
 
-        return unless Lite::Command.configuration.raise_dynamic_faults
-
-        base.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-          # eg: Users::ResetPassword::Fault < Lite::Command::Fault
-          #{base}::Fault = Class.new(Lite::Command::Fault)
-
-          # eg: Users::ResetPassword::Noop < Users::ResetPassword::Fault
-          #{base}::Noop    = Class.new(#{base}::Fault)
-          #{base}::Invalid = Class.new(#{base}::Fault)
-          #{base}::Failure = Class.new(#{base}::Fault)
-          #{base}::Error   = Class.new(#{base}::Fault)
-        RUBY
+        if Lite::Command.configuration.raise_dynamic_faults # rubocop:disable Style/GuardClause
+          base.class_eval <<-RUBY, __FILE__, __LINE__ + 1
+            #{base}::Fault   = Class.new(Lite::Command::Fault)
+            #{base}::Noop    = Class.new(#{base}::Fault)
+            #{base}::Invalid = Class.new(#{base}::Fault)
+            #{base}::Failure = Class.new(#{base}::Fault)
+            #{base}::Error   = Class.new(#{base}::Fault)
+          RUBY
+        end
       end
 
       attr_reader :context

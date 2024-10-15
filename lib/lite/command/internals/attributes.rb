@@ -1,42 +1,51 @@
 # frozen_string_literal: true
 
+require "forwardable" unless defined?(Forwardable)
+require "active_model" unless defined?(ActiveModel)
+
 module Lite
   module Command
     module Internals
       module Attributes
 
         def self.included(base)
+          base.extend Forwardable
           base.extend ClassMethods
         end
 
         module ClassMethods
 
-          def attribute(*args, **options)
-            args.each do |method_name|
-              attributes[method_name] = Lite::Command::Attribute.new(method_name, options)
+          def requires(*attributes, from: :context)
+            def_delegators(from, *attributes)
 
-              define_method(method_name) do
-                ivar = :"@#{method_name}"
-                return instance_variable_get(ivar) if instance_variable_defined?(ivar)
+            validates_each(*attributes) do |command, method_name, _attr_value|
+              next if command.errors.added?(from, :undefined) || command.errors.added?(method_name, :required)
 
-                instance_variable_set(ivar, self.class.attributes[method_name].value)
+              if !command.respond_to?(from, true)
+                command.errors.add(from, :undefined, message: "is an undefined argument")
+              elsif !command.send(from).respond_to?(method_name, true)
+                command.errors.add(method_name, :required, message: "is a required argument")
               end
             end
           end
 
-          def attributes
-            @attributes ||= {}
+          def optional(*attributes, from: :context)
+            def_delegators(from, *attributes)
           end
 
+        end
+
+        def read_attribute_for_validation(method_name)
+          # Do nothing since the value can be delegated by `:from`
+          # The delegated values are propagated by `def_delegators`
         end
 
         private
 
         def validate_context_attributes
-          validator = Lite::Command::AttributeValidator.new(self)
-          return if validator.valid?
+          return if errors.empty?
 
-          invalid!("Invalid context attributes", validator.errors)
+          invalid!(errors.full_messages.join(". "), errors.messages)
         end
 
       end

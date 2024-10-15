@@ -37,6 +37,7 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = %w[lib]
 
+  spec.add_dependency "activemodel"
   spec.add_dependency "ostruct"
 
   spec.add_development_dependency "bundler"

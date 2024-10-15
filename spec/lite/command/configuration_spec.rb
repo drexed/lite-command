@@ -18,7 +18,7 @@ RSpec.describe Lite::Command::Configuration do
       Lite::Command.configuration.raise_dynamic_faults = "foo"
       Lite::Command.reset_configuration!
 
-      expect(Lite::Command.configuration.raise_dynamic_faults).to be(false)
+      expect(Lite::Command.configuration.raise_dynamic_faults).to be(true)
     end
   end
 

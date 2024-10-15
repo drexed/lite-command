@@ -10,7 +10,7 @@ require "lite/command"
 
 spec_path = Pathname.new(File.expand_path("../spec", File.dirname(__FILE__)))
 
-%w[matchers models helpers commands sequencers].each do |dir|
+%w[matchers models commands sequencers].each do |dir|
   Dir.glob(spec_path.join("support/#{dir}/**/*.rb"))
      .sort_by { |f| [f.split("/").size, f] }
      .each { |f| load(f) }

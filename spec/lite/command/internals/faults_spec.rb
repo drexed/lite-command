@@ -54,18 +54,19 @@ RSpec.describe Lite::Command::Internals::Faults do
       it "raises a EmailValidatorCommand::Invalid exception" do
         expect { EmailValidatorCommand.call!(user:) }.to raise_error(
           EmailValidatorCommand::Invalid,
-          "Invalid context attributes"
+          "Invalid email format"
         )
       end
     end
 
     context "when disabled" do
       it "raises a Lite::Command::Invalid exception" do
+        allow_any_instance_of(EmailValidatorCommand).to receive(:freeze_execution_objects).and_return(true)
         allow_any_instance_of(EmailValidatorCommand).to receive(:raise_dynamic_faults?).and_return(false)
 
         expect { EmailValidatorCommand.call!(user:) }.to raise_error(
           Lite::Command::Invalid,
-          "Invalid context attributes"
+          "Invalid email format"
         )
       end
     end

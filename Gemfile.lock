@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     lite-command (2.2.0)
+      activemodel
       ostruct
 
 GEM
@@ -24,6 +25,8 @@ GEM
       erubi (~> 1.11)
       rails-dom-testing (~> 2.2)
       rails-html-sanitizer (~> 1.6)
+    activemodel (7.2.1)
+      activesupport (= 7.2.1)
     activesupport (7.2.1)
       base64
       bigdecimal

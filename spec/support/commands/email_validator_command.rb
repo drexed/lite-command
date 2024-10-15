@@ -2,8 +2,9 @@
 
 class EmailValidatorCommand < ApplicationCommand
 
-  attribute :user, required: { reject_nil: true }, type: User
-  attribute :email, required: { reject_empty: true }, type: String, from: :user
+  requires :user
+  requires :email, from: :user
+  optional :simulate_token_collision
 
   def call
     if !email.include?("@")
