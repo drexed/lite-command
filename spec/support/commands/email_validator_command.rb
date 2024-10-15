@@ -13,12 +13,10 @@ class EmailValidatorCommand < ApplicationCommand
     elsif email.end_with?(".test")
       failure!("Undeliverable TLD extension")
     elsif email.end_with?(".wompwomp")
-      # Testing uncaught exceptions
-      raise ArgumentError, "TLD extension doesn't exists"
+      raise ArgumentError, "TLD extension doesn't exists" # Uncaught exceptions
     elsif email.include?("+")
-      # Testing caught exceptions
-      raise NotImplementedError, "Subaddressing is not allowed"
-    elsif validation_token.failure?
+      raise NotImplementedError, "Subaddressing is not allowed" # Caught exceptions
+    elsif validation_token.fault?
       throw!(validation_token)
     else
       context.validation_secret = "01001101011001100"

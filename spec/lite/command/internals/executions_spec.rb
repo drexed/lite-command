@@ -27,6 +27,10 @@ RSpec.describe Lite::Command::Internals::Executions do
         expect(command).not_to be_thrown
         expect(command).to be_complete
         expect(command).to have_attributes(state: Lite::Command::COMPLETE)
+        expect(command.context).to have_attributes(
+          validation_token: "123abc-456def",
+          validation_secret: "01001101011001100"
+        )
       end
     end
 
@@ -40,6 +44,10 @@ RSpec.describe Lite::Command::Internals::Executions do
         expect(command).not_to be_thrown
         expect(command).to be_interrupted
         expect(command).to have_attributes(state: Lite::Command::INTERRUPTED)
+        expect(command.context.to_h.keys).not_to include(
+          :validation_token,
+          :validation_secret
+        )
       end
     end
 
@@ -53,6 +61,10 @@ RSpec.describe Lite::Command::Internals::Executions do
         expect(command).to be_thrown
         expect(command).to be_interrupted
         expect(command).to have_attributes(state: Lite::Command::INTERRUPTED)
+        expect(command.context.to_h.keys).not_to include(
+          :validation_token,
+          :validation_secret
+        )
       end
     end
   end
