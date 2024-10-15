@@ -32,6 +32,7 @@ Or install it yourself as:
 * [Statuses](#statuses)
 * [Callbacks](#callbacks)
   * [State Hooks](#status-hooks)
+  * [Attribute Hooks](#attribute-hooks)
   * [Execution Hooks](#execution-hooks)
   * [Status Hooks](#status-hooks)
 * [Children](#children)
@@ -370,6 +371,26 @@ class CalculatePower < Lite::Command::Base
 
   def on_interrupted
     # eg: Report to APM with tags and metadata
+  end
+
+end
+```
+
+### Attribute Hooks
+
+Define before attribtue validation callbacks.
+
+```ruby
+class CalculatePower < Lite::Command::Base
+
+  def call
+    # ...
+  end
+
+  private
+
+  def on_before_validation
+    # eg: Normalize context data
   end
 
 end

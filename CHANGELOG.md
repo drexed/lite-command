@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `type` attribute option to alias `types`
 - Configuration class to handle dynamic error creation
 - Added depth tracking and raise error if too deep
+- Added `on_before_validation` callback hook
 ### Changed
 - Merged required with filled and changed the option names
 - Improved values of `caused_by` and `thrown_by`

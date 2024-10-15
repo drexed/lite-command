@@ -35,8 +35,9 @@ module Lite
           increment_execution_index
           assign_execution_cmd_id
           start_monotonic_time
-          Utils.try(self, :on_before_execution)
+          Utils.try(self, :on_before_validation)
           validate_context_attributes
+          Utils.try(self, :on_before_execution)
           executing!
           Utils.try(self, :on_executing)
         end

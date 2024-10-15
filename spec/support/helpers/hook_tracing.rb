@@ -9,6 +9,10 @@ module HookTracing
     ctx.hooks << "#{self.class.name}.#{method}"
   end
 
+  def on_before_validation
+    trace_hook(__method__)
+  end
+
   def on_before_execution
     trace_hook(__method__)
   end
