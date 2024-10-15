@@ -44,9 +44,7 @@ RSpec.describe Lite::Command::Attribute do
         it "returns invalid" do
           expect(command).to be_invalid
           expect(command.reason).to eq("Invalid context attributes")
-          expect(command.metadata).to include(
-            fake: ["is not defined or an attribute"]
-          )
+          expect(command.metadata).to include(fake: ["is not defined or an attribute"])
         end
       end
 
@@ -120,9 +118,7 @@ RSpec.describe Lite::Command::Attribute do
         it "returns invalid" do
           expect(command).to be_invalid
           expect(command.reason).to eq("Invalid context attributes")
-          expect(command.metadata).to include(
-            context: ["last_name is required"]
-          )
+          expect(command.metadata).to include(context: ["last_name is required"])
         end
       end
 
@@ -149,9 +145,7 @@ RSpec.describe Lite::Command::Attribute do
         it "returns invalid" do
           expect(command).to be_invalid
           expect(command.reason).to eq("Invalid context attributes")
-          expect(command.metadata).to include(
-            context: ["last_name is required"]
-          )
+          expect(command.metadata).to include(context: ["last_name is required"])
         end
       end
 
@@ -174,9 +168,7 @@ RSpec.describe Lite::Command::Attribute do
         it "returns invalid" do
           expect(command).to be_invalid
           expect(command.reason).to eq("Invalid context attributes")
-          expect(command.metadata).to include(
-            context: ["middle_name cannot be nil"]
-          )
+          expect(command.metadata).to include(context: ["middle_name cannot be nil"])
         end
       end
 
@@ -200,7 +192,10 @@ RSpec.describe Lite::Command::Attribute do
           expect(command).to be_invalid
           expect(command.reason).to eq("Invalid context attributes")
           expect(command.metadata).to include(
-            context: ["first_name cannot be nil", "middle_name cannot be empty"]
+            context: [
+              "first_name cannot be nil",
+              "middle_name cannot be empty"
+            ]
           )
         end
       end
@@ -225,7 +220,10 @@ RSpec.describe Lite::Command::Attribute do
         expect(command).to be_invalid
         expect(command.reason).to eq("Invalid context attributes")
         expect(command.metadata).to include(
-          context: ["first_name cannot be nil", "first_name type invalid"]
+          context: [
+            "first_name cannot be nil",
+            "first_name type invalid"
+          ]
         )
       end
     end
