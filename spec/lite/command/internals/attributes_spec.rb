@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-RSpec.describe Lite::Command::Internals::Faults do
+RSpec.describe Lite::Command::Internals::Attributes do
   subject(:command) { command_class.call(command_arguments) }
 
   let(:command_arguments) do
