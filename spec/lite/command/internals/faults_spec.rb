@@ -46,4 +46,28 @@ RSpec.describe Lite::Command::Internals::Faults do
       end
     end
   end
+
+  describe "#raise_dynamic_faults" do
+    let(:user) { User.new(email: "jane.doe") }
+
+    context "when enabled" do
+      it "raises a EmailValidatorCommand::Invalid exception" do
+        expect { EmailValidatorCommand.call!(user:) }.to raise_error(
+          EmailValidatorCommand::Invalid,
+          "Invalid context attributes"
+        )
+      end
+    end
+
+    context "when disabled" do
+      it "raises a Lite::Command::Invalid exception" do
+        allow_any_instance_of(EmailValidatorCommand).to receive(:raise_dynamic_faults?).and_return(false)
+
+        expect { EmailValidatorCommand.call!(user:) }.to raise_error(
+          Lite::Command::Invalid,
+          "Invalid context attributes"
+        )
+      end
+    end
+  end
 end
