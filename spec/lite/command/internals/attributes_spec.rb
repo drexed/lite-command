@@ -23,6 +23,7 @@ RSpec.describe Lite::Command::Internals::Attributes do
 
       it "returns successfully" do
         expect(command).to be_success
+        expect(command.class.attributes).not_to be_empty
       end
     end
 
