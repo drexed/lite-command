@@ -16,14 +16,14 @@ module Lite
         return unless Lite::Command.configuration.raise_dynamic_faults
 
         base.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-            # eg: Users::ResetPassword::Fault < Lite::Command::Fault
-            #{base}::Fault = Class.new(Lite::Command::Fault)
+          # eg: Users::ResetPassword::Fault < Lite::Command::Fault
+          #{base}::Fault = Class.new(Lite::Command::Fault)
 
-            # eg: Users::ResetPassword::Noop < Users::ResetPassword::Fault
-            #{base}::Noop    = Class.new(#{base}::Fault)
-            #{base}::Invalid = Class.new(#{base}::Fault)
-            #{base}::Failure = Class.new(#{base}::Fault)
-            #{base}::Error   = Class.new(#{base}::Fault)
+          # eg: Users::ResetPassword::Noop < Users::ResetPassword::Fault
+          #{base}::Noop    = Class.new(#{base}::Fault)
+          #{base}::Invalid = Class.new(#{base}::Fault)
+          #{base}::Failure = Class.new(#{base}::Fault)
+          #{base}::Error   = Class.new(#{base}::Fault)
         RUBY
       end
 
