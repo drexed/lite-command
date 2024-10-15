@@ -15,10 +15,11 @@ module Lite
 
         module ClassMethods
 
-          def requires(*attributes, from: :context)
+          def requires(*attributes, **options)
+            from = options.delete(:from) || :context
             def_delegators(from, *attributes)
 
-            validates_each(*attributes) do |command, method_name, _attr_value|
+            validates_each(*attributes, **options) do |command, method_name, _attr_value|
               next if command.errors.added?(from, :undefined) || command.errors.added?(method_name, :required)
 
               if !command.respond_to?(from, true)
@@ -33,11 +34,6 @@ module Lite
             def_delegators(from, *attributes)
           end
 
-        end
-
-        def read_attribute_for_validation(method_name)
-          # Do nothing since the value can be delegated by `:from`
-          # The delegated values are propagated by `def_delegators`
         end
 
         private

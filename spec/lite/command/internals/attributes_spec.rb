@@ -68,6 +68,23 @@ RSpec.describe Lite::Command::Internals::Attributes do
         expect(command.metadata).to include(fake: ["is an undefined argument"])
       end
     end
+
+    context "with failed validations" do
+      let(:command_class) do
+        Class.new(AnonCommand) do
+          requires :first_name, :last_name
+          optional :ssn
+
+          validates :first_name, length: { maximum: 1, from: :user }
+        end
+      end
+
+      it "returns invalid" do
+        expect(command).to be_invalid
+        expect(command.reason).to eq("First name is too long (maximum is 1 character)")
+        expect(command.metadata).to include(first_name: ["is too long (maximum is 1 character)"])
+      end
+    end
   end
 
 end
