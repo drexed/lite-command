@@ -12,7 +12,7 @@ RSpec.describe Lite::Command::Attribute do
   describe "#validations" do
     context "without options" do
       let(:command_class) do
-        Class.new(BaseCommand) do
+        Class.new(ApplicationCommand) do
           attribute :first_name, :last_name, :ssn
 
           def call
@@ -32,7 +32,7 @@ RSpec.describe Lite::Command::Attribute do
     context "with from option" do
       context "when attribute doesnt exists" do
         let(:command_class) do
-          Class.new(BaseCommand) do
+          Class.new(ApplicationCommand) do
             attribute :first_name, :last_name, from: :fake
 
             def call
@@ -44,8 +44,8 @@ RSpec.describe Lite::Command::Attribute do
         it "returns invalid" do
           expect(command).to be_invalid
           expect(command.reason).to eq("Invalid context attributes")
-          expect(command.metadata).to eq(
-            { fake: ["is not defined or an attribute"] }
+          expect(command.metadata).to include(
+            fake: ["is not defined or an attribute"]
           )
         end
       end
@@ -55,7 +55,7 @@ RSpec.describe Lite::Command::Attribute do
           { passport: instance_double("Passport", first_name: "John", last_name: "Doe") }
         end
         let(:command_class) do
-          Class.new(BaseCommand) do
+          Class.new(ApplicationCommand) do
             attribute :passport
             attribute :first_name, :last_name, from: :passport
 
@@ -78,7 +78,7 @@ RSpec.describe Lite::Command::Attribute do
           {}
         end
         let(:command_class) do
-          Class.new(BaseCommand) do
+          Class.new(ApplicationCommand) do
             attribute :first_name, :last_name, from: :passport
 
             def call
@@ -108,7 +108,7 @@ RSpec.describe Lite::Command::Attribute do
           { first_name: "John" }
         end
         let(:command_class) do
-          Class.new(BaseCommand) do
+          Class.new(ApplicationCommand) do
             attribute :first_name, :last_name, required: true
 
             def call
@@ -120,8 +120,8 @@ RSpec.describe Lite::Command::Attribute do
         it "returns invalid" do
           expect(command).to be_invalid
           expect(command.reason).to eq("Invalid context attributes")
-          expect(command.metadata).to eq(
-            { context: ["last_name is required"] }
+          expect(command.metadata).to include(
+            context: ["last_name is required"]
           )
         end
       end
@@ -131,7 +131,7 @@ RSpec.describe Lite::Command::Attribute do
           { first_name: "John" }
         end
         let(:command_class) do
-          Class.new(BaseCommand) do
+          Class.new(ApplicationCommand) do
             attribute :first_name, :last_name, required: :fact?
 
             def call
@@ -149,8 +149,8 @@ RSpec.describe Lite::Command::Attribute do
         it "returns invalid" do
           expect(command).to be_invalid
           expect(command.reason).to eq("Invalid context attributes")
-          expect(command.metadata).to eq(
-            { context: ["last_name is required"] }
+          expect(command.metadata).to include(
+            context: ["last_name is required"]
           )
         end
       end
@@ -160,7 +160,7 @@ RSpec.describe Lite::Command::Attribute do
           { first_name: "", middle_name: nil, last_name: nil }
         end
         let(:command_class) do
-          Class.new(BaseCommand) do
+          Class.new(ApplicationCommand) do
             attribute :first_name, required: { reject_nil: true }
             attribute :middle_name, required: { reject_nil: true }
             attribute :last_name, required: { reject_nil: false }
@@ -174,8 +174,8 @@ RSpec.describe Lite::Command::Attribute do
         it "returns invalid" do
           expect(command).to be_invalid
           expect(command.reason).to eq("Invalid context attributes")
-          expect(command.metadata).to eq(
-            { context: ["middle_name cannot be nil"] }
+          expect(command.metadata).to include(
+            context: ["middle_name cannot be nil"]
           )
         end
       end
@@ -185,7 +185,7 @@ RSpec.describe Lite::Command::Attribute do
           { first_name: nil, middle_name: "", last_name: "" }
         end
         let(:command_class) do
-          Class.new(BaseCommand) do
+          Class.new(ApplicationCommand) do
             attribute :first_name, required: { reject_empty: true }
             attribute :middle_name, required: { reject_empty: true }
             attribute :last_name, required: { reject_empty: false }
@@ -199,8 +199,8 @@ RSpec.describe Lite::Command::Attribute do
         it "returns invalid" do
           expect(command).to be_invalid
           expect(command.reason).to eq("Invalid context attributes")
-          expect(command.metadata).to eq(
-            { context: ["first_name cannot be nil", "middle_name cannot be empty"] }
+          expect(command.metadata).to include(
+            context: ["first_name cannot be nil", "middle_name cannot be empty"]
           )
         end
       end
@@ -211,7 +211,7 @@ RSpec.describe Lite::Command::Attribute do
         { first_name: nil, last_name: nil }
       end
       let(:command_class) do
-        Class.new(BaseCommand) do
+        Class.new(ApplicationCommand) do
           attribute :first_name, required: { reject_nil: true }, types: [String, Integer, NilClass]
           attribute :last_name, type: String
 
@@ -224,8 +224,8 @@ RSpec.describe Lite::Command::Attribute do
       it "returns invalid" do
         expect(command).to be_invalid
         expect(command.reason).to eq("Invalid context attributes")
-        expect(command.metadata).to eq(
-          { context: ["first_name cannot be nil", "first_name type invalid"] }
+        expect(command.metadata).to include(
+          context: ["first_name cannot be nil", "first_name type invalid"]
         )
       end
     end
