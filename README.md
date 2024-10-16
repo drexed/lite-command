@@ -123,9 +123,9 @@ DecryptSecretMessage.new(...).call!
 
 ### Dynamic Faults
 
-Enable dynamic faults named after your command which is especially helpful for
-catching + running custom logic or filtering out specific exceptions from your
-APM service.
+Dynamic faults are custom faults named after your command. This is especially
+helpful for catching + running custom logic or filtering out specific
+exceptions from your APM service.
 
 ```ruby
 class DecryptSecretMessage < Lite::Command::Base
@@ -136,8 +136,11 @@ class DecryptSecretMessage < Lite::Command::Base
 
   private
 
+  # Disable raising dynamic faults on a per command basis.
+  # The `raise_dynamic_faults` configuration option must be
+  # enabled for this method to have any affect.
   def raise_dynamic_faults?
-    true
+    false
   end
 
 end
