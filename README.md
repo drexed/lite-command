@@ -277,38 +277,36 @@ A status of `success` is returned even if the command has **NOT** been executed.
 class DecryptSecretMessage < Lite::Command::Base
 
   def call
-    if ctx.a.nil? || ctx.b.nil?
-      invalid!("An a and b parameter must be passed")
-    elsif ctx.a < 1 || ctx.b < 1
-      failure!("Parameters must be >= 1")
-    elsif ctx.a == 1 || ctx.b == 1
-      noop!(
-        "Anything to the power of 1 is 1",
-        { i18n: "some.key" }
-      )
+    if context.encrypted_message.empty?
+      noop!("No message to decrypt")
+    elsif context.encrypted_message.start_with?("== womp")
+      invalid!("Invalid message start value", i18n: "gb.invalid_start_value")
+    elsif context.encrypted_message.algo?(OldAlgo)
+      failure!("Unsafe encryption algo detected")
     else
-      ctx.result = ctx.a ** ctx.b
+      context.decrypted_message = SecretMessage.decrypt(ctx.encrypted_message)
     end
-  rescue DivisionError => e
-    error!("Cathcing it myself")
+  rescue CryptoError => e
+    Apm.report_error(e)
+    error!("Failed decryption due to: #{e}")
   end
 
 end
 
-cmd = DecryptSecretMessage.call(a: 1, b: 3)
-cmd.status   #=> "noop"
-cmd.reason   #=> "Anything to the power of 1 is 1"
-cmd.metadata #=> { i18n: "some.key" }
+cmd = DecryptSecretMessage.call(encrypted_message: "2jk3hjeh2hj2jh")
+cmd.status   #=> "invalid"
+cmd.reason   #=> "Invalid message start value"
+cmd.metadata #=> { i18n: "gb.invalid_start_value" }
 
 cmd.success? #=> false
-cmd.noop?    #=> true
-cmd.noop?("Other reason") #=> false
-cmd.invalid? #=> false
+cmd.noop?    #=> false
+cmd.invalid? #=> true
+cmd.invalid?("Other reason") #=> false
 cmd.failure? #=> false
 cmd.error?   #=> false
 
 # `success` or `noop`
-cmd.ok?      #=> true
+cmd.ok?      #=> false
 cmd.ok?("Other reason") #=> false
 
 # NOT `success`
@@ -316,7 +314,7 @@ cmd.fault?   #=> true
 cmd.fault?("Other reason") #=> false
 
 # `invalid` or `failure` or `error`
-cmd.bad?     #=> false
+cmd.bad?     #=> true
 cmd.bad?("Other reason") #=> false
 ```
 
