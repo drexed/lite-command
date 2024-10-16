@@ -171,40 +171,31 @@ cmd.ctx.fake_message          #=> nil
 
 ### Attributes
 
-Delegate methods for a cleaner command setup, type checking and
-argument requirements. Setup a contract by using the `attribute`
-method which automatically delegates to `context`.
-
-| Options         | Values | Default | Description |
-| --------------- | ------ | ------- | ----------- |
-| `from`          | Symbol, String | `:context` | The object containing the attribute. |
-| `types`, `type` | Symbol, String, Array, Proc | | The allowed class types of the attribute value. |
-| `required`      | Symbol, String, Boolean, Proc, hash | `false` | The attribute must be passed to the context or delegatable (no matter the value). Pass `{ reject_nil: true }` to invalidate `nil` values. Pass `{ reject_empty: true }` to invalidate `nil` and `empty` values. |
-
-> [!NOTE]
-> If optioned with some similar to `filled: true, types: [String, NilClass]`
-> then `NilClass` for the `types` option will be removed automatically.
+Delegate methods for a cleaner command setup by declaring `required` and
+`optional` arguments. `required` only verifies that argument was pass to the
+context or can be called via defined method or another delegated method.
 
 ```ruby
 class DecryptSecretMessage < Lite::Command::Base
 
-  attribute :remote_storage, required: { reject_nil: true }, types: RemoteStorage
-
-  attribute :a, :b
-  attribute :c, :d, from: :remote_storage, types: [Integer, Float]
-  attribute :x, :y, from: :local_storage, required: { reject_empty: true }, if: :signed_in?
+  requires :user, :encrypted_message
+  requires :secret_key, from: :user
+  requires :algo, :algo_detector
+  optional :version
 
   def call
-    context.result =
-      (a.to_i ** b.to_i) +
-      (c.to_i + d.to_i) -
-      (x.to_i + y.to_i)
+    context.decrypted_message = SecretMessage.decrypt(
+      encrypted_message,
+      decryption_key: ENV["DECRYPT_KEY"],
+      algo: algo,
+      version: version || 2
+    )
   end
 
   private
 
-  def local_storage
-    @local_storage ||= LocalStorage.new(x: 1, y: 1, z: 99)
+  def algo_detector
+    @algo_detector ||= AlgoDetector.new(encrypted_message)
   end
 
   def signed_in?
@@ -214,19 +205,17 @@ class DecryptSecretMessage < Lite::Command::Base
 end
 
 # With valid options:
-rs  = RemoteStorage.new(c: 2, d: 2, j: 99)
-cmd = DecryptSecretMessage.call(a: 2, b: 2, remote_storage: rs)
-cmd.status         #=> "success"
-cmd.context.result #=> 6
+cmd = DecryptSecretMessage.call(user: user, encrypted_message: "ll23k2j3kcms", version: 9)
+cmd.status                    #=> "success"
+cmd.context.decrypted_message #=> "Hola Mundo"
 
 # With invalid options:
 cmd = DecryptSecretMessage.call
 cmd.status   #=> "invalid"
-cmd.reason   #=> "Invalid context attributes"
+cmd.reason   #=> "Encrypted message is a required argument. User is an undefined argument..."
 cmd.metadata #=> {
-             #=>   context: ["a is required", "remote_storage must be filled"],
-             #=>   remote_storage: ["d type invalid"]
-             #=>   local_storage: ["is not defined or an attribute"]
+             #=>   user: ["is a required argument", "is an undefined argument"],
+             #=>   encrypted_message: ["is a required argument"]
              #=> }
 ```
 
