@@ -2,8 +2,8 @@
 
 class EmailValidatorCommand < ApplicationCommand
 
-  requires :user
-  requires :email, from: :user
+  required :user
+  required :email, from: :user
   optional :simulate_token_collision
 
   def call

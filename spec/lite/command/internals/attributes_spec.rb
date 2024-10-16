@@ -13,7 +13,7 @@ RSpec.describe Lite::Command::Internals::Attributes do
     context "with valid attributes" do
       let(:command_class) do
         Class.new(AnonCommand) do
-          requires :first_name, :last_name
+          required :first_name, :last_name
           optional :ssn
         end
       end
@@ -36,8 +36,8 @@ RSpec.describe Lite::Command::Internals::Attributes do
       end
       let(:command_class) do
         Class.new(AnonCommand) do
-          requires :user
-          requires :first_name, :last_name, from: :user
+          required :user
+          required :first_name, :last_name, from: :user
           optional :ssn, from: :user
         end
       end
@@ -57,7 +57,7 @@ RSpec.describe Lite::Command::Internals::Attributes do
     context "with invalid delegation" do
       let(:command_class) do
         Class.new(AnonCommand) do
-          requires :first_name, :last_name, from: :fake
+          required :first_name, :last_name, from: :fake
           optional :ssn, from: :fake
         end
       end
@@ -75,8 +75,8 @@ RSpec.describe Lite::Command::Internals::Attributes do
       end
       let(:command_class) do
         Class.new(AnonCommand) do
-          requires :user
-          requires :first_name, :last_name, from: :user
+          required :user
+          required :first_name, :last_name, from: :user
           optional :ssn, from: :user
 
           validates :first_name, :ssn, length: { maximum: 1 }

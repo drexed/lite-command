@@ -179,9 +179,9 @@ context or can be called via defined method or another delegated method.
 ```ruby
 class DecryptSecretMessage < Lite::Command::Base
 
-  requires :user, :encrypted_message
-  requires :secret_key, from: :user
-  requires :algo, :algo_detector
+  required :user, :encrypted_message
+  required :secret_key, from: :user
+  required :algo, :algo_detector
   optional :version
 
   def call
@@ -228,7 +228,7 @@ any and all delegated arguments.
 ```ruby
 class DecryptSecretMessage < Lite::Command::Base
 
-  requires :encrypted_message
+  required :encrypted_message
   optional :version
 
   validates :encrypted_message, length: 10..999
@@ -541,7 +541,7 @@ This is useful for composing multiple steps into one call.
 ```ruby
 class ProcessCheckout < Lite::Command::Sequence
 
-  requires :user
+  required :user
 
   step FinalizeInvoice
   step ChargeCard, if: :card_available?

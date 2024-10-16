@@ -11,7 +11,7 @@ module Lite
 
         module ClassMethods
 
-          def requires(*attributes, from: :context, **options)
+          def required(*attributes, from: :context, **options)
             delegate(*attributes, from:)
 
             validates_each(*attributes, **options) do |command, method_name, _attr_value|
