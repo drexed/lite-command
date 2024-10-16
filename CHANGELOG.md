@@ -6,16 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [2.2.0] - 2024-10-12
+## [3.0.0] - 2024-10-15
 ### Added
 - Added `bad?` status method check
-- Added `type` attribute option to alias `types`
 - Configuration class to handle dynamic error creation
 - Added `on_before_validation` callback hook
+- Added validation support
+- Added new `required` and `optional` attribute methods
 ### Changed
-- Merged required with filled and changed the option names
 - Improved values of `caused_by` and `thrown_by`
 - Use try util instead of hook
+### Removed
+- Removed attributes method
 
 ## [2.1.3] - 2024-10-08
 ### Changed
