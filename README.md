@@ -30,7 +30,7 @@ Or install it yourself as:
   * [Attributes](#attributes)
 * [States](#states)
 * [Statuses](#statuses)
-* [Callbacks](#callbacks)
+* [Hooks](#hooks)
   * [State Hooks](#status-hooks)
   * [Attribute Hooks](#attribute-hooks)
   * [Execution Hooks](#execution-hooks)
@@ -41,7 +41,6 @@ Or install it yourself as:
 * [Results](#results)
 * [Examples](#examples)
   * [Disable Instance Calls](#disable-instance-calls)
-  * [ActiveModel Validations](#activemodel-validations)
 * [Generator](#generator)
 
 ## Configuration
@@ -160,14 +159,14 @@ class DecryptSecretMessage < Lite::Command::Base
 
   def call
     # `ctx` is an alias to `context`
-    context.result = ctx.a ** ctx.b
+    context.decrypted_message = SecretMessage.decrypt(ctx.encrypted_message)
   end
 
 end
 
-cmd = DecryptSecretMessage.call(a: 2, b: 3)
-cmd.context.result #=> 8
-cmd.ctx.fake       #=> nil
+cmd = DecryptSecretMessage.call(encrypted_message: "a22j3nkenjk2ne2")
+cmd.context.decrypted_message #=> "Hello World"
+cmd.ctx.fake_message          #=> nil
 ```
 
 ### Attributes
@@ -321,11 +320,11 @@ cmd.bad?     #=> false
 cmd.bad?("Other reason") #=> false
 ```
 
-## Callbacks
+## Hooks
 
-Use callbacks to run arbituary code at transition points and
-on finalized internals. The following is an example of the hooks
-called for a failed command with a successful child command.
+Use hooks to run arbituary code at transition points and on finalized internals.
+The following is an example of the hooks called for a failed command with a
+successful child command.
 
 ```ruby
 -> 1. FooCommand.on_pending
@@ -344,8 +343,7 @@ called for a failed command with a successful child command.
 
 ### Status Hooks
 
-Define one or more callbacks that are called during transitions
-between states.
+Define one or more callbacks that are called during transitions between states.
 
 ```ruby
 class DecryptSecretMessage < Lite::Command::Base
@@ -461,16 +459,16 @@ end
 
 ## Children
 
-When building complex commands, its best that you pass the
-parents context to the child command (unless neccessary) so
-that it gains automated indexing and the parents `cmd_id`.
+When building complex commands, its best that you pass the parents context to the
+child command (unless neccessary) so that it gains automated indexing and the
+parents `cmd_id`.
 
 ```ruby
 class DecryptSecretMessage < Lite::Command::Base
 
   def call
-    context.merge!(some_other: "required value")
-    CalculateSqrt.call(context)
+    context.merge!(decryption_key: ENV["DECRYPT_KEY"])
+    ValidateSecretMessage.call(context)
   end
 
 end
@@ -478,26 +476,24 @@ end
 
 ### Throwing Faults
 
-Throwing faults allows you to bubble up child faults up to the parent.
-Use it to create branches within your logic and create clean tracing
-of your command results. You can use `throw!` as a catch-all or any
-of the bang status method `failure!`. Any `reason` and `metadata` will
-be bubbled up from the original fault.
+Throwing faults allows you to bubble up child faults up to the parent. Use it to create
+branches within your logic and create clean tracing of your command results. You can use
+`throw!` as a catch-all or any of the bang status method `failure!`. Any `reason` and
+`metadata` will be bubbled up from the original fault.
 
 ```ruby
 class DecryptSecretMessage < Lite::Command::Base
 
   def call
-    command = CalculateSqrt.call(context.merge!(some_other: "required value"))
+    context.merge!(decryption_key: ENV["DECRYPT_KEY"])
+    cmd = ValidateSecretMessage.call(context)
 
-    if command.noop?("Sqrt of 1 is 1")
-      # Manually throw a specific fault
-      invalid!(command)
+    if cmd.invalid?("Invalid magic numbers")
+      error!(cmd) # Manually throw a specific fault
     elsif command.fault?
-      # Automatically throws a matching fault
-      throw!(command)
+      throw!(cmd) # Automatically throws a matching fault
     else
-      # Success, do nothing
+      context.decrypted_message = SecretMessage.decrypt(ctx.encrypted_message)
     end
   end
 
@@ -522,7 +518,7 @@ This is useful for composing multiple steps into one call.
 ```ruby
 class ProcessCheckout < Lite::Command::Sequence
 
-  attribute :user, required: true, filled: true
+  requires :user
 
   step FinalizeInvoice
   step ChargeCard, if: :card_available?
@@ -545,10 +541,9 @@ seq = ProcessCheckout.call(...)
 
 ## Results
 
-During any point in the lifecyle of a command, `to_hash` can be
-called to dump out the current values. The `index` value is
-auto-incremented and the `cmd_id` is static when its passed to
-child commands. This helps with debugging and logging.
+During any point in the lifecyle of a command, `to_hash` can be called to dump out
+the current values. The `index` value is auto-incremented and the `cmd_id` is static
+when its passed to child commands. This helps with debugging and logging.
 
 ```ruby
 command = DecryptSecretMessage.call(...)
@@ -587,44 +582,6 @@ end
 
 DecryptSecretMessage.new(...).call
 #=> raise NoMethodError
-```
-
-### ActiveModel Validations
-
-```ruby
-class DecryptSecretMessage < Lite::Command::Base
-  include ActiveModel::Validations
-
-  validates :a, :b, presence: true
-
-  def call
-    # ...
-  end
-
-  def read_attribute_for_validation(key)
-    context.public_send(key)
-  end
-
-  private
-
-  def on_before_execution
-    return if valid?
-
-    invalid!(
-      errors.full_messages.to_sentence,
-      errors.to_hash
-    )
-  end
-
-end
-
-DecryptSecretMessage.call!
-
-# With `validate!`
-#=> raise ActiveRecord::RecordInvalid
-
-# With `valid?`
-#=> raise Lite::Command::Invalid
 ```
 
 ## Generator
