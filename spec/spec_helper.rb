@@ -8,6 +8,10 @@ require "generator_spec"
 
 require "lite/command"
 
+Lite::Command.configure do |config|
+  config.raise_dynamic_faults = true
+end
+
 spec_path = Pathname.new(File.expand_path("../spec", File.dirname(__FILE__)))
 
 %w[matchers models commands sequencers].each do |dir|

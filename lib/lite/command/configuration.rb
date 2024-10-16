@@ -8,7 +8,7 @@ module Lite
       attr_accessor :raise_dynamic_faults
 
       def initialize
-        @raise_dynamic_faults = true
+        @raise_dynamic_faults = false
       end
 
     end

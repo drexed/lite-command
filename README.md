@@ -51,29 +51,29 @@ Or install it yourself as:
 
 ```ruby
 Lite::Command.configure do |config|
-  config.raise_dynamic_errors = true
+  config.raise_dynamic_faults = true
 end
 ```
 
 ## Usage
 
-Defining a command is as simple as inheriting the base class and
-adding a `call` method to a command object (required).
+Defining a command is as simple as inheriting the base class and adding a `call` method
+to a command object (required).
 
 ```ruby
-class CalculatePower < Lite::Command::Base
+class DecryptSecretMessage < Lite::Command::Base
 
   def call
-    if all_even_numbers?
-      context.result = ctx.a ** ctx.b
+    if invalid_magic_numbers?
+      invalid!("Invalid crypto message")
     else
-      invalid!("All values must be even")
+      context.decrypted_message = SecretMessage.decrypt(context.encrypted_message)
     end
   end
 
   private
 
-  def all_even_numbers?
+  def invalid_magic_numbers?
     # Some logic...
   end
 
@@ -81,38 +81,38 @@ end
 ```
 
 > [!TIP]
-> You should make all of your domain logic private so that only the command API is exposed.
+> You should treat all command as emphemeral objects, so you should think about making
+> all of your domain logic private and leaving the default command API is exposed.
 
 ## Execution
 
-Executing a command can be done as an instance or class call.
-It returns the command instance in a frozen state.
-These will never call will never raise an execption, but will
-be kept track of in its internal state.
+Executing a command can be done as an instance or class call. It returns the command instance
+in a frozen state. These will never call will never raise an execption, but will be kept track
+of in its internal state.
 
 ```ruby
-CalculatePower.call(...)
+DecryptSecretMessage.call(...)
 # - or -
-CalculatePower.new(...).call
+DecryptSecretMessage.new(...).call
 
 # On success, fault and exception:
-#=> <CalculatePower ...>
+#=> <DecryptSecretMessage ...>
 ```
 
 > [!TIP]
-> Class calls is the prefered format due to its readability.
+> Class calls is the prefered format due to its readability. Read the [Disable Instance Calls](#disable-instance-calls)
+> section on how to prevent instance style calls.
 
-Commands can be called with a `!` bang method to raise a
-`Lite::Command::Fault` based exception or the original
-`StandardError` based exception.
+Commands can be called with a `!` bang method to raise a `Lite::Command::Fault` or the
+original `StandardError` based exceptions.
 
 ```ruby
-CalculatePower.call!(...)
+DecryptSecretMessage.call!(...)
 # - or -
-CalculatePower.new(...).call!
+DecryptSecretMessage.new(...).call!
 
 # On success:
-#=> <CalculatePower ...>
+#=> <DecryptSecretMessage ...>
 
 # On fault:
 #=> raises Lite::Command::Fault
@@ -123,12 +123,12 @@ CalculatePower.new(...).call!
 
 ### Dynamic Faults
 
-You can enable dynamic faults named after your command. This is
-especially helpful for catching + running custom logic or filtering
-out specific errors from you APM service.
+Enable dynamic faults named after your command which is especially helpful for
+catching + running custom logic or filtering out specific exceptions from your
+APM service.
 
 ```ruby
-class CalculatePower < Lite::Command::Base
+class DecryptSecretMessage < Lite::Command::Base
 
   def call
     fail!("Some failure")
@@ -142,8 +142,8 @@ class CalculatePower < Lite::Command::Base
 
 end
 
-CalculatePower.call!(...)
-#=> raises CalculatePower::Failure
+DecryptSecretMessage.call!(...)
+#=> raises DecryptSecretMessage::Failure
 ```
 
 ## Context
@@ -156,7 +156,7 @@ of its children commands.
 > Attributes that do **NOT** exist on the context will return `nil`.
 
 ```ruby
-class CalculatePower < Lite::Command::Base
+class DecryptSecretMessage < Lite::Command::Base
 
   def call
     # `ctx` is an alias to `context`
@@ -165,7 +165,7 @@ class CalculatePower < Lite::Command::Base
 
 end
 
-cmd = CalculatePower.call(a: 2, b: 3)
+cmd = DecryptSecretMessage.call(a: 2, b: 3)
 cmd.context.result #=> 8
 cmd.ctx.fake       #=> nil
 ```
@@ -187,7 +187,7 @@ method which automatically delegates to `context`.
 > then `NilClass` for the `types` option will be removed automatically.
 
 ```ruby
-class CalculatePower < Lite::Command::Base
+class DecryptSecretMessage < Lite::Command::Base
 
   attribute :remote_storage, required: { reject_nil: true }, types: RemoteStorage
 
@@ -216,12 +216,12 @@ end
 
 # With valid options:
 rs  = RemoteStorage.new(c: 2, d: 2, j: 99)
-cmd = CalculatePower.call(a: 2, b: 2, remote_storage: rs)
+cmd = DecryptSecretMessage.call(a: 2, b: 2, remote_storage: rs)
 cmd.status         #=> "success"
 cmd.context.result #=> 6
 
 # With invalid options:
-cmd = CalculatePower.call
+cmd = DecryptSecretMessage.call
 cmd.status   #=> "invalid"
 cmd.reason   #=> "Invalid context attributes"
 cmd.metadata #=> {
@@ -245,7 +245,7 @@ cmd.metadata #=> {
 > States are automatically transitioned and should **NEVER** be altered manually.
 
 ```ruby
-cmd = CalculatePower.call
+cmd = DecryptSecretMessage.call
 cmd.state        #=> "complete"
 
 cmd.pending?     #=> false
@@ -275,7 +275,7 @@ A status of `success` is returned even if the command has **NOT** been executed.
 > Metadata may also be passed to enrich your fault response.
 
 ```ruby
-class CalculatePower < Lite::Command::Base
+class DecryptSecretMessage < Lite::Command::Base
 
   def call
     if ctx.a.nil? || ctx.b.nil?
@@ -296,7 +296,7 @@ class CalculatePower < Lite::Command::Base
 
 end
 
-cmd = CalculatePower.call(a: 1, b: 3)
+cmd = DecryptSecretMessage.call(a: 1, b: 3)
 cmd.status   #=> "noop"
 cmd.reason   #=> "Anything to the power of 1 is 1"
 cmd.metadata #=> { i18n: "some.key" }
@@ -348,7 +348,7 @@ Define one or more callbacks that are called during transitions
 between states.
 
 ```ruby
-class CalculatePower < Lite::Command::Base
+class DecryptSecretMessage < Lite::Command::Base
 
   def call
     # ...
@@ -380,7 +380,7 @@ end
 Define before attribtue validation callbacks.
 
 ```ruby
-class CalculatePower < Lite::Command::Base
+class DecryptSecretMessage < Lite::Command::Base
 
   def call
     # ...
@@ -400,7 +400,7 @@ end
 Define before and after callbacks to call around execution.
 
 ```ruby
-class CalculatePower < Lite::Command::Base
+class DecryptSecretMessage < Lite::Command::Base
 
   def call
     # ...
@@ -425,7 +425,7 @@ Define one or more callbacks that are called after execution for
 specific statuses.
 
 ```ruby
-class CalculatePower < Lite::Command::Base
+class DecryptSecretMessage < Lite::Command::Base
 
   def call
     # ...
@@ -466,7 +466,7 @@ parents context to the child command (unless neccessary) so
 that it gains automated indexing and the parents `cmd_id`.
 
 ```ruby
-class CalculatePower < Lite::Command::Base
+class DecryptSecretMessage < Lite::Command::Base
 
   def call
     context.merge!(some_other: "required value")
@@ -485,7 +485,7 @@ of the bang status method `failure!`. Any `reason` and `metadata` will
 be bubbled up from the original fault.
 
 ```ruby
-class CalculatePower < Lite::Command::Base
+class DecryptSecretMessage < Lite::Command::Base
 
   def call
     command = CalculateSqrt.call(context.merge!(some_other: "required value"))
@@ -551,7 +551,7 @@ auto-incremented and the `cmd_id` is static when its passed to
 child commands. This helps with debugging and logging.
 
 ```ruby
-command = CalculatePower.call(...)
+command = DecryptSecretMessage.call(...)
 command.to_hash #=> {
                 #=>   index: 1,
                 #=>   cmd_id: "018c2b95-b764-7615-a924-cc5b910ed1e5",
@@ -575,7 +575,7 @@ command.to_hash #=> {
 ### Disable Instance Calls
 
 ```ruby
-class CalculatePower < Lite::Command::Base
+class DecryptSecretMessage < Lite::Command::Base
 
   private_class_method :new
 
@@ -585,14 +585,14 @@ class CalculatePower < Lite::Command::Base
 
 end
 
-CalculatePower.new(...).call
+DecryptSecretMessage.new(...).call
 #=> raise NoMethodError
 ```
 
 ### ActiveModel Validations
 
 ```ruby
-class CalculatePower < Lite::Command::Base
+class DecryptSecretMessage < Lite::Command::Base
   include ActiveModel::Validations
 
   validates :a, :b, presence: true
@@ -618,7 +618,7 @@ class CalculatePower < Lite::Command::Base
 
 end
 
-CalculatePower.call!
+DecryptSecretMessage.call!
 
 # With `validate!`
 #=> raise ActiveRecord::RecordInvalid
