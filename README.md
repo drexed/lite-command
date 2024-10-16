@@ -28,6 +28,7 @@ Or install it yourself as:
   * [Dynamic Faults](#dynamic-faults)
 * [Context](#context)
   * [Attributes](#attributes)
+  * [Validations](#validations)
 * [States](#states)
 * [Statuses](#statuses)
 * [Hooks](#hooks)
@@ -216,6 +217,41 @@ cmd.reason   #=> "Encrypted message is a required argument. User is an undefined
 cmd.metadata #=> {
              #=>   user: ["is a required argument", "is an undefined argument"],
              #=>   encrypted_message: ["is a required argument"]
+             #=> }
+```
+
+### Validations
+
+The full power of active model valdations is available to validate
+any and all delegated arguments.
+
+```ruby
+class DecryptSecretMessage < Lite::Command::Base
+
+  requires :encrypted_message
+  optional :version
+
+  validates :encrypted_message, length: 10..999
+  validates :version, inclusion: { in: %w[v1 v3 v8], allow_blank: true }
+
+  def call
+    context.decrypted_message = SecretMessage.decrypt(ctx.encrypted_message)
+  end
+
+end
+
+# With valid options:
+cmd = DecryptSecretMessage.call(encrypted_message: "ll23k2j3kcms", version: "v1")
+cmd.status                    #=> "success"
+cmd.context.decrypted_message #=> "Hola Mundo"
+
+# With invalid options:
+cmd = DecryptSecretMessage.call(encrypted_message: "idk", version: "v23")
+cmd.status   #=> "invalid"
+cmd.reason   #=> "Encrypted message is too short (minimum is 10 character). Version is not included in list..."
+cmd.metadata #=> {
+             #=>   user: ["is not included in list"],
+             #=>   encrypted_message: ["is too short (minimum is 10 character)"]
              #=> }
 ```
 
