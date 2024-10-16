@@ -65,4 +65,38 @@ RSpec.describe Lite::Command::Utils do
     end
   end
 
+  describe ".evaluate" do
+    context "with if option" do
+      it "returns false" do
+        value = Lite::Command::Utils.evaluate(user, { if: proc { 1 + 2 == 0 } })
+
+        expect(value).to be(false)
+      end
+    end
+
+    context "with unless option" do
+      it "returns false" do
+        value = Lite::Command::Utils.evaluate(user, { unless: proc { 1 + 2 == 3 } })
+
+        expect(value).to be(false)
+      end
+    end
+
+    context "with default option" do
+      it "returns false" do
+        value = Lite::Command::Utils.evaluate(user, { default: false })
+
+        expect(value).to be(false)
+      end
+    end
+
+    context "with empty options" do
+      it "returns true" do
+        value = Lite::Command::Utils.evaluate(user, {})
+
+        expect(value).to be(true)
+      end
+    end
+  end
+
 end

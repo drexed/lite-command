@@ -175,13 +175,15 @@ cmd.ctx.fake_message          #=> nil
 Delegate methods for a cleaner command setup by declaring `required` and
 `optional` arguments. `required` only verifies that argument was pass to the
 context or can be called via defined method or another delegated method.
+Is an `:if` or `:unless` callable option on a `required` delegation evaluates
+to false, it will be delegated as an `optional` attribute.
 
 ```ruby
 class DecryptSecretMessage < Lite::Command::Base
 
   required :user, :encrypted_message
   required :secret_key, from: :user
-  required :algo, :algo_detector
+  required :algo, :algo_detector, if: :signed_in?
   optional :version
 
   def call

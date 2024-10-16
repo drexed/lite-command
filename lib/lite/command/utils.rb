@@ -22,6 +22,16 @@ module Lite
         end
       end
 
+      def evaluate(object, options = {})
+        if options[:if]
+          call(object, options[:if])
+        elsif options[:unless]
+          !call(object, options[:unless])
+        else
+          options.fetch(:default, true)
+        end
+      end
+
     end
   end
 end

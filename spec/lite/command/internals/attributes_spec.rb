@@ -38,7 +38,14 @@ RSpec.describe Lite::Command::Internals::Attributes do
         Class.new(AnonCommand) do
           required :user
           required :first_name, :last_name, from: :user
+          required :passport, if: :ssn_missing?
           optional :ssn, from: :user
+
+          private
+
+          def ssn_missing?
+            context.user.send(:ssn).nil?
+          end
         end
       end
 

@@ -12,13 +12,7 @@ module Lite
       end
 
       def run?(cmd)
-        if options[:if]
-          Utils.call(cmd, options[:if])
-        elsif options[:unless]
-          !Utils.call(cmd, options[:unless])
-        else
-          true
-        end
+        Utils.evaluate(cmd, options)
       end
 
     end
