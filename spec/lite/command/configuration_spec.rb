@@ -3,7 +3,7 @@
 require "spec_helper"
 
 RSpec.describe Lite::Command::Configuration do
-  after { Lite::Command.reset_configuration! }
+  after { Lite::Command.configuration.raise_dynamic_faults = true }
 
   describe "#configure" do
     it 'to be "foo"' do

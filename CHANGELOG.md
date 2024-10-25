@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [3.1.0] - 2024-10-25
 ### Added
 - Added `raise!` method to reraise soft call errors
+### Changed
+- Fixed leakage of configuration option changes in spec
 
 ## [3.0.1] - 2024-10-25
 ### Changed
