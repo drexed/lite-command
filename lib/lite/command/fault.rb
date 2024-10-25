@@ -29,8 +29,21 @@ module Lite
         fault
       end
 
+      def self.===(item)
+        klass0 = respond_to?(:new) ? self : self.class
+        klass1 = item.respond_to?(:new) ? item : item.class
+        return true if klass0 == klass1
+
+        klass0.ancestors.include?(klass1) || klass1.ancestors.include?(klass0)
+      end
+
       def type
         @type ||= self.class.name.split("::").last.downcase
+      end
+
+      def ===(item)
+        klass = item.respond_to?(:new) ? item : item.class
+        is_a?(klass)
       end
 
     end

@@ -42,6 +42,8 @@ Metrics/PerceivedComplexity:
   Enabled: false
 Naming/MemoizedInstanceVariableName:
   Enabled: false
+Performance/AncestorsInclude:
+  Enabled: false
 RSpec/AnyInstance:
   Enabled: false
 RSpec/DescribedClass:

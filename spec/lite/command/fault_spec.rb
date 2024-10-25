@@ -61,4 +61,49 @@ RSpec.describe Lite::Command::Fault do
       expect(fault.type).to eq("noop")
     end
   end
+
+  # rubocop:disable Style/CaseEquality
+  describe ".===" do
+    let(:fault) do
+      EmailValidatorCommand::Noop.new(
+        reason: "Some reason",
+        metadata: { a: 1 },
+        caused_by: command,
+        thrown_by: command
+      )
+    end
+
+    {
+      Lite::Command::Fault => true,
+      Lite::Command::Noop => false,
+      Lite::Command::Failure => false,
+      EmailValidatorCommand::Fault => true,
+      EmailValidatorCommand::Noop => true,
+      EmailValidatorCommand::Failure => false
+    }.each do |klass, bool|
+      context "when #{klass} instance check" do
+        it "returns #{bool}" do
+          expect(fault === klass).to be(bool)
+        end
+      end
+
+      context "when #{klass} class check" do
+        it "returns #{bool}" do
+          expect(fault.class === klass).to be(bool)
+        end
+      end
+
+      context "when #{klass} case check" do
+        it "returns #{bool}" do
+          expect(
+            case fault
+            when klass then true
+            else false
+            end
+          ).to be(bool)
+        end
+      end
+    end
+  end
+  # rubocop:enable Style/CaseEquality
 end
