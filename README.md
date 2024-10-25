@@ -88,15 +88,21 @@ end
 
 Executing a command can be done as an instance or class call. It returns the command instance
 in a frozen state. These will never call will never raise an execption, but will be kept track
-of in its internal state.
+of in its internal state. You can raise the offending exception using `raise!`.
 
 ```ruby
-DecryptSecretMessage.call(...)
+cmd = DecryptSecretMessage.call(...)
 # - or -
-DecryptSecretMessage.new(...).call
+cmd = DecryptSecretMessage.new(...).call
 
-# On success, fault and exception:
-#=> <DecryptSecretMessage ...>
+# On success, fault or exception:
+cmd #=> <DecryptSecretMessage ...>
+
+# On fault:
+cmd.raise! #=> raises Lite::Command::Fault
+
+# On exception:
+cmd.raise! #=> raises StandardError
 ```
 
 > [!TIP]

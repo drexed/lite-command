@@ -60,6 +60,7 @@ module Lite
           around_execution { call }
           Utils.try(self, :on_success)
         rescue StandardError => e
+          @exception = e
           fault(e, ERROR, metadata) unless e.is_a?(Lite::Command::Fault)
           after_execution
           Utils.try(self, :"on_#{status}", e)
@@ -71,6 +72,7 @@ module Lite
           around_execution { call }
           Utils.try(self, :on_success)
         rescue StandardError => e
+          @exception = e
           fault(e, ERROR, metadata) unless e.is_a?(Lite::Command::Fault)
           after_execution
           Utils.try(self, :"on_#{status}", e)

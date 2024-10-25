@@ -30,11 +30,7 @@ module Lite
       end
 
       def self.===(item)
-        klass0 = respond_to?(:new) ? self : self.class
-        klass1 = item.respond_to?(:new) ? item : item.class
-        return true if klass0 == klass1
-
-        klass0.ancestors.include?(klass1) || klass1.ancestors.include?(klass0)
+        Utils.descendant_of?(self, item) || Utils.descendant_of?(item, self)
       end
 
       def type
@@ -42,8 +38,7 @@ module Lite
       end
 
       def ===(item)
-        klass = item.respond_to?(:new) ? item : item.class
-        is_a?(klass)
+        Utils.descendant_of?(self, item)
       end
 
     end

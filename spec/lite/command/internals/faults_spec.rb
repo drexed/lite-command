@@ -47,6 +47,22 @@ RSpec.describe Lite::Command::Internals::Faults do
     end
   end
 
+  describe "#raise!" do
+    context "when success" do
+      it "does not raise an error" do
+        expect { command.raise! }.not_to raise_error
+      end
+    end
+
+    context "when fault" do
+      let(:user) { User.new(email: "spy.master@cia.gov") }
+
+      it "reraises the caught exception" do
+        expect { command.raise! }.to raise_error(EmailValidatorCommand::Noop, "Ummm, didn't see anything")
+      end
+    end
+  end
+
   describe "#raise_dynamic_faults" do
     let(:user) { User.new(email: "jane.doe") }
 

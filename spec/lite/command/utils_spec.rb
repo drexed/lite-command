@@ -5,6 +5,24 @@ require "spec_helper"
 RSpec.describe Lite::Command::Utils do
   let(:user) { User.new }
 
+  describe ".descendant_of?" do
+    context "when is descendant" do
+      it "returns true" do
+        value = Lite::Command::Utils.descendant_of?(Lite::Command::Error, StandardError)
+
+        expect(value).to be(true)
+      end
+    end
+
+    context "when not descendant" do
+      it "returns false" do
+        value = Lite::Command::Utils.descendant_of?(Lite::Command::Error, RuntimeError)
+
+        expect(value).to be(false)
+      end
+    end
+  end
+
   describe ".try" do
     context "when method public exists" do
       it "returns value" do

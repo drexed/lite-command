@@ -5,6 +5,10 @@ module Lite
     module Internals
       module Faults
 
+        def self.included(base)
+          base.class_eval { attr_reader :exception }
+        end
+
         def caused_by
           return if success?
 
@@ -27,6 +31,12 @@ module Lite
 
         def thrown?
           fault? && !caused_fault?
+        end
+
+        def raise!
+          return if exception.nil?
+
+          raise exception
         end
 
         private
