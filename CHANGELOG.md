@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [3.1.3] - 2024-10-26
+### Changed
+- Move monotonic clock to util
 ### Removed
 - Removed unnecessary `Lite::Command::` prefixes
 

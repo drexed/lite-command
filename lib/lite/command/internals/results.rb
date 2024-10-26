@@ -53,11 +53,11 @@ module Lite
         end
 
         def start_monotonic_time
-          @start_monotonic_time ||= Process.clock_gettime(Process::CLOCK_MONOTONIC)
+          @start_monotonic_time ||= Utils.monotonic_time
         end
 
         def stop_monotonic_time
-          @stop_monotonic_time ||= Process.clock_gettime(Process::CLOCK_MONOTONIC)
+          @stop_monotonic_time ||= Utils.monotonic_time
         end
 
         def runtime

@@ -29,16 +29,16 @@ module Lite
         fault
       end
 
-      def self.===(item)
-        Utils.descendant_of?(self, item) || Utils.descendant_of?(item, self)
+      def self.===(object)
+        Utils.descendant_of?(self, object) || Utils.descendant_of?(object, self)
       end
 
       def type
         @type ||= self.class.name.split("::").last.downcase
       end
 
-      def ===(item)
-        Utils.descendant_of?(self, item)
+      def ===(object)
+        Utils.descendant_of?(self, object)
       end
 
     end

@@ -6,6 +6,10 @@ module Lite
 
       module_function
 
+      def monotonic_time
+        Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      end
+
       def descendant_of?(object, other)
         object_class = object.respond_to?(:new) ? object : object.class
         other_class = other.respond_to?(:new) ? other : other.class
