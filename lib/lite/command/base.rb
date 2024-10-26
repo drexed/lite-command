@@ -11,11 +11,11 @@ module Lite
 
         base.include ActiveModel::Validations
 
-        base.include Lite::Command::Internals::Attributes
-        base.include Lite::Command::Internals::Calls
-        base.include Lite::Command::Internals::Executions
-        base.include Lite::Command::Internals::Faults
-        base.include Lite::Command::Internals::Results
+        base.include Internals::Attributes
+        base.include Internals::Calls
+        base.include Internals::Executions
+        base.include Internals::Faults
+        base.include Internals::Results
 
         if Lite::Command.configuration.raise_dynamic_faults # rubocop:disable Style/GuardClause
           base.class_eval <<-RUBY, __FILE__, __LINE__ + 1
@@ -32,7 +32,7 @@ module Lite
       alias ctx context
 
       def initialize(context = {})
-        @context = Lite::Command::Context.build(context)
+        @context = Context.build(context)
         Utils.try(self, :on_pending)
       end
 

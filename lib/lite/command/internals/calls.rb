@@ -81,7 +81,7 @@ module Lite
           @status   = s
           @metadata = m
 
-          fault_streamer = Lite::Command::FaultStreamer.new(self, object)
+          fault_streamer = FaultStreamer.new(self, object)
           @reason    ||= fault_streamer.reason
           @metadata  ||= fault_streamer.metadata
           @caused_by ||= fault_streamer.caused_by
