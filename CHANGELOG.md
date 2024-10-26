@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed `metadata` to a keyword arg on fault `!` calls
 ### Removed
 - Removed unnecessary `Lite::Command::` prefixes
+- Removed double if/unless eval for required validations
 
 ## [3.1.2] - 2024-10-26
 ### Changed

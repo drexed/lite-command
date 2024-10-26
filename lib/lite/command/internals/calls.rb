@@ -92,7 +92,7 @@ module Lite
         end
 
         FAULTS.each do |f|
-          # eg: invalid!("idk") or failure!(fault) or error!("idk", { error_key: "some.error" })
+          # eg: invalid!("idk") or failure!(fault) or error!("idk", metadata: { error_key: "some.error" }, original_exception: err)
           define_method(:"#{f}!") do |object, metadata: nil, original_exception: nil|
             return unless success?
 

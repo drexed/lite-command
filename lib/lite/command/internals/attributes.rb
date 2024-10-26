@@ -15,7 +15,6 @@ module Lite
             delegate(*attributes, from:)
 
             validates_each(*attributes, **options) do |command, method_name, _attr_value|
-              next unless Utils.evaluate(command, options)
               next if command.errors.added?(from, :undefined) || command.errors.added?(method_name, :required)
 
               if !command.respond_to?(from, true)
