@@ -75,8 +75,7 @@ module Lite
           around_execution { call }
           Utils.try(self, :on_success)
         rescue StandardError => e
-          @original_exception = e
-          fault(e, ERROR, metadata)
+          fault(e, ERROR, metadata, e)
           after_execution
           Utils.try(self, :"on_#{status}", e)
         ensure
@@ -87,8 +86,7 @@ module Lite
           around_execution { call }
           Utils.try(self, :on_success)
         rescue StandardError => e
-          @original_exception = e
-          fault(e, ERROR, metadata)
+          fault(e, ERROR, metadata, e)
           after_execution
           Utils.try(self, :"on_#{status}", e)
           raise(e)

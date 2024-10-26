@@ -334,7 +334,7 @@ class DecryptSecretMessage < Lite::Command::Base
     if context.encrypted_message.empty?
       noop!("No message to decrypt")
     elsif context.encrypted_message.start_with?("== womp")
-      invalid!("Invalid message start value", i18n: "gb.invalid_start_value")
+      invalid!("Invalid message start value", metadata: { i18n: "gb.invalid_start_value" })
     elsif context.encrypted_message.algo?(OldAlgo)
       failure!("Unsafe encryption algo detected")
     else
@@ -342,7 +342,7 @@ class DecryptSecretMessage < Lite::Command::Base
     end
   rescue CryptoError => e
     Apm.report_error(e)
-    error!("Failed decryption due to: #{e}")
+    error!("Failed decryption due to: #{e}", original_exception: e)
   end
 
 end
@@ -541,7 +541,7 @@ class DecryptSecretMessage < Lite::Command::Base
     cmd = ValidateSecretMessage.call(context)
 
     if cmd.invalid?("Invalid magic numbers")
-      error!(cmd) # Manually throw a specific fault
+      failure!(cmd) # Manually throw a specific fault
     elsif command.fault?
       throw!(cmd) # Automatically throws a matching fault
     else

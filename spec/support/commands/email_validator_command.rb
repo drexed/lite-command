@@ -8,7 +8,7 @@ class EmailValidatorCommand < ApplicationCommand
 
   def call
     if !email.include?("@")
-      invalid!("Invalid email format", i18n: { errors: :invalid_email })
+      invalid!("Invalid email format", metadata: { i18n: { errors: :invalid_email } })
     elsif email.include?("@cia.gov")
       noop!("Ummm, didn't see anything")
     elsif email.end_with?(".test")
@@ -23,7 +23,7 @@ class EmailValidatorCommand < ApplicationCommand
       context.validation_secret = "01001101011001100"
     end
   rescue NotImplementedError => e
-    error!("Womp womp, due to: #{e.message}")
+    error!("Womp womp, due to: #{e.message}", original_exception: e)
   end
 
   private

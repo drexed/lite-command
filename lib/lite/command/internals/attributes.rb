@@ -55,7 +55,7 @@ module Lite
         def validate_context_attributes
           return if errors.empty?
 
-          invalid!(errors.full_messages.join(". "), errors.messages)
+          invalid!(errors.full_messages.join(". "), metadata: errors.messages)
         end
 
       end
