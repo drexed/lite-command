@@ -59,7 +59,7 @@ module Lite
         end
 
         def bad?(reason = nil)
-          ![SUCCESS, NOOP].include?(status) && reason?(reason)
+          !ok?(reason)
         end
 
         FAULTS.each do |f|
@@ -75,22 +75,25 @@ module Lite
           str.nil? || str == reason
         end
 
-        def fault(object, status, metadata)
-          @status   = status
-          @metadata = metadata
+        def fault(object, s, m) # rubocop:disable Naming/MethodParameterName
+          return if s == SUCCESS || status != SUCCESS
 
-          down_stream = Lite::Command::FaultStreamer.new(self, object)
-          @reason    ||= down_stream.reason
-          @metadata  ||= down_stream.metadata
-          @caused_by ||= down_stream.caused_by
-          @thrown_by ||= down_stream.thrown_by
+          @status   = s
+          @metadata = m
 
-          @fault_exception ||= down_stream.fault_exception
+          fault_streamer = Lite::Command::FaultStreamer.new(self, object)
+          @reason    ||= fault_streamer.reason
+          @metadata  ||= fault_streamer.metadata
+          @caused_by ||= fault_streamer.caused_by
+          @thrown_by ||= fault_streamer.thrown_by
+          @fault_exception ||= fault_streamer.fault_exception
         end
 
         FAULTS.each do |f|
           # eg: invalid!("idk") or failure!(fault) or error!("idk", { error_key: "some.error" })
           define_method(:"#{f}!") do |object, metadata = nil|
+            return unless success?
+
             fault(object, f, metadata)
             raise(fault_exception)
           end

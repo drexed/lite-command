@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.1.2] - 2024-10-26
+### Changed
+- Make state set methods private
+- Add returns for invalid state and status transitions
+
 ## [3.1.1] - 2024-10-25
 ### Changed
 - Add option to raise original or fault exception

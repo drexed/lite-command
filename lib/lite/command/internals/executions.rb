@@ -24,12 +24,27 @@ module Lite
         STATES.each do |s|
           # eg: executing?
           define_method(:"#{s}?") { state == s }
-
-          # eg: interrupted!
-          define_method(:"#{s}!") { @state = s }
         end
 
         private
+
+        def executing!
+          return unless pending?
+
+          @state = EXECUTING
+        end
+
+        def complete!
+          return if executed?
+
+          @state = COMPLETE
+        end
+
+        def interrupted!
+          return if executed?
+
+          @state = INTERRUPTED
+        end
 
         def before_execution
           increment_execution_index
@@ -61,7 +76,7 @@ module Lite
           Utils.try(self, :on_success)
         rescue StandardError => e
           @original_exception = e
-          fault(e, ERROR, metadata) unless e.is_a?(Lite::Command::Fault)
+          fault(e, ERROR, metadata)
           after_execution
           Utils.try(self, :"on_#{status}", e)
         ensure
@@ -73,7 +88,7 @@ module Lite
           Utils.try(self, :on_success)
         rescue StandardError => e
           @original_exception = e
-          fault(e, ERROR, metadata) unless e.is_a?(Lite::Command::Fault)
+          fault(e, ERROR, metadata)
           after_execution
           Utils.try(self, :"on_#{status}", e)
           raise(e)

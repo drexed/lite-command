@@ -35,7 +35,9 @@ module Lite
 
         def raise!(original: false)
           exception = (fault_exception unless original) || original_exception
-          raise(exception) unless exception.nil?
+          return if exception.nil?
+
+          raise(exception)
         end
 
         private
