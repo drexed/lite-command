@@ -26,6 +26,7 @@ Or install it yourself as:
 * [Usage](#usage)
 * [Execution](#execution)
   * [Dynamic Faults](#dynamic-faults)
+  * [Raising Faults](#raising-faults)
 * [Context](#context)
   * [Attributes](#attributes)
   * [Validations](#validations)
@@ -88,21 +89,15 @@ end
 
 Executing a command can be done as an instance or class call. It returns the command instance
 in a frozen state. These will never call will never raise an execption, but will be kept track
-of in its internal state. You can raise the offending exception using `raise!`.
+of in its internal state.
 
 ```ruby
-cmd = DecryptSecretMessage.call(...)
+DecryptSecretMessage.call(...)
 # - or -
-cmd = DecryptSecretMessage.new(...).call
+DecryptSecretMessage.new(...).call
 
 # On success, fault or exception:
-cmd #=> <DecryptSecretMessage ...>
-
-# On fault:
-cmd.raise! #=> raises Lite::Command::Fault
-
-# On exception:
-cmd.raise! #=> raises StandardError
+#=> <DecryptSecretMessage ...>
 ```
 
 > [!TIP]
@@ -125,6 +120,29 @@ DecryptSecretMessage.new(...).call!
 
 # On exception:
 #=> raises StandardError
+```
+
+### Raising Faults
+
+Sometimes its suitable to raise the offending soft call command fault later
+in a call stack. Use the `raise!` method to reraise the fault or original
+error (if they differ). `original: false` is the default.
+
+```ruby
+cmd = DecryptSecretMessage.call(...)
+Apm.track_stat("DecryptSecretMessage.called")
+# other stuff...
+
+# On success:
+cmd.raise! #=> nil
+
+# On fault:
+cmd.raise!(original: false) #=> raises Lite::Command::Fault
+cmd.raise!(original: true)  #=> raises Lite::Command::Fault
+
+# On exception:
+cmd.raise!(original: false) #=> raises Lite::Command::Error
+cmd.raise!(original: true)  #=> raises StandardError
 ```
 
 ### Dynamic Faults

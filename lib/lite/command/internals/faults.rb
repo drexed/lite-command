@@ -6,7 +6,7 @@ module Lite
       module Faults
 
         def self.included(base)
-          base.class_eval { attr_reader :exception }
+          base.class_eval { attr_reader :fault_exception, :original_exception }
         end
 
         def caused_by
@@ -33,10 +33,9 @@ module Lite
           fault? && !caused_fault?
         end
 
-        def raise!
-          return if exception.nil?
-
-          raise exception
+        def raise!(original: false)
+          exception = (fault_exception unless original) || original_exception
+          raise(exception) unless exception.nil?
         end
 
         private

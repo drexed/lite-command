@@ -11,6 +11,20 @@ module Lite
         @object = object
       end
 
+      def reason
+        if object.respond_to?(:reason)
+          object.reason
+        elsif object.is_a?(StandardError)
+          "[#{object.class.name}] #{object.message}".chomp(".")
+        else
+          object
+        end
+      end
+
+      def metadata
+        Utils.try(object, :metadata) || command.metadata
+      end
+
       def caused_by
         Utils.try(object, :caused_by) || command
       end
@@ -21,18 +35,15 @@ module Lite
         Utils.try(object, :thrown_by) || command.caused_by
       end
 
-      def metadata
-        Utils.try(object, :metadata) || command.metadata
-      end
+      def fault_exception
+        return if command.success?
 
-      def reason
-        if object.respond_to?(:reason)
-          object.reason
-        elsif object.is_a?(StandardError)
-          "[#{object.class.name}] #{object.message}".chomp(".")
-        else
-          object
-        end
+        Fault.build(
+          command.status.capitalize,
+          command,
+          object,
+          dynamic: command.send(:raise_dynamic_faults?)
+        )
       end
 
     end

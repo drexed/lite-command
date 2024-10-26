@@ -49,16 +49,52 @@ RSpec.describe Lite::Command::Internals::Faults do
 
   describe "#raise!" do
     context "when success" do
-      it "does not raise an error" do
+      it "does not raise exception" do
         expect { command.raise! }.not_to raise_error
       end
     end
 
-    context "when fault" do
+    context "when fault error originator" do
       let(:user) { User.new(email: "spy.master@cia.gov") }
 
-      it "reraises the caught exception" do
-        expect { command.raise! }.to raise_error(EmailValidatorCommand::Noop, "Ummm, didn't see anything")
+      context "when original true" do
+        it "reraises the fault exception" do
+          expect { command.raise!(original: true) }.to raise_error(
+            EmailValidatorCommand::Noop,
+            "Ummm, didn't see anything"
+          )
+        end
+      end
+
+      context "when original false" do
+        it "reraises the fault exception" do
+          expect { command.raise!(original: false) }.to raise_error(
+            EmailValidatorCommand::Noop,
+            "Ummm, didn't see anything"
+          )
+        end
+      end
+    end
+
+    context "when standard error originator" do
+      let(:user) { User.new(email: "jane.doe@example.wompwomp") }
+
+      context "when original true" do
+        it "reraises the original exception" do
+          expect { command.raise!(original: true) }.to raise_error(
+            ArgumentError,
+            "TLD extension doesn't exists"
+          )
+        end
+      end
+
+      context "when original false" do
+        it "reraises the fault exception" do
+          expect { command.raise!(original: false) }.to raise_error(
+            EmailValidatorCommand::Error,
+            "[ArgumentError] TLD extension doesn't exists"
+          )
+        end
       end
     end
   end

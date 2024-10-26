@@ -84,13 +84,15 @@ module Lite
           @metadata  ||= down_stream.metadata
           @caused_by ||= down_stream.caused_by
           @thrown_by ||= down_stream.thrown_by
+
+          @fault_exception ||= down_stream.fault_exception
         end
 
         FAULTS.each do |f|
           # eg: invalid!("idk") or failure!(fault) or error!("idk", { error_key: "some.error" })
           define_method(:"#{f}!") do |object, metadata = nil|
             fault(object, f, metadata)
-            raise Lite::Command::Fault.build(f.capitalize, self, object, dynamic: raise_dynamic_faults?)
+            raise(fault_exception)
           end
         end
 
