@@ -35,7 +35,7 @@ module Lite
         Utils.try(object, :thrown_by) || command.caused_by
       end
 
-      def fault_exception
+      def command_exception
         return if command.success?
 
         Fault.build(

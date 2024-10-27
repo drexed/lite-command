@@ -87,8 +87,8 @@ module Lite
           @caused_by ||= fault_streamer.caused_by
           @thrown_by ||= fault_streamer.thrown_by
 
-          @fault_exception    ||= fault_streamer.fault_exception
-          @original_exception ||= exception || fault_exception
+          @command_exception  ||= fault_streamer.command_exception
+          @original_exception ||= exception || command_exception
         end
 
         FAULTS.each do |f|
@@ -98,7 +98,7 @@ module Lite
 
             fault(object, f, metadata, exception: original_exception)
 
-            raise(fault_exception)
+            raise(command_exception)
           end
         end
 

@@ -24,7 +24,7 @@ RSpec.describe Lite::Command::FaultStreamer do
           expect(streamer.metadata).to eq(command.metadata)
           expect(streamer.caused_by).to be_a(EmailValidatorCommand)
           expect(streamer.thrown_by).to be_a(EmailValidatorCommand)
-          expect(streamer.fault_exception).to be_a(EmailValidatorCommand::Invalid)
+          expect(streamer.command_exception).to be_a(EmailValidatorCommand::Invalid)
         end
       end
 
@@ -39,7 +39,7 @@ RSpec.describe Lite::Command::FaultStreamer do
           expect(streamer.metadata).to eq([1, 2, 3])
           expect(streamer.caused_by).to be_a(ValidationTokenCommand)
           expect(streamer.thrown_by).to be_a(EmailValidatorCommand)
-          expect(streamer.fault_exception).to be_a(EmailValidatorCommand::Failure)
+          expect(streamer.command_exception).to be_a(EmailValidatorCommand::Failure)
         end
       end
     end
@@ -52,7 +52,7 @@ RSpec.describe Lite::Command::FaultStreamer do
         expect(streamer.metadata).to eq(command.metadata)
         expect(streamer.caused_by).to be_a(EmailValidatorCommand)
         expect(streamer.thrown_by).to be_nil
-        expect(streamer.fault_exception).to be_nil
+        expect(streamer.command_exception).to be_nil
       end
     end
 
@@ -64,7 +64,7 @@ RSpec.describe Lite::Command::FaultStreamer do
         expect(streamer.metadata).to eq(command.metadata)
         expect(streamer.caused_by).to be_a(EmailValidatorCommand)
         expect(streamer.thrown_by).to be_nil
-        expect(streamer.fault_exception).to be_nil
+        expect(streamer.command_exception).to be_nil
       end
     end
   end

@@ -28,7 +28,7 @@ module Lite
             caused_by: caused_by&.index,
             caused_exception: Utils.pretty_exception(caused_by&.original_exception),
             thrown_by: thrown_by&.index,
-            thrown_exception: Utils.pretty_exception(thrown_by&.fault_exception),
+            thrown_exception: Utils.pretty_exception(thrown_by&.command_exception),
             runtime:
           }.compact
         end
