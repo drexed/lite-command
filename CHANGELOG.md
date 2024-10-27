@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Relocated some results methods to a runtimes internal module
 - Assign correct fault even when child command is hard called
+- Renamed `fault_exception` to `command_exception`
 
 ## [3.1.3] - 2024-10-26
 ### Added
