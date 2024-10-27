@@ -11,10 +11,11 @@ module Lite
 
         base.include ActiveModel::Validations
 
+        base.include Internals::Runtimes
         base.include Internals::Attributes
+        base.include Internals::Faults
         base.include Internals::Calls
         base.include Internals::Executions
-        base.include Internals::Faults
         base.include Internals::Results
 
         if Lite::Command.configuration.raise_dynamic_faults # rubocop:disable Style/GuardClause
