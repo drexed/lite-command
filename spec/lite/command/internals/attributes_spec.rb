@@ -12,7 +12,7 @@ RSpec.describe Lite::Command::Internals::Attributes do
   describe "#validations" do
     context "with valid attributes" do
       let(:command_class) do
-        Class.new(AnonCommand) do
+        Class.new(AnonymousCommand) do
           required :first_name, :last_name
           optional :ssn
         end
@@ -35,7 +35,7 @@ RSpec.describe Lite::Command::Internals::Attributes do
         { user: User.new }
       end
       let(:command_class) do
-        Class.new(AnonCommand) do
+        Class.new(AnonymousCommand) do
           required :user
           required :first_name, :last_name, from: :user
           required :passport, if: :ssn_missing?
@@ -63,7 +63,7 @@ RSpec.describe Lite::Command::Internals::Attributes do
 
     context "with invalid delegation" do
       let(:command_class) do
-        Class.new(AnonCommand) do
+        Class.new(AnonymousCommand) do
           required :first_name, :last_name, from: :fake
           optional :ssn, from: :fake
         end
@@ -81,7 +81,7 @@ RSpec.describe Lite::Command::Internals::Attributes do
         { user: User.new }
       end
       let(:command_class) do
-        Class.new(AnonCommand) do
+        Class.new(AnonymousCommand) do
           required :user
           required :first_name, :last_name, from: :user
           optional :ssn, from: :user
