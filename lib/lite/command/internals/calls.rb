@@ -75,7 +75,7 @@ module Lite
           str.nil? || str == reason
         end
 
-        def fault(object, s, m, oe) # rubocop:disable Naming/MethodParameterName
+        def fault(object, s, m, exception: nil) # rubocop:disable Naming/MethodParameterName
           return if s == SUCCESS || status != SUCCESS
 
           @status   = s
@@ -88,7 +88,7 @@ module Lite
           @thrown_by ||= fault_streamer.thrown_by
 
           @fault_exception    ||= fault_streamer.fault_exception
-          @original_exception ||= oe || fault_exception
+          @original_exception ||= exception || fault_exception
         end
 
         FAULTS.each do |f|
@@ -96,7 +96,7 @@ module Lite
           define_method(:"#{f}!") do |object, metadata: nil, original_exception: nil|
             return unless success?
 
-            fault(object, f, metadata, original_exception)
+            fault(object, f, metadata, exception: original_exception)
 
             raise(fault_exception)
           end
