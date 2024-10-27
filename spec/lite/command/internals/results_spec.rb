@@ -49,7 +49,9 @@ RSpec.describe Lite::Command::Internals::Results do
           status: "failure",
           reason: "Unauthorized token",
           caused_by: 3,
+          caused_exception: "[AuthorizeTokenCommand::Failure] Unauthorized token",
           thrown_by: 2,
+          thrown_exception: "[ValidationTokenCommand::Failure] Unauthorized token",
           runtime: 0.0123
         )
       end

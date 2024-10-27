@@ -15,7 +15,7 @@ module Lite
         if object.respond_to?(:reason)
           object.reason
         elsif object.is_a?(StandardError)
-          "[#{object.class.name}] #{object.message}".chomp(".")
+          Utils.pretty_exception(object)
         else
           object
         end

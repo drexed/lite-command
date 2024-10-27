@@ -5,6 +5,14 @@ require "spec_helper"
 RSpec.describe Lite::Command::Utils do
   let(:user) { User.new }
 
+  describe ".pretty_exception" do
+    it "returns true" do
+      value = Lite::Command::Utils.pretty_exception(RuntimeError.new("womp womp"))
+
+      expect(value).to eq("[RuntimeError] womp womp")
+    end
+  end
+
   describe ".descendant_of?" do
     context "when is descendant" do
       it "returns true" do

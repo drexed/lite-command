@@ -10,6 +10,12 @@ module Lite
         Process.clock_gettime(Process::CLOCK_MONOTONIC)
       end
 
+      def pretty_exception(exception)
+        return if exception.nil?
+
+        "[#{exception.class.name}] #{exception.message}".chomp(".")
+      end
+
       def descendant_of?(object, other)
         object_class = object.respond_to?(:new) ? object : object.class
         other_class = other.respond_to?(:new) ? other : other.class
