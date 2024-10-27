@@ -4,7 +4,6 @@ class EmailValidatorCommand < ApplicationCommand
 
   required :user
   required :email, from: :user
-  optional :simulate_token_collision
 
   def call
     if !email.include?("@")

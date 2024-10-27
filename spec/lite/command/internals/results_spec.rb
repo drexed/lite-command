@@ -3,10 +3,10 @@
 require "spec_helper"
 
 RSpec.describe Lite::Command::Internals::Results do
-  subject(:command) { EmailValidatorCommand.call(user:, simulate_token_collision:) }
+  subject(:command) { EmailValidatorCommand.call(user:, simulate_unauthoized_token:) }
 
   let(:user) { User.new }
-  let(:simulate_token_collision) { false }
+  let(:simulate_unauthoized_token) { false }
 
   before do
     [
@@ -36,10 +36,10 @@ RSpec.describe Lite::Command::Internals::Results do
     end
 
     context "with fault" do
-      let(:simulate_token_collision) { true }
+      let(:simulate_unauthoized_token) { true }
 
       it "returns correct data" do
-        expect(command.results.size).to eq(2)
+        expect(command.results.size).to eq(3)
         expect(command.to_hash).to eq(
           index: 1,
           cmd_id: "018c2b95-b764-7615-a924-cc5b910ed1e5",
@@ -47,8 +47,8 @@ RSpec.describe Lite::Command::Internals::Results do
           outcome: "interrupted",
           state: "interrupted",
           status: "failure",
-          reason: "Validation token already exists",
-          caused_by: 2,
+          reason: "Unauthorized token",
+          caused_by: 3,
           thrown_by: 2,
           runtime: 0.0123
         )

@@ -7,8 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [3.1.4] - 2024-10-27
+### Added
+- Add exception data to results hash
 ### Changed
 - Relocated some results methods to a runtimes internal module
+- Assign correct fault even when child command is hard called
 
 ## [3.1.3] - 2024-10-26
 ### Added

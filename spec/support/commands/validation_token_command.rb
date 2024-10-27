@@ -2,8 +2,12 @@
 
 class ValidationTokenCommand < ApplicationCommand
 
+  optional :simulate_unauthoized_token, :simulate_token_collision
+
   def call
-    if ctx.simulate_token_collision
+    if simulate_unauthoized_token
+      AuthorizeTokenCommand.call!(ctx)
+    elsif simulate_token_collision
       fail!("Validation token already exists")
     else
       context.validation_token = "123abc-456def"
