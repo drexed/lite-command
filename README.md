@@ -262,9 +262,18 @@ class DecryptSecretMessage < Lite::Command::Base
 
   validates :encrypted_message, length: 10..999
   validates :version, inclusion: { in: %w[v1 v3 v8], allow_blank: true }
+  validate :validate_decrypt_magic_numbers
 
   def call
-    context.decrypted_message = SecretMessage.decrypt(ctx.encrypted_message)
+    context.decrypted_message = SecretMessage.decrypt(encrypted_message)
+  end
+
+  private
+
+  def validate_decrypt_magic_numbers
+    return if encrypted_message.starts_with?("~x01~")
+
+    errors.add(:encrypted_message, :invalid, message: "has invalid magic numbers")
   end
 
 end
@@ -351,6 +360,9 @@ cmd = DecryptSecretMessage.call(encrypted_message: "2jk3hjeh2hj2jh")
 cmd.status   #=> "invalid"
 cmd.reason   #=> "Invalid message start value"
 cmd.metadata #=> { i18n: "gb.invalid_start_value" }
+
+cmd.original_exception #=> <RuntimeError ...>
+cmd.command_exception  #=> <DecryptSecretMessage::Error ...>
 
 cmd.success? #=> false
 cmd.noop?    #=> false
@@ -606,13 +618,15 @@ command.to_hash #=> {
                 #=>   outcome: "failure",
                 #=>   state: "interrupted",
                 #=>   status: "failure",
-                #=>   reason: "[!] command stopped due to failure",
+                #=>   reason: "Command stopped due to some failure",
                 #=>   metadata: {
                 #=>     errors: { name: ["is too short"] },
                 #=>     i18n_key: "command.failure"
                 #=>   },
-                #=>   caused_by: 1,
-                #=>   thrown_by: 1,
+                #=>   caused_by: 3,
+                #=>   caused_exception: "[ChildCommand::Failure] something is wrong from within",
+                #=>   thrown_by: 2,
+                #=>   thrown_exception: "[FailureCommand::Failure] something is wrong from within",
                 #=>   runtime: 0.0123
                 #=> }
 ```

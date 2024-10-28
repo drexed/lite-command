@@ -87,15 +87,24 @@ RSpec.describe Lite::Command::Internals::Attributes do
           optional :ssn, from: :user
 
           validates :first_name, :ssn, length: { maximum: 1 }
+          validate :validate_dummy_ssn
+
+          private
+
+          def validate_dummy_ssn
+            return if ssn.nil? || !ssn.starts_with?("001")
+
+            errors.add(:ssn, :invalid, message: "is a dummy")
+          end
         end
       end
 
       it "returns invalid" do
         expect(command).to be_invalid
-        expect(command.reason).to eq("First name is too long (maximum is 1 character). Ssn is too long (maximum is 1 character)")
+        expect(command.reason).to eq("First name is too long (maximum is 1 character). Ssn is too long (maximum is 1 character). Ssn is a dummy")
         expect(command.metadata).to include(
           first_name: ["is too long (maximum is 1 character)"],
-          ssn: ["is too long (maximum is 1 character)"]
+          ssn: ["is too long (maximum is 1 character)", "is a dummy"]
         )
       end
     end
