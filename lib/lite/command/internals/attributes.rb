@@ -12,7 +12,7 @@ module Lite
         module ClassMethods
 
           def required(*attributes, from: :context, **options)
-            delegate(*attributes, from:)
+            delegates(*attributes, from:)
 
             validates_each(*attributes, **options) do |command, method_name, _attr_value|
               next if command.errors.added?(from, :undefined) || command.errors.added?(method_name, :required)
@@ -26,12 +26,12 @@ module Lite
           end
 
           def optional(*attributes, from: :context, **_options)
-            delegate(*attributes, from:)
+            delegates(*attributes, from:)
           end
 
           private
 
-          def delegate(*attributes, from: :context)
+          def delegates(*attributes, from: :context)
             attributes.each do |method_name|
               define_method(method_name) do
                 return unless respond_to?(from)
