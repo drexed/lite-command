@@ -92,6 +92,14 @@ RSpec.describe Lite::Command::Utils do
   end
 
   describe ".evaluate" do
+    context "with if and unless option" do
+      it "returns true" do
+        value = Lite::Command::Utils.evaluate(user, { if: proc { 1 + 2 == 3 }, unless: proc { 1 + 1 == 3 } })
+
+        expect(value).to be(true)
+      end
+    end
+
     context "with if option" do
       it "returns false" do
         value = Lite::Command::Utils.evaluate(user, { if: proc { 1 + 2 == 0 } })

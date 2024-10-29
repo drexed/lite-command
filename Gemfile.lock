@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    lite-command (3.2.0)
+    lite-command (3.2.1)
       activemodel
       ostruct
 

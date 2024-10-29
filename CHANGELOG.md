@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.2.1] - 2024-10-29
+### Changed
+- Allow if and unless evaluations to happen at the same time
+
 ## [3.2.0] - 2024-10-29
 ### Changed
 - Move callbacks to hooks instead of try methods

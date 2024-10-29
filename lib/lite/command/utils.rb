@@ -40,7 +40,9 @@ module Lite
       end
 
       def evaluate(object, options = {})
-        if options[:if]
+        if options[:if] && options[:unless]
+          call(object, options[:if]) && !call(object, options[:unless])
+        elsif options[:if]
           call(object, options[:if])
         elsif options[:unless]
           !call(object, options[:unless])
