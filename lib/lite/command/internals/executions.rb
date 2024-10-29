@@ -74,10 +74,9 @@ module Lite
         end
 
         def execute
-          around_execution { call }
-        rescue StandardError => e
-          fault(e, Utils.try(e, :type) || ERROR, metadata, exception: e)
-          after_execution
+          execute!
+        rescue StandardError
+          # Do nothing
         end
 
         def execute!
