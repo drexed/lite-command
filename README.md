@@ -143,6 +143,10 @@ cmd.raise!(original: true)  #=> raises Lite::Command::Fault
 # On exception:
 cmd.raise!(original: false) #=> raises Lite::Command::Error
 cmd.raise!(original: true)  #=> raises StandardError
+
+# Access the exception objects directly
+cmd.original_exception #=> <StandardError ...>
+cmd.command_exception  #=> <Lite::Command::Error ...>
 ```
 
 ### Dynamic Faults
@@ -360,9 +364,6 @@ cmd = DecryptSecretMessage.call(encrypted_message: "2jk3hjeh2hj2jh")
 cmd.status   #=> "invalid"
 cmd.reason   #=> "Invalid message start value"
 cmd.metadata #=> { i18n: "gb.invalid_start_value" }
-
-cmd.original_exception #=> <RuntimeError ...>
-cmd.command_exception  #=> <DecryptSecretMessage::Error ...>
 
 cmd.success? #=> false
 cmd.noop?    #=> false
