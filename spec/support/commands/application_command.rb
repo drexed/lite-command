@@ -2,7 +2,25 @@
 
 class ApplicationCommand < Lite::Command::Base
 
-  # Add inheritable logic here...
+  # Lifecycle hooks
+  after_initialize  :after_initialize_hook
+  before_validation :before_validation_hook
+  before_execution  :before_execution_hook
+  around_execution  :around_execution_hook
+  after_execution   :after_execution_hook
+
+  # Status hooks
+  on_success :on_success_hook
+  on_noop    :on_noop_hook
+  on_invalid :on_invalid_hook
+  on_failure :on_failure_hook
+  on_error   :on_error_hook
+
+  # State hooks
+  on_pending     :on_pending_hook
+  on_executing   :on_executing_hook
+  on_complete    :on_complete_hook
+  on_interrupted :on_interrupted_hook
 
   private
 
@@ -11,28 +29,8 @@ class ApplicationCommand < Lite::Command::Base
     ctx.hooks << "#{self.class.name}.#{method}"
   end
 
-  def on_before_validation
-    trace_hook(__method__)
-  end
-
-  def on_before_execution
-    trace_hook(__method__)
-  end
-
-  def on_after_execution
-    trace_hook(__method__)
-  end
-
-  def on_success
-    trace_hook(__method__)
-  end
-
-  Lite::Command::FAULTS.each do |f|
-    define_method(:"on_#{f}") { |_fault| trace_hook(__method__) }
-  end
-
-  Lite::Command::STATES.each do |s|
-    define_method(:"on_#{s}") { trace_hook(__method__) }
+  Lite::Command::HOOKS.each do |h|
+    define_method(:"#{h}_hook") { trace_hook(__method__) }
   end
 
 end

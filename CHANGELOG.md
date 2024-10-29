@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.2.0] - 2024-10-29
+### Changed
+- Move callbacks to hooks instead of try methods
+
 ## [3.1.5] - 2024-10-28
 ### Changed
 - Renamed private `delegate` method to `delegates` to prevent rails clash

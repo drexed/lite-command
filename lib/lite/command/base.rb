@@ -16,6 +16,7 @@ module Lite
         base.include Internals::Faults
         base.include Internals::Calls
         base.include Internals::Executions
+        base.include Internals::Hooks
         base.include Internals::Results
 
         if Lite::Command.configuration.raise_dynamic_faults # rubocop:disable Style/GuardClause
@@ -34,7 +35,7 @@ module Lite
 
       def initialize(context = {})
         @context = Context.build(context)
-        Utils.try(self, :on_pending)
+        run_hooks(:after_initialize)
       end
 
     end

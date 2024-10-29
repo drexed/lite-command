@@ -74,20 +74,22 @@ RSpec.describe Lite::Command::Internals::Executions do
       it "calls correct hooks" do
         expect(command.context.hooks).to eq(
           %w[
-            EmailValidatorCommand.on_pending
-            EmailValidatorCommand.on_before_validation
-            EmailValidatorCommand.on_before_execution
-            EmailValidatorCommand.on_executing
-            ValidationTokenCommand.on_pending
-            ValidationTokenCommand.on_before_validation
-            ValidationTokenCommand.on_before_execution
-            ValidationTokenCommand.on_executing
-            ValidationTokenCommand.on_after_execution
-            ValidationTokenCommand.on_success
-            ValidationTokenCommand.on_complete
-            EmailValidatorCommand.on_after_execution
-            EmailValidatorCommand.on_success
-            EmailValidatorCommand.on_complete
+            EmailValidatorCommand.after_initialize_hook
+            EmailValidatorCommand.on_pending_hook
+            EmailValidatorCommand.before_validation_hook
+            EmailValidatorCommand.before_execution_hook
+            EmailValidatorCommand.on_executing_hook
+            ValidationTokenCommand.after_initialize_hook
+            ValidationTokenCommand.on_pending_hook
+            ValidationTokenCommand.before_validation_hook
+            ValidationTokenCommand.before_execution_hook
+            ValidationTokenCommand.on_executing_hook
+            ValidationTokenCommand.after_execution_hook
+            ValidationTokenCommand.on_success_hook
+            ValidationTokenCommand.on_complete_hook
+            EmailValidatorCommand.after_execution_hook
+            EmailValidatorCommand.on_success_hook
+            EmailValidatorCommand.on_complete_hook
           ]
         )
       end
@@ -99,20 +101,22 @@ RSpec.describe Lite::Command::Internals::Executions do
       it "calls correct hooks" do
         expect(command.context.hooks).to eq(
           %w[
-            EmailValidatorCommand.on_pending
-            EmailValidatorCommand.on_before_validation
-            EmailValidatorCommand.on_before_execution
-            EmailValidatorCommand.on_executing
-            ValidationTokenCommand.on_pending
-            ValidationTokenCommand.on_before_validation
-            ValidationTokenCommand.on_before_execution
-            ValidationTokenCommand.on_executing
-            ValidationTokenCommand.on_after_execution
-            ValidationTokenCommand.on_failure
-            ValidationTokenCommand.on_interrupted
-            EmailValidatorCommand.on_after_execution
-            EmailValidatorCommand.on_failure
-            EmailValidatorCommand.on_interrupted
+            EmailValidatorCommand.after_initialize_hook
+            EmailValidatorCommand.on_pending_hook
+            EmailValidatorCommand.before_validation_hook
+            EmailValidatorCommand.before_execution_hook
+            EmailValidatorCommand.on_executing_hook
+            ValidationTokenCommand.after_initialize_hook
+            ValidationTokenCommand.on_pending_hook
+            ValidationTokenCommand.before_validation_hook
+            ValidationTokenCommand.before_execution_hook
+            ValidationTokenCommand.on_executing_hook
+            ValidationTokenCommand.after_execution_hook
+            ValidationTokenCommand.on_failure_hook
+            ValidationTokenCommand.on_interrupted_hook
+            EmailValidatorCommand.after_execution_hook
+            EmailValidatorCommand.on_failure_hook
+            EmailValidatorCommand.on_interrupted_hook
           ]
         )
       end

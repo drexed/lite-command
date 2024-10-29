@@ -51,6 +51,8 @@ module Lite
 
         private
 
+        # TODO: rename this method
+        # TODO: move hooks here
         def validate_context_attributes
           return if errors.empty?
 
