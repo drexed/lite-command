@@ -289,10 +289,10 @@ cmd.context.decrypted_message #=> "Hola Mundo"
 # With invalid options:
 cmd = DecryptSecretMessage.call(encrypted_message: "idk", version: "v23")
 cmd.status   #=> "invalid"
-cmd.reason   #=> "Encrypted message is too short (minimum is 10 character). Version is not included in list..."
+cmd.reason   #=> "Encrypted message is too short (minimum is 10 character). Encrypted message has invalid magic numbers. Version is not included in list."
 cmd.metadata #=> {
              #=>   user: ["is not included in list"],
-             #=>   encrypted_message: ["is too short (minimum is 10 character)"]
+             #=>   encrypted_message: ["is too short (minimum is 10 character)", "has invalid magic numbers"]
              #=> }
 ```
 
@@ -388,28 +388,18 @@ cmd.bad?("Other reason") #=> false
 
 Use hooks to run arbituary code at transition points and on finalized internals.
 All hooks are ran in the order they are defined. Hooks types can be defined
-multiple times. The following is an example of the hooks called for a failed
-command with a successful child command.
+multiple times. Hooks are ran in the following order:
 
 ```ruby
--> 1. FooCommand.after_initialize
--> 2. FooCommand.on_pending
--> 3. FooCommand.before_validation
--> 4. FooCommand.after_validation
--> 5. FooCommand.before_execution
--> 6. FooCommand.on_executing
----> 6a. BarCommand.after_initialize
----> 6b. BarCommand.on_pending
----> 6c. BarCommand.before_validation
----> 6d. BarCommand.after_validation
----> 6e. BarCommand.before_execution
----> 6f. BarCommand.on_executing
----> 6g. BarCommand.after_execution
----> 6h. BarCommand.on_failure
----> 6i. BarCommand.on_interrupted
--> 7. FooCommand.after_execution
--> 8. FooCommand.on_failure
--> 9. FooCommand.on_interrupted
+1. after_initialize
+2. on_pending
+3. before_validation
+4. after_validation
+5. before_execution
+6. on_executing
+7. after_execution
+8. on_[success, noop, invalid, failure, error]
+9. on_[complete, interrupted]
 ```
 
 ### Lifecycle Hooks
