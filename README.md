@@ -33,10 +33,9 @@ Or install it yourself as:
 * [States](#states)
 * [Statuses](#statuses)
 * [Hooks](#hooks)
-  * [State Hooks](#status-hooks)
-  * [Attribute Hooks](#attribute-hooks)
-  * [Execution Hooks](#execution-hooks)
+  * [Lifecycle Hooks](#lifecycle-hooks)
   * [Status Hooks](#status-hooks)
+  * [State Hooks](#state-hooks)
 * [Children](#children)
   * [Throwing Faults](#throwing-faults)
 * [Sequences](#sequences)
@@ -388,95 +387,46 @@ cmd.bad?("Other reason") #=> false
 ## Hooks
 
 Use hooks to run arbituary code at transition points and on finalized internals.
-The following is an example of the hooks called for a failed command with a
-successful child command.
+All hooks are ran in the order they are defined. Hooks types can be defined
+multiple times. The following is an example of the hooks called for a failed
+command with a successful child command.
 
 ```ruby
--> 1. FooCommand.on_pending
--> 2. FooCommand.on_before_execution
--> 3. FooCommand.on_executing
----> 3a. BarCommand.on_pending
----> 3b. BarCommand.on_before_execution
----> 3c. BarCommand.on_executing
----> 3d. BarCommand.on_after_execution
----> 3e. BarCommand.on_success
----> 3f. BarCommand.on_complete
--> 4. FooCommand.on_after_execution
--> 5. FooCommand.on_failure
--> 6. FooCommand.on_interrupted
+-> 1. FooCommand.after_initialize
+-> 2. FooCommand.on_pending
+-> 3. FooCommand.before_validation
+-> 4. FooCommand.after_validation
+-> 5. FooCommand.before_execution
+-> 6. FooCommand.on_executing
+---> 6a. BarCommand.after_initialize
+---> 6b. BarCommand.on_pending
+---> 6c. BarCommand.before_validation
+---> 6d. BarCommand.after_validation
+---> 6e. BarCommand.before_execution
+---> 6f. BarCommand.on_executing
+---> 6g. BarCommand.after_execution
+---> 6h. BarCommand.on_failure
+---> 6i. BarCommand.on_interrupted
+-> 7. FooCommand.after_execution
+-> 8. FooCommand.on_failure
+-> 9. FooCommand.on_interrupted
 ```
 
-### Status Hooks
-
-Define one or more callbacks that are called during transitions between states.
-
-```ruby
-class DecryptSecretMessage < Lite::Command::Base
-
-  def call
-    # ...
-  end
-
-  private
-
-  def on_pending
-    # eg: Append additional contextual data
-  end
-
-  def on_executing
-    # eg: Insert inspection debugger
-  end
-
-  def on_complete
-    # eg: Log message for posterity
-  end
-
-  def on_interrupted
-    # eg: Report to APM with tags and metadata
-  end
-
-end
-```
-
-### Attribute Hooks
-
-Define before attribtue validation callbacks.
-
-```ruby
-class DecryptSecretMessage < Lite::Command::Base
-
-  def call
-    # ...
-  end
-
-  private
-
-  def on_before_validation
-    # eg: Normalize context data
-  end
-
-end
-```
-
-### Execution Hooks
+### Lifecycle Hooks
 
 Define before and after callbacks to call around execution.
 
 ```ruby
 class DecryptSecretMessage < Lite::Command::Base
 
+  after_initialize  :some_method
+  before_validation :some_method
+  after_validation  :some_method
+  before_execution  :some_method
+  after_execution   :some_method
+
   def call
     # ...
-  end
-
-  private
-
-  def on_before_execution
-    # eg: Append additional contextual data
-  end
-
-  def on_after_execution
-    # eg: Store results to database
   end
 
 end
@@ -490,37 +440,37 @@ specific statuses.
 ```ruby
 class DecryptSecretMessage < Lite::Command::Base
 
+  on_success :some_method
+  on_noop    :some_method
+  on_invalid :some_method
+  on_failure :some_method
+  on_error   :some_method
+
   def call
     # ...
-  end
-
-  private
-
-  def on_success
-    # eg: Increment KPI counter
-  end
-
-  def on_noop(fault)
-    # eg: Log message for posterity
-  end
-
-  def on_invalid(fault)
-    # eg: Send metadata errors to frontend
-  end
-
-  def on_failure(fault)
-    # eg: Rollback record changes
-  end
-
-  def on_error(fault_or_exception)
-    # eg: Report to APM with tags and metadata
   end
 
 end
 ```
 
-> [!NOTE]
-> The `on_success` callback does **NOT** take any arguments.
+### State Hooks
+
+Define one or more callbacks that are called during transitions between states.
+
+```ruby
+class DecryptSecretMessage < Lite::Command::Base
+
+  on_pending     :some_method
+  on_executing   :some_method
+  on_complete    :some_method
+  on_interrupted :some_method
+
+  def call
+    # ...
+  end
+
+end
+```
 
 ## Children
 
