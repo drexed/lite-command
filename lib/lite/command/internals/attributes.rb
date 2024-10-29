@@ -51,12 +51,12 @@ module Lite
 
         private
 
-        # TODO: rename this method
-        # TODO: move hooks here
         def validate_context_attributes
-          return if errors.empty?
+          run_hooks(:before_validation)
 
-          invalid!(errors.full_messages.join(". "), metadata: errors.messages)
+          invalid!(errors.full_messages.join(". "), metadata: errors.messages) unless valid?
+
+          run_hooks(:after_validation)
         end
 
       end

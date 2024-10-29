@@ -24,14 +24,12 @@ module Lite
 
           def call(context = {})
             instance = send(:new, context)
-            instance.validate
             instance.send(:execute)
             instance
           end
 
           def call!(context = {})
             instance = send(:new, context)
-            instance.validate
             instance.send(:execute!)
             instance
           end

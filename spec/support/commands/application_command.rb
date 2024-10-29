@@ -5,8 +5,8 @@ class ApplicationCommand < Lite::Command::Base
   # Lifecycle hooks
   after_initialize  :after_initialize_hook
   before_validation :before_validation_hook
+  after_validation  :after_validation_hook
   before_execution  :before_execution_hook
-  around_execution  :around_execution_hook
   after_execution   :after_execution_hook
 
   # Status hooks

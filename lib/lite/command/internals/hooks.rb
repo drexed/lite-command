@@ -6,7 +6,7 @@ module Lite
     HOOKS = [
       :after_initialize,
       :before_validation,
-      :around_execution,
+      :after_validation,
       :before_execution,
       :after_execution,
       *STATUSES.map { |s| :"on_#{s}" },
@@ -29,10 +29,7 @@ module Lite
           HOOKS.each do |h|
             define_method(h) do |*method_names, &block|
               method_names << block if block_given?
-              method_names.each do |mn|
-                hooks[h] ||= []
-                hooks[h].push(mn)
-              end
+              method_names.each { |mn| (hooks[h] ||= []) << mn }
             end
           end
 

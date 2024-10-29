@@ -51,7 +51,6 @@ module Lite
           assign_execution_cmd_id
           start_monotonic_time
           run_hooks(:on_pending)
-          run_hooks(:before_validation)
           validate_context_attributes
           run_hooks(:before_execution)
           executing!

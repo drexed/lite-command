@@ -77,11 +77,13 @@ RSpec.describe Lite::Command::Internals::Executions do
             EmailValidatorCommand.after_initialize_hook
             EmailValidatorCommand.on_pending_hook
             EmailValidatorCommand.before_validation_hook
+            EmailValidatorCommand.after_validation_hook
             EmailValidatorCommand.before_execution_hook
             EmailValidatorCommand.on_executing_hook
             ValidationTokenCommand.after_initialize_hook
             ValidationTokenCommand.on_pending_hook
             ValidationTokenCommand.before_validation_hook
+            ValidationTokenCommand.after_validation_hook
             ValidationTokenCommand.before_execution_hook
             ValidationTokenCommand.on_executing_hook
             ValidationTokenCommand.after_execution_hook
@@ -104,11 +106,13 @@ RSpec.describe Lite::Command::Internals::Executions do
             EmailValidatorCommand.after_initialize_hook
             EmailValidatorCommand.on_pending_hook
             EmailValidatorCommand.before_validation_hook
+            EmailValidatorCommand.after_validation_hook
             EmailValidatorCommand.before_execution_hook
             EmailValidatorCommand.on_executing_hook
             ValidationTokenCommand.after_initialize_hook
             ValidationTokenCommand.on_pending_hook
             ValidationTokenCommand.before_validation_hook
+            ValidationTokenCommand.after_validation_hook
             ValidationTokenCommand.before_execution_hook
             ValidationTokenCommand.on_executing_hook
             ValidationTokenCommand.after_execution_hook
