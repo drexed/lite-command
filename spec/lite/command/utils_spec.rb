@@ -31,10 +31,10 @@ RSpec.describe Lite::Command::Utils do
     end
   end
 
-  describe ".try" do
+  describe ".cmd_try" do
     context "when method public exists" do
       it "returns value" do
-        value = Lite::Command::Utils.try(user, :first_name)
+        value = Lite::Command::Utils.cmd_try(user, :first_name)
 
         expect(value).to eq("John")
       end
@@ -42,7 +42,7 @@ RSpec.describe Lite::Command::Utils do
 
     context "when method private exists" do
       it "returns value" do
-        value = Lite::Command::Utils.try(user, :ssn)
+        value = Lite::Command::Utils.cmd_try(user, :ssn)
 
         expect(value).to eq("001-555-6789")
       end
@@ -50,17 +50,17 @@ RSpec.describe Lite::Command::Utils do
 
     context "when method missing" do
       it "returns nil" do
-        value = Lite::Command::Utils.try(user, :gender)
+        value = Lite::Command::Utils.cmd_try(user, :gender)
 
         expect(value).to be_nil
       end
     end
   end
 
-  describe ".call" do
+  describe ".cmd_call" do
     context "when symbol" do
       it "returns method value" do
-        value = Lite::Command::Utils.call(user, :first_name)
+        value = Lite::Command::Utils.cmd_call(user, :first_name)
 
         expect(value).to eq("John")
       end
@@ -68,7 +68,7 @@ RSpec.describe Lite::Command::Utils do
 
     context "when string" do
       it "returns method value" do
-        value = Lite::Command::Utils.call(user, "first_name")
+        value = Lite::Command::Utils.cmd_call(user, "first_name")
 
         expect(value).to eq("John")
       end
@@ -76,7 +76,7 @@ RSpec.describe Lite::Command::Utils do
 
     context "when proc" do
       it "returns block value" do
-        value = Lite::Command::Utils.call(user, proc { 1 + 1 })
+        value = Lite::Command::Utils.cmd_call(user, proc { 1 + 1 })
 
         expect(value).to eq(2)
       end
@@ -84,17 +84,17 @@ RSpec.describe Lite::Command::Utils do
 
     context "when unknown" do
       it "returns argument value" do
-        value = Lite::Command::Utils.call(user, 123)
+        value = Lite::Command::Utils.cmd_call(user, 123)
 
         expect(value).to eq(123)
       end
     end
   end
 
-  describe ".evaluate" do
+  describe ".cmd_eval" do
     context "with if and unless option" do
       it "returns true" do
-        value = Lite::Command::Utils.evaluate(user, { if: proc { 1 + 2 == 3 }, unless: proc { 1 + 1 == 3 } })
+        value = Lite::Command::Utils.cmd_eval(user, { if: proc { 1 + 2 == 3 }, unless: proc { 1 + 1 == 3 } })
 
         expect(value).to be(true)
       end
@@ -102,7 +102,7 @@ RSpec.describe Lite::Command::Utils do
 
     context "with if option" do
       it "returns false" do
-        value = Lite::Command::Utils.evaluate(user, { if: proc { 1 + 2 == 0 } })
+        value = Lite::Command::Utils.cmd_eval(user, { if: proc { 1 + 2 == 0 } })
 
         expect(value).to be(false)
       end
@@ -110,7 +110,7 @@ RSpec.describe Lite::Command::Utils do
 
     context "with unless option" do
       it "returns false" do
-        value = Lite::Command::Utils.evaluate(user, { unless: proc { 1 + 2 == 3 } })
+        value = Lite::Command::Utils.cmd_eval(user, { unless: proc { 1 + 2 == 3 } })
 
         expect(value).to be(false)
       end
@@ -118,7 +118,7 @@ RSpec.describe Lite::Command::Utils do
 
     context "with default option" do
       it "returns false" do
-        value = Lite::Command::Utils.evaluate(user, { default: false })
+        value = Lite::Command::Utils.cmd_eval(user, { default: false })
 
         expect(value).to be(false)
       end
@@ -126,7 +126,7 @@ RSpec.describe Lite::Command::Utils do
 
     context "with empty options" do
       it "returns true" do
-        value = Lite::Command::Utils.evaluate(user, {})
+        value = Lite::Command::Utils.cmd_eval(user, {})
 
         expect(value).to be(true)
       end

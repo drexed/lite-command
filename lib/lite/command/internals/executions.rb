@@ -82,7 +82,7 @@ module Lite
         def execute!
           around_execution { call }
         rescue StandardError => e
-          fault(e, Utils.try(e, :type) || ERROR, metadata, exception: e)
+          fault(e, Utils.cmd_try(e, :type) || ERROR, metadata, exception: e)
           after_execution
           raise(e)
         end

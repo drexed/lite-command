@@ -36,7 +36,7 @@ module Lite
               define_method(method_name) do
                 return unless respond_to?(from)
 
-                Utils.try(send(from), method_name)
+                Utils.cmd_try(send(from), method_name)
               end
             end
           end
@@ -44,7 +44,7 @@ module Lite
         end
 
         def read_attribute_for_validation(method_name)
-          Utils.try(self, method_name)
+          Utils.cmd_try(self, method_name)
         rescue NameError
           # Do nothing, fallback to :undefined error
         end

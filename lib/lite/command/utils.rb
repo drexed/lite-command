@@ -23,13 +23,13 @@ module Lite
         !!(object_class <= other_class)
       end
 
-      def try(object, method_name, *args, include_private: true)
+      def cmd_try(object, method_name, *args, include_private: true)
         return unless object.respond_to?(method_name, include_private)
 
         object.send(method_name, *args)
       end
 
-      def call(object, argument)
+      def cmd_call(object, argument)
         if argument.is_a?(Symbol) || argument.is_a?(String)
           object.send(argument)
         elsif argument.is_a?(Proc)
@@ -39,7 +39,7 @@ module Lite
         end
       end
 
-      def evaluate(object, options = {})
+      def cmd_eval(object, options = {})
         if options[:if] && options[:unless]
           call(object, options[:if]) && !call(object, options[:unless])
         elsif options[:if]

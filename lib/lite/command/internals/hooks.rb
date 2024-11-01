@@ -23,7 +23,7 @@ module Lite
         module ClassMethods
 
           def hooks
-            @hooks ||= Utils.try(superclass, :hooks).dup || {}
+            @hooks ||= Utils.cmd_try(superclass, :hooks).dup || {}
           end
 
           HOOKS.each do |h|
@@ -41,7 +41,7 @@ module Lite
           hooks = self.class.hooks[hook]
           return if hooks.nil?
 
-          hooks.each { |h| Utils.call(self, h) }
+          hooks.each { |h| Utils.cmd_call(self, h) }
         end
 
       end

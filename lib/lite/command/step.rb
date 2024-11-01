@@ -12,7 +12,7 @@ module Lite
       end
 
       def run?(cmd)
-        Utils.evaluate(cmd, options)
+        Utils.cmd_eval(cmd, options)
       end
 
     end
