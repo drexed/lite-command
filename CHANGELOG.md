@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.3.0] - 2024-11-01
+### Changed
+- Prefixed util method with `cmd_`
+- Improve monotonic clock handling
+- Improve order of hook calls
+
 ## [3.2.1] - 2024-10-29
 ### Changed
 - Allow if and unless evaluations to happen at the same time

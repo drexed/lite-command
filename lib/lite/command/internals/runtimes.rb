@@ -34,7 +34,7 @@ module Lite
         end
 
         def runtime
-          return 0 unless defined?(@stop_monotonic_time)
+          return unless executed?
 
           stop_monotonic_time - start_monotonic_time
         end

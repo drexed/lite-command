@@ -41,11 +41,11 @@ module Lite
 
       def cmd_eval(object, options = {})
         if options[:if] && options[:unless]
-          call(object, options[:if]) && !call(object, options[:unless])
+          cmd_call(object, options[:if]) && !cmd_call(object, options[:unless])
         elsif options[:if]
-          call(object, options[:if])
+          cmd_call(object, options[:if])
         elsif options[:unless]
-          !call(object, options[:unless])
+          !cmd_call(object, options[:unless])
         else
           options.fetch(:default, true)
         end

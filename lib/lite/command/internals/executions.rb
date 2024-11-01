@@ -50,18 +50,19 @@ module Lite
           increment_execution_index
           assign_execution_cmd_id
           start_monotonic_time
-          run_hooks(:on_pending)
-          validate_context_attributes
+
           run_hooks(:before_execution)
           executing!
+          validate_context_attributes
           run_hooks(:on_executing)
         end
 
         def after_execution
           send(:"#{success? ? COMPLETE : INTERRUPTED}!")
-          run_hooks(:after_execution)
           run_hooks(:"on_#{status}")
           run_hooks(:"on_#{state}")
+          run_hooks(:after_execution)
+
           stop_monotonic_time
           append_execution_result
           freeze_execution_objects

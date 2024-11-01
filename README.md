@@ -392,14 +392,13 @@ multiple times. Hooks are ran in the following order:
 
 ```ruby
 1. after_initialize
-2. on_pending
+2. before_execution
 3. before_validation
 4. after_validation
-5. before_execution
-6. on_executing
-7. after_execution
-8. on_[success, noop, invalid, failure, error]
-9. on_[complete, interrupted]
+5. on_executing
+6. on_[success, noop, invalid, failure, error]
+7. on_[complete, interrupted]
+8. after_execution
 ```
 
 ### Lifecycle Hooks

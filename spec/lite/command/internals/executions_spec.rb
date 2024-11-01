@@ -75,23 +75,21 @@ RSpec.describe Lite::Command::Internals::Executions do
         expect(command.context.hooks).to eq(
           %w[
             EmailValidatorCommand.after_initialize_hook
-            EmailValidatorCommand.on_pending_hook
+            EmailValidatorCommand.before_execution_hook
             EmailValidatorCommand.before_validation_hook
             EmailValidatorCommand.after_validation_hook
-            EmailValidatorCommand.before_execution_hook
             EmailValidatorCommand.on_executing_hook
             ValidationTokenCommand.after_initialize_hook
-            ValidationTokenCommand.on_pending_hook
+            ValidationTokenCommand.before_execution_hook
             ValidationTokenCommand.before_validation_hook
             ValidationTokenCommand.after_validation_hook
-            ValidationTokenCommand.before_execution_hook
             ValidationTokenCommand.on_executing_hook
-            ValidationTokenCommand.after_execution_hook
             ValidationTokenCommand.on_success_hook
             ValidationTokenCommand.on_complete_hook
-            EmailValidatorCommand.after_execution_hook
+            ValidationTokenCommand.after_execution_hook
             EmailValidatorCommand.on_success_hook
             EmailValidatorCommand.on_complete_hook
+            EmailValidatorCommand.after_execution_hook
           ]
         )
       end
@@ -104,23 +102,21 @@ RSpec.describe Lite::Command::Internals::Executions do
         expect(command.context.hooks).to eq(
           %w[
             EmailValidatorCommand.after_initialize_hook
-            EmailValidatorCommand.on_pending_hook
+            EmailValidatorCommand.before_execution_hook
             EmailValidatorCommand.before_validation_hook
             EmailValidatorCommand.after_validation_hook
-            EmailValidatorCommand.before_execution_hook
             EmailValidatorCommand.on_executing_hook
             ValidationTokenCommand.after_initialize_hook
-            ValidationTokenCommand.on_pending_hook
+            ValidationTokenCommand.before_execution_hook
             ValidationTokenCommand.before_validation_hook
             ValidationTokenCommand.after_validation_hook
-            ValidationTokenCommand.before_execution_hook
             ValidationTokenCommand.on_executing_hook
-            ValidationTokenCommand.after_execution_hook
             ValidationTokenCommand.on_failure_hook
             ValidationTokenCommand.on_interrupted_hook
-            EmailValidatorCommand.after_execution_hook
+            ValidationTokenCommand.after_execution_hook
             EmailValidatorCommand.on_failure_hook
             EmailValidatorCommand.on_interrupted_hook
+            EmailValidatorCommand.after_execution_hook
           ]
         )
       end
