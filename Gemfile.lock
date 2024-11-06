@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    lite-command (3.3.0)
+    lite-command (3.3.1)
       activemodel
       ostruct
 
@@ -59,7 +59,7 @@ GEM
     irb (1.14.1)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
-    json (2.7.5)
+    json (2.8.0)
     language_server-protocol (3.17.0.3)
     logger (1.6.1)
     loofah (2.23.1)
@@ -72,7 +72,7 @@ GEM
       racc (~> 1.4)
     ostruct (0.6.0)
     parallel (1.26.3)
-    parser (3.3.5.1)
+    parser (3.3.6.0)
       ast (~> 2.4.1)
       racc
     psych (5.1.2)
@@ -83,9 +83,8 @@ GEM
       rack (>= 3.0.0)
     rack-test (2.1.0)
       rack (>= 1.3)
-    rackup (2.1.0)
+    rackup (2.2.0)
       rack (>= 3)
-      webrick (~> 1.8)
     rails-dom-testing (2.2.0)
       activesupport (>= 5.0.0)
       minitest
@@ -131,7 +130,7 @@ GEM
       rubocop-ast (>= 1.32.2, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 3.0)
-    rubocop-ast (1.33.0)
+    rubocop-ast (1.34.0)
       parser (>= 3.3.1.0)
     rubocop-performance (1.22.1)
       rubocop (>= 1.48.1, < 2.0)
@@ -150,7 +149,6 @@ GEM
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.6.0)
     useragent (0.16.10)
-    webrick (1.9.0)
     zeitwerk (2.7.1)
 
 PLATFORMS
