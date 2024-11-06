@@ -15,7 +15,7 @@ module Lite
           @results ||= context.results ||= []
         end
 
-        def to_hash
+        def to_h
           {
             index:,
             cmd_id:,
@@ -32,7 +32,6 @@ module Lite
             runtime:
           }.compact
         end
-        alias to_h to_hash
 
         private
 

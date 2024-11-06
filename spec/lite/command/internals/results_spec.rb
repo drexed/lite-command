@@ -23,7 +23,7 @@ RSpec.describe Lite::Command::Internals::Results do
     context "without fault" do
       it "returns correct data" do
         expect(command.results.size).to eq(2)
-        expect(command.to_hash).to eq(
+        expect(command.to_h).to eq(
           index: 1,
           cmd_id: "018c2b95-b764-7615-a924-cc5b910ed1e5",
           command: "EmailValidatorCommand",
@@ -40,7 +40,7 @@ RSpec.describe Lite::Command::Internals::Results do
 
       it "returns correct data" do
         expect(command.results.size).to eq(3)
-        expect(command.to_hash).to eq(
+        expect(command.to_h).to eq(
           index: 1,
           cmd_id: "018c2b95-b764-7615-a924-cc5b910ed1e5",
           command: "EmailValidatorCommand",

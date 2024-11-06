@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.3.1] - 2024-11-06
+### Removed
+- Remove `to_hash` method
+
 ## [3.3.0] - 2024-11-01
 ### Changed
 - Prefixed util method with `cmd_`
