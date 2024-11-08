@@ -34,7 +34,7 @@ module Lite
           def delegates(*attributes, from: :context)
             attributes.each do |method_name|
               define_method(method_name) do
-                return unless respond_to?(from)
+                return unless respond_to?(from, true)
 
                 Utils.cmd_try(send(from), method_name)
               end
