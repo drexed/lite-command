@@ -40,6 +40,8 @@ module Lite
         end
 
         def freeze_execution_objects
+          return if (ENV.fetch("RAILS_ENV", nil) || ENV.fetch("RACK_ENV", nil)) == "test"
+
           context.freeze if index == 1
           freeze
         end

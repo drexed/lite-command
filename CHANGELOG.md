@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.3.3] - 2024-11-25
+### Changed
+- Skip freezing in test environments so it doesnt interfere with stubbing
+
 ## [3.3.2] - 2024-11-08
 ### Changed
 - Fixed issue where commands didnt delegate to private methods

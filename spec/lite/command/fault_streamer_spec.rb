@@ -32,7 +32,6 @@ RSpec.describe Lite::Command::FaultStreamer do
         let(:simulate_token_collision) { true }
 
         it "returns correct data" do
-          allow_any_instance_of(ValidationTokenCommand).to receive(:freeze_execution_objects).and_return(true)
           allow_any_instance_of(ValidationTokenCommand).to receive(:metadata).and_return([1, 2, 3])
 
           expect(streamer.reason).to eq("Validation token already exists")

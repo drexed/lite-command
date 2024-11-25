@@ -13,7 +13,6 @@ RSpec.describe Lite::Command::Internals::Results do
       EmailValidatorCommand,
       ValidationTokenCommand
     ].each do |klass|
-      allow_any_instance_of(klass).to receive(:freeze_execution_objects).and_return(true)
       allow_any_instance_of(klass).to receive(:cmd_id).and_return("018c2b95-b764-7615-a924-cc5b910ed1e5")
       allow_any_instance_of(klass).to receive(:runtime).and_return(0.0123)
     end
