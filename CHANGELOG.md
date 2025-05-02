@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.3.4] - 2025-05-02
+### Changed
+- Make sure commands are still set as interrupted even on raised errors
+- Duplicate call logic so to make sure that calls dont cross contaminate
+
 ## [3.3.3] - 2024-11-25
 ### Changed
 - Skip freezing in test environments so it doesnt interfere with stubbing

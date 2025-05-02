@@ -75,14 +75,17 @@ module Lite
         end
 
         def execute
-          execute!
-        rescue StandardError
-          # Do nothing
+          around_execution { call }
+        rescue StandardError => e
+          interrupted!
+          fault(e, Utils.cmd_try(e, :type) || ERROR, metadata, exception: e)
+          after_execution
         end
 
         def execute!
           around_execution { call }
         rescue StandardError => e
+          interrupted!
           fault(e, Utils.cmd_try(e, :type) || ERROR, metadata, exception: e)
           after_execution
           raise(e)
